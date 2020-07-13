@@ -1,4 +1,4 @@
-package nio2.Ch9b;
+package nio2.Ch9_CompletionHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,7 +12,7 @@ import java.nio.charset.CharsetDecoder;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-public class Client9 {
+public class Client2 {
 
     public static void main(String[] args) {
 

@@ -1,34 +1,23 @@
-package nio2.Ch9b;
+package nio2.Ch9_CompletionHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class Server11 {
+public class Server3 {
 
     public static void main(String[] args) {
 
         final int DEFAULT_PORT = 5555;
         final String IP = "127.0.0.1";
-        AsynchronousChannelGroup threadGroup = null;
-
-        ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
-        try {
-            threadGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
 
         //create asynchronous server-socket channel bound to the default group
-        try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open(threadGroup)) {
+        try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open()) {
 
             if (asynchronousServerSocketChannel.isOpen()) {
 
@@ -94,6 +83,5 @@ public class Server11 {
         } catch (IOException ex) {
             System.err.println(ex);
         }
-
     }
 }
