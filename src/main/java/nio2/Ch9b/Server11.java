@@ -1,4 +1,4 @@
-package nio2.Ch9;
+package nio2.Ch9b;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,10 +12,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- *
- * @author Apress
- */
 public class Server11 {
 
     public static void main(String[] args) {

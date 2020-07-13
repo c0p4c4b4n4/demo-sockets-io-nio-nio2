@@ -1,4 +1,4 @@
-package nio2.Ch9;
+package nio2.Ch9b;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,10 +9,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
 
-/**
- *
- * @author Apress
- */
 public class Server10 {
 
     public static void main(String[] args) {
