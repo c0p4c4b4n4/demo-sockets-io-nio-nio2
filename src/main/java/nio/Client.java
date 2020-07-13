@@ -1,12 +1,11 @@
+package nio;
 
 import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
 import java.io.*;
-import java.nio.channels.spi.*;
 import java.nio.charset.*;
 import java.lang.*;
-
 
 public class Client
 {
