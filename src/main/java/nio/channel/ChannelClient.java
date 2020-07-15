@@ -11,8 +11,7 @@ public class ChannelClient {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
 
-        InetSocketAddress remoteAddress = new InetSocketAddress("localhost", 9999);
-        socketChannel.connect(remoteAddress);
+        socketChannel.connect(new InetSocketAddress("localhost", 9999));
 
         while (!socketChannel.finishConnect())
             System.out.println("waiting to finish connection");

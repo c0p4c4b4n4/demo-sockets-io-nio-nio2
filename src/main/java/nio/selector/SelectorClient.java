@@ -7,34 +7,29 @@ import java.nio.channels.SocketChannel;
 import java.util.Date;
 
 public class SelectorClient {
-    final static int DEFAULT_PORT = 9999;
+    private static final int DEFAULT_PORT = 9999;
 
-    static ByteBuffer bb = ByteBuffer.allocateDirect(8);
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
         if (args.length > 0)
             port = Integer.parseInt(args[0]);
 
-        try {
-            SocketChannel sc = SocketChannel.open();
-            InetSocketAddress addr = new InetSocketAddress("localhost", port);
-            sc.connect(addr);
+        SocketChannel socketChannel = SocketChannel.open();
+        socketChannel.connect(new InetSocketAddress("localhost", port));
 
-            long time = 0;
-            while (sc.read(bb) != -1) {
-                bb.flip();
-                while (bb.hasRemaining()) {
-                    time <<= 8;
-                    time |= bb.get() & 255;
-                }
-                bb.clear();
+        ByteBuffer bb = ByteBuffer.allocateDirect(8);
+
+        long time = 0;
+        while (socketChannel.read(bb) != -1) {
+            bb.flip();
+            while (bb.hasRemaining()) {
+                time <<= 8;
+                time |= bb.get() & 255;
             }
-            System.out.println(new Date(time));
-
-            sc.close();
-        } catch (IOException ioe) {
-            System.err.println("I/O error: " + ioe.getMessage());
+            bb.clear();
         }
+        System.out.println(new Date(time));
+
+        socketChannel.close();
     }
 }

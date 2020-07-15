@@ -11,24 +11,24 @@ public class ChannelServer {
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");
 
-        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 
-        ssc.socket().bind(new InetSocketAddress(9999));
-        ssc.configureBlocking(false);
+        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+        serverSocketChannel.configureBlocking(false);
 
-        String msg = "local address: " + ssc.socket().getLocalSocketAddress();
+        String msg = "local address: " + serverSocketChannel.socket().getLocalSocketAddress();
         ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
 
         while (true) {
-            SocketChannel sc = ssc.accept();
-            if (sc != null) {
+            SocketChannel socketChannel = serverSocketChannel.accept();
+            if (socketChannel != null) {
                 System.out.println();
-                System.out.println("Received connection from " + sc.socket().getRemoteSocketAddress());
+                System.out.println("received connection from " + socketChannel.socket().getRemoteSocketAddress());
 
                 buffer.rewind();
 
-                sc.write(buffer);
-                sc.close();
+                socketChannel.write(buffer);
+                socketChannel.close();
             } else
                 try {
                     Thread.sleep(100);

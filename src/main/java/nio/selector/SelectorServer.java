@@ -11,44 +11,50 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 public class SelectorServer {
-    final static int DEFAULT_PORT = 9999;
 
-    static ByteBuffer bb = ByteBuffer.allocateDirect(8);
+    private static final  int DEFAULT_PORT = 9999;
 
     public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
         if (args.length > 0)
             port = Integer.parseInt(args[0]);
+
         System.out.println("Server starting ... listening on port " + port);
 
-        ServerSocketChannel ssc = ServerSocketChannel.open();
-        ServerSocket ss = ssc.socket();
-        ss.bind(new InetSocketAddress(port));
-        ssc.configureBlocking(false);
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 
-        Selector s = Selector.open();
-        ssc.register(s, SelectionKey.OP_ACCEPT);
+        ServerSocket serverSocket = serverSocketChannel.socket();
+        serverSocket.bind(new InetSocketAddress(port));
+        serverSocketChannel.configureBlocking(false);
+
+        Selector selector = Selector.open();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-            int n = s.select();
+            int n = selector.select();
             if (n == 0)
                 continue;
-            Iterator it = s.selectedKeys().iterator();
+
+            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
             while (it.hasNext()) {
                 SelectionKey key = (SelectionKey) it.next();
                 if (key.isAcceptable()) {
-                    SocketChannel sc;
-                    sc = ((ServerSocketChannel) key.channel()).accept();
-                    if (sc == null)
+                    SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
+                    if (socketChannel == null)
                         continue;
+
                     System.out.println("Receiving connection");
+
+                    ByteBuffer bb = ByteBuffer.allocateDirect(8);
                     bb.clear();
                     bb.putLong(System.currentTimeMillis());
                     bb.flip();
+
                     System.out.println("Writing current time");
                     while (bb.hasRemaining())
-                        sc.write(bb);
-                    sc.close();
+                        socketChannel.write(bb);
+
+                    socketChannel.close();
                 }
                 it.remove();
             }
