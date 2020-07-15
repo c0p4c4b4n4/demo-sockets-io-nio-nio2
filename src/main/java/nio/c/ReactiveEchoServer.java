@@ -1,4 +1,4 @@
-package yyy;
+package nio.c;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,20 +12,22 @@ import java.util.concurrent.Executors;
 
 class ReactiveEchoServer implements Runnable {
 
-    private final Selector _selector;
-    private final ServerSocketChannel _serverSocketChannel;
-    private static final int WORKER_POOL_SIZE = 10;
-    private static ExecutorService _workerPool;
+    private final Selector selector;
+    private final ServerSocketChannel serverSocketChannel;
+
+    private static final int THREAD_POOL_SIZE = 10;
+    private static ExecutorService executorService;
 
     ReactiveEchoServer(int port) throws IOException {
-        _selector = Selector.open();
-        _serverSocketChannel = ServerSocketChannel.open();
-        _serverSocketChannel.socket().bind(new InetSocketAddress(port));
-        _serverSocketChannel.configureBlocking(false);
+        selector = Selector.open();
 
-        // Register _serverSocketChannel with _selector listening on OP_ACCEPT events.
+        serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.socket().bind(new InetSocketAddress(port));
+        serverSocketChannel.configureBlocking(false);
+
+        // Register serverSocketChannel with selector listening on OP_ACCEPT events.
         // Callback: Acceptor, selected when a new connection incomes.
-        SelectionKey selectionKey = _serverSocketChannel.register(_selector, SelectionKey.OP_ACCEPT);
+        SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         selectionKey.attach(new Acceptor());
     }
 
@@ -33,8 +35,8 @@ class ReactiveEchoServer implements Runnable {
         try {
             // Event Loop
             while (true) {
-                _selector.select();
-                Iterator it = _selector.selectedKeys().iterator();
+                selector.select();
+                Iterator it = selector.selectedKeys().iterator();
 
                 while (it.hasNext()) {
                     SelectionKey sk = (SelectionKey) it.next();
@@ -51,16 +53,16 @@ class ReactiveEchoServer implements Runnable {
     }
 
     public static ExecutorService getWorkerPool() {
-        return _workerPool;
+        return executorService;
     }
 
     // Acceptor: if connection is established, assign a handler to it.
     private class Acceptor implements Runnable {
         public void run() {
             try {
-                SocketChannel socketChannel = _serverSocketChannel.accept();
+                SocketChannel socketChannel = serverSocketChannel.accept();
                 if (socketChannel != null) {
-                    new Handler(_selector, socketChannel);
+                    new Handler(selector, socketChannel);
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -69,7 +71,7 @@ class ReactiveEchoServer implements Runnable {
     }
 
     public static void main(String[] args) {
-        _workerPool = Executors.newFixedThreadPool(WORKER_POOL_SIZE);
+        executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
         try {
             new Thread(new ReactiveEchoServer(9090)).start(); // a single thread blocking on selector for events
