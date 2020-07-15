@@ -31,12 +31,10 @@ class Handler implements Runnable {
         try {
             if (_selectionKey.isReadable()) {
                 read();
-            }
-            else if (_selectionKey.isWritable()) {
+            } else if (_selectionKey.isWritable()) {
                 write();
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -64,16 +62,14 @@ class Handler implements Runnable {
                 _selectionKey.cancel();
                 _socketChannel.close();
                 System.out.println("read(): client connection might have been dropped!");
-            }
-            else {
+            } else {
                 ReactiveEchoServer.getWorkerPool().execute(new Runnable() {
                     public void run() {
                         process();
                     }
                 });
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             return;
         }
@@ -94,8 +90,7 @@ class Handler implements Runnable {
                 _selectionKey.interestOps(SelectionKey.OP_READ);
                 _selectionKey.selector().wakeup();
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }

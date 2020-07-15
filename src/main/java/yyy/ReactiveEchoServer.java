@@ -45,8 +45,7 @@ class ReactiveEchoServer implements Runnable {
                     }
                 }
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -63,8 +62,7 @@ class ReactiveEchoServer implements Runnable {
                 if (socketChannel != null) {
                     new Handler(_selector, socketChannel);
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }

@@ -1,4 +1,4 @@
-package xxx;
+package io;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,17 +8,18 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.*;
 
-public class EchoServer {
+public class EchoServer2 {
+
     private static final int PORT = 4000;
-    private static final int BUFFER_SZ = 1024;
+    private static final int BUFFER_SIZE = 1024;
 
     public static void main(String[] args) {
         try {
             ServerSocket server = new ServerSocket(PORT);
             ExecutorService executor = Executors.newCachedThreadPool();
             while (true) {
-                Socket s = server.accept();
-                executor.submit(new Handler(s));
+                Socket socket = server.accept();
+                executor.submit(new Handler(socket));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,19 +27,20 @@ public class EchoServer {
     }
 
     private static class Handler implements Runnable {
-        Socket _s;
 
-        public Handler(Socket s) {
-            _s = s;
+        private final Socket socket;
+
+        Handler(Socket s) {
+            socket = s;
         }
 
         @Override
         public void run() {
             try {
-                InputStream in = _s.getInputStream();
-                OutputStream out = _s.getOutputStream();
+                InputStream in = socket.getInputStream();
+                OutputStream out = socket.getOutputStream();
                 int read = 0;
-                byte[] buf = new byte[BUFFER_SZ];
+                byte[] buf = new byte[BUFFER_SIZE];
                 while ((read = in.read(buf)) != -1) {
                     out.write(buf, 0, read);
                 }
@@ -46,7 +48,7 @@ public class EchoServer {
                 e.printStackTrace();
             } finally {
                 try {
-                    _s.close();
+                    socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
