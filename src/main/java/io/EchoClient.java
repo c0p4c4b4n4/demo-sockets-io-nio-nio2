@@ -15,18 +15,18 @@ public class EchoClient {
 
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket("localhost", 9999);
-        String message = "hello";
+        String msg = "hello";
 
         OutputStream os = socket.getOutputStream();
         OutputStreamWriter osw = new OutputStreamWriter(os);
         PrintWriter pw = new PrintWriter(osw);
-        pw.println(message);
-        System.out.println("sent: " + message);
+        pw.println(msg);
+        System.out.println("client sent: " + msg);
         pw.flush();
 
         InputStream is = socket.getInputStream();
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
-        System.out.println("received: " + br.readLine());
+        System.out.println("client received: " + br.readLine());
     }
 }
