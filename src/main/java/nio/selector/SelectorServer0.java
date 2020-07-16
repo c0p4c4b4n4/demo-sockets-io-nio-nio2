@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SelectorServer2 {
+public class SelectorServer0 {
 
     private static final int DEFAULT_PORT = 9999;
 

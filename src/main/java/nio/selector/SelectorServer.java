@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 public class SelectorServer {
 
-    private static final  int DEFAULT_PORT = 9999;
+    private static final int DEFAULT_PORT = 9999;
 
     public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
