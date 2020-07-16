@@ -12,9 +12,9 @@ public class ChannelServer {
         System.out.println("Starting server...");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.socket().bind(new InetSocketAddress(9999));
-        serverSocketChannel.configureBlocking(false);
 
         String msg = "local address: " + serverSocketChannel.socket().getLocalSocketAddress();
         ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
@@ -22,7 +22,6 @@ public class ChannelServer {
         while (true) {
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (socketChannel != null) {
-                System.out.println();
                 System.out.println("received connection from " + socketChannel.socket().getRemoteSocketAddress());
 
                 buffer.rewind();
