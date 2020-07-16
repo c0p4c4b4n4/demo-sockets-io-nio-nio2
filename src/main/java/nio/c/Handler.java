@@ -12,12 +12,13 @@ class Handler {
     private final SocketChannel socketChannel;
     private final SelectionKey selectionKey;
 
-    private ByteBuffer readBuf = ByteBuffer.allocate(1024);
-    private ByteBuffer writeBuf = ByteBuffer.allocate(1024);
 
     public Handler(Selector selector, SocketChannel socketChannel) throws IOException {
         this.socketChannel = socketChannel;
         this.socketChannel.configureBlocking(false);
+
+        ByteBuffer readBuf = ByteBuffer.allocate(1024);
+         ByteBuffer writeBuf = ByteBuffer.allocate(1024);
 
         // Register socketChannel with _selector listening on OP_READ events.
         // Callback: Handler, selected when the connection is established and ready for READ
