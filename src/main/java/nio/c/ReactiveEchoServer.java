@@ -10,29 +10,6 @@ import java.util.Iterator;
 
 class ReactiveEchoServer  {
 
-    private static class Acceptor implements Runnable {
-
-        private final ServerSocketChannel serverSocketChannel;
-        private final Selector selector;
-
-         Acceptor(ServerSocketChannel serverSocketChannel, Selector selector) {
-            this.serverSocketChannel = serverSocketChannel;
-            this.selector = selector;
-        }
-
-        @Override
-        public void run() {
-            try {
-                SocketChannel socketChannel = serverSocketChannel.accept();
-                if (socketChannel != null) {
-                    new Handler(selector, socketChannel);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static void main(String[] args) throws IOException{
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
@@ -40,20 +17,19 @@ class ReactiveEchoServer  {
         serverSocketChannel.socket().bind(new InetSocketAddress(9999));
 
         Selector selector = Selector.open();
-        SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-        selectionKey.attach(new Acceptor(serverSocketChannel, selector));
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
             selector.select();
             Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
 
             while (keysIterator.hasNext()) {
-                SelectionKey key = (SelectionKey) keysIterator.next();
+                SelectionKey key = keysIterator.next();
                 keysIterator.remove();
 
-                Runnable runnable = (Runnable) key.attachment();
-                if (runnable != null) {
-                    runnable.run();
+                SocketChannel socketChannel = serverSocketChannel.accept();
+                if (socketChannel != null) {
+                    new Handler(selector, socketChannel);
                 }
             }
         }
