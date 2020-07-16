@@ -1,4 +1,4 @@
-package nio.c;
+package nio.selector_echo_2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
