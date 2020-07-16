@@ -65,8 +65,6 @@ public class MultiPortEchoServer {
                     // Read the data
                     SocketChannel sc = (SocketChannel) key.channel();
 
-                    // Echo data
-                    int bytesEchoed = 0;
                     while (true) {
                         echoBuffer.clear();
 
@@ -79,14 +77,10 @@ public class MultiPortEchoServer {
                         echoBuffer.flip();
 
                         sc.write(echoBuffer);
-                        bytesEchoed += r;
                     }
-
-                    System.out.println("Echoed " + bytesEchoed + " from " + sc);
 
                     it.remove();
                 }
-
             }
 
             //selectedKeys.clear();
