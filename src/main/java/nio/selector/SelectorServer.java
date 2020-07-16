@@ -22,22 +22,22 @@ public class SelectorServer {
         System.out.println("Server starting ... listening on port " + port);
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
 
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(port));
-        serverSocketChannel.configureBlocking(false);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-            int n = selector.select();
-            if (n == 0)
+            int readyChannelsNumber = selector.select();
+            if (readyChannelsNumber == 0)
                 continue;
 
-            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
-            while (it.hasNext()) {
-                SelectionKey key = (SelectionKey) it.next();
+            Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
+            while (keysIterator.hasNext()) {
+                SelectionKey key = (SelectionKey) keysIterator.next();
                 if (key.isAcceptable()) {
                     SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
                     if (socketChannel == null)
@@ -56,7 +56,7 @@ public class SelectorServer {
 
                     socketChannel.close();
                 }
-                it.remove();
+                keysIterator.remove();
             }
         }
     }
