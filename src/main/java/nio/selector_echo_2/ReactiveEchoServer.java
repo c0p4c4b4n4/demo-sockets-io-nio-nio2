@@ -37,8 +37,6 @@ class ReactiveEchoServer {
                     // Register socketChannel with _selector listening on OP_READ events.
                     // Callback: Handler, selected when the connection is established and ready for READ
                     SelectionKey selectionKey = socketChannel.register(selector, SelectionKey.OP_READ);
-//                    selectionKey.attach(this);
-                    //selector.wakeup(); // let blocking select() return
 
                     while (true) {
                         if (selectionKey.isReadable()) {
@@ -50,20 +48,18 @@ class ReactiveEchoServer {
                                 socketChannel.close();
                                 System.out.println("read(): client connection might have been dropped!");
                             } else {
-
-                                // Set the key's interest to WRITE operation
                                 readBuf.flip();
                                 byte[] bytes = new byte[readBuf.remaining()];
                                 readBuf.get(bytes, 0, bytes.length);
                                 System.out.print("process(): " + new String(bytes, Charset.forName("ISO-8859-1")));
                                 writeBuf = ByteBuffer.wrap(bytes);
+
+                                // Set the key's interest to WRITE operation
                                 selectionKey.interestOps(SelectionKey.OP_WRITE);
                                 selectionKey.selector().wakeup();
                             }
                         } else if (selectionKey.isWritable()) {
-                            int numBytes = 0;
-
-                            numBytes = socketChannel.write(writeBuf);
+                            int numBytes = socketChannel.write(writeBuf);
                             System.out.println("write(): #bytes read from 'writeBuf' buffer = " + numBytes);
 
                             if (numBytes > 0) {
