@@ -1,4 +1,4 @@
-package ttt;
+package ttt.nio;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -1,4 +1,4 @@
-package ttt;
+package ttt.nio;
 
 import java.io.File;
 import java.io.IOException;

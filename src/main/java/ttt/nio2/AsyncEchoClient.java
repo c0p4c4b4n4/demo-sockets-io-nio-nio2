@@ -1,7 +1,4 @@
-package ttt;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package ttt.nio2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class AsyncEchoClient {
-    private static final Logger LOG = LoggerFactory.getLogger(AsyncEchoClient.class);
 
     private AsynchronousSocketChannel client;
     private Future<Void> future;
@@ -80,11 +76,11 @@ public class AsyncEchoClient {
         client.start();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String line;
-        LOG.debug("Message to server:");
+        System.out.println("Message to server:");
         while ((line = br.readLine()) != null) {
             String response = client.sendMessage(line);
-            LOG.debug("response from server: " + response);
-            LOG.debug("Message to server:");
+            System.out.println("response from server: " + response);
+            System.out.println("Message to server:");
         }
     }
 
