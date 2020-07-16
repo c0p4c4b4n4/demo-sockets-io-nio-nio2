@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,22 +30,18 @@ package oracle.nio.server;/*
  */
 
 /**
- * A non-blocking/dual-threaded which performs accept()s in one thread,
- * and services requests in a second.  Both threads use select().
+ * An Sendable interface extension that adds additional
+ * methods for additional information, such as Files
+ * or Strings.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-public class N2 extends Server {
+interface Content extends Sendable {
 
-    N2(int port, int backlog, boolean secure) throws Exception {
-        super(port, backlog, secure);
-    }
+    String type();
 
-    void runServer() throws Exception {
-        Dispatcher d = new DispatcherN();
-        Acceptor a = new Acceptor(ssc, d, sslContext);
-        new Thread(a).start();
-        d.run();
-    }
+    // Returns -1 until prepare() invoked
+    long length();
+
 }

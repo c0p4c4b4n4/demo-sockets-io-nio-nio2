@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,44 +29,23 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-
 /**
- * A simple example to illustrate using a URL to access a resource
- * and then store the result to a File.
- * <P>
- * Any type of URL can be used:  http, https, ftp, etc.
+ * A non-blocking/dual-threaded which performs accept()s in one thread,
+ * and services requests in a second.  Both threads use select().
  *
- * @author Brad R. Wetmore
  * @author Mark Reinhold
+ * @author Brad R. Wetmore
  */
-public class URLDumper {
-    public static void main(String[] args) throws Exception {
+public class N2 extends Server {
 
-        if (args.length != 2) {
-            System.out.println("Usage:  URLDumper <URL> <file>");
-            System.exit(1);
-        }
+    N2(int port, int backlog, boolean secure) throws Exception {
+        super(port, backlog, secure);
+    }
 
-        String location = args[0];
-        String file = args[1];
-
-        URL url = new URL(location);
-        FileOutputStream fos = new FileOutputStream(file);
-
-        byte [] bytes = new byte [4096];
-
-        InputStream is = url.openStream();
-
-        int read;
-
-        while ((read = is.read(bytes)) != -1) {
-            fos.write(bytes, 0, read);
-        }
-
-        is.close();
-        fos.close();
+    void runServer() throws Exception {
+        Dispatcher d = new DispatcherN();
+        Acceptor a = new Acceptor(ssc, d, sslContext);
+        new Thread(a).start();
+        d.run();
     }
 }

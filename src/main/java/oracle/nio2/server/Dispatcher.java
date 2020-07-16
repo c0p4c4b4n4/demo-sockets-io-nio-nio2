@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,72 +30,19 @@ package oracle.nio.server;/*
  */
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
+import java.nio.channels.SelectableChannel;
 
 /**
- * A Content type that provides for transferring Strings.
+ * Base class for the Dispatchers.
+ * <P>
+ * Servers use these to obtain ready status, and then to dispatch jobs.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-class StringContent implements Content {
+interface Dispatcher extends Runnable {
 
-    private static Charset ascii = Charset.forName("US-ASCII");
+    void register(SelectableChannel ch, int ops, Handler h)
+        throws IOException;
 
-    private String type;                // MIME type
-    private String content;
-
-    StringContent(CharSequence c, String t) {
-        content = c.toString();
-        if (!content.endsWith("\n"))
-            content += "\n";
-        type = t + "; charset=iso-8859-1";
-    }
-
-    StringContent(CharSequence c) {
-        this(c, "text/plain");
-    }
-
-    StringContent(Exception x) {
-        StringWriter sw = new StringWriter();
-        x.printStackTrace(new PrintWriter(sw));
-        type = "text/plain; charset=iso-8859-1";
-        content = sw.toString();
-    }
-
-    public String type() {
-        return type;
-    }
-
-    private ByteBuffer bb = null;
-
-    private void encode() {
-        if (bb == null)
-            bb = ascii.encode(CharBuffer.wrap(content));
-    }
-
-    public long length() {
-        encode();
-        return bb.remaining();
-    }
-
-    public void prepare() {
-        encode();
-        bb.rewind();
-    }
-
-    public boolean send(ChannelIO cio) throws IOException {
-        if (bb == null)
-            throw new IllegalStateException();
-        cio.write(bb);
-
-        return bb.hasRemaining();
-    }
-
-    public void release() throws IOException {
-    }
 }

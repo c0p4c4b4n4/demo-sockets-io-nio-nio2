@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,52 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.Iterator;
+
 /**
- * An Sendable interface extension that adds additional
- * methods for additional information, such as Files
- * or Strings.
+ * A single-threaded dispatcher.
+ * <P>
+ * When a SelectionKey is ready, it dispatches the job in this
+ * thread.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-interface Content extends Sendable {
+class Dispatcher1 implements Dispatcher {
 
-    String type();
+    private Selector sel;
 
-    // Returns -1 until prepare() invoked
-    long length();
+    Dispatcher1() throws IOException {
+        sel = Selector.open();
+    }
 
+    // Doesn't really need to be runnable
+    public void run() {
+        for (;;) {
+            try {
+                dispatch();
+            } catch (IOException x) {
+                x.printStackTrace();
+            }
+        }
+    }
+
+    private void dispatch() throws IOException {
+        sel.select();
+        for (Iterator i = sel.selectedKeys().iterator(); i.hasNext(); ) {
+            SelectionKey sk = (SelectionKey)i.next();
+            i.remove();
+            Handler h = (Handler)sk.attachment();
+            h.handle(sk);
+        }
+    }
+
+    public void register(SelectableChannel ch, int ops, Handler h)
+            throws IOException {
+        ch.register(sel, ops, h);
+    }
 }

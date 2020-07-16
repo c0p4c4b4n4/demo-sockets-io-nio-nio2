@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,24 +29,51 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 /**
- * Method definitions used for preparing, sending, and release
- * content.
+ * A Runnable class which sits in a loop accepting SocketChannels,
+ * then registers the Channels with the read/write Selector.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-interface Sendable {
+class Acceptor implements Runnable {
 
-    void prepare() throws IOException;
+    private ServerSocketChannel ssc;
+    private Dispatcher d;
 
-    // Sends (some) content to the given channel.
-    // Returns true if more bytes remain to be written.
-    // Throws IllegalStateException if not prepared.
-    //
-    boolean send(ChannelIO cio) throws IOException;
+    private SSLContext sslContext;
 
-    void release() throws IOException;
+    Acceptor(ServerSocketChannel ssc, Dispatcher d, SSLContext sslContext) {
+        this.ssc = ssc;
+        this.d = d;
+        this.sslContext = sslContext;
+    }
+
+    public void run() {
+        for (;;) {
+            try {
+                SocketChannel sc = ssc.accept();
+
+                ChannelIO cio = (sslContext != null ?
+                    ChannelIOSecure.getInstance(
+                        sc, false /* non-blocking */, sslContext) :
+                    ChannelIO.getInstance(
+                        sc, false /* non-blocking */));
+
+                RequestHandler rh = new RequestHandler(cio);
+
+                d.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
+
+            } catch (IOException x) {
+                x.printStackTrace();
+                break;
+            }
+        }
+    }
 }

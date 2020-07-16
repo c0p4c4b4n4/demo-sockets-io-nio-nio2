@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,58 +29,50 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.util.Iterator;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 /**
- * A Multi-threaded dispatcher.
- * <P>
- * In this example, one thread does accepts, and the second
- * does read/writes.
+ * A single threaded Handler that performs accepts SocketChannels and
+ * registers the Channels with the read/write Selector.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-class DispatcherN implements Dispatcher {
+class AcceptHandler implements Handler {
 
-    private Selector sel;
+    private ServerSocketChannel channel;
+    private Dispatcher dsp;
 
-    DispatcherN() throws IOException {
-        sel = Selector.open();
+    private SSLContext sslContext;
+
+    AcceptHandler(ServerSocketChannel ssc, Dispatcher dsp,
+            SSLContext sslContext) {
+        channel = ssc;
+        this.dsp = dsp;
+        this.sslContext = sslContext;
     }
 
-    public void run() {
-        for (;;) {
-            try {
-                dispatch();
-            } catch (IOException x) {
-                x.printStackTrace();
-            }
+    public void handle(SelectionKey sk) throws IOException {
+
+        if (!sk.isAcceptable())
+            return;
+
+        SocketChannel sc = channel.accept();
+        if (sc == null) {
+            return;
         }
+
+        ChannelIO cio = (sslContext != null ?
+            ChannelIOSecure.getInstance(
+                sc, false /* non-blocking */, sslContext) :
+            ChannelIO.getInstance(
+                sc, false /* non-blocking */));
+
+        RequestHandler rh = new RequestHandler(cio);
+        dsp.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
     }
-
-    private Object gate = new Object();
-
-    private void dispatch() throws IOException {
-        sel.select();
-        for (Iterator i = sel.selectedKeys().iterator(); i.hasNext(); ) {
-            SelectionKey sk = (SelectionKey)i.next();
-            i.remove();
-            Handler h = (Handler)sk.attachment();
-            h.handle(sk);
-        }
-        synchronized (gate) { }
-    }
-
-    public void register(SelectableChannel ch, int ops, Handler h)
-            throws IOException {
-        synchronized (gate) {
-            sel.wakeup();
-            ch.register(sel, ops, h);
-        }
-    }
-
 }

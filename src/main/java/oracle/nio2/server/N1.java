@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,27 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
 
 /**
- * Base class for the Dispatchers.
- * <P>
- * Servers use these to obtain ready status, and then to dispatch jobs.
+ * A non-blocking/single-threaded server.  All accept() and
+ * read()/write() operations are performed by a single thread, but only
+ * after being selected for those operations by a Selector.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-interface Dispatcher extends Runnable {
+public class N1 extends Server {
 
-    void register(SelectableChannel ch, int ops, Handler h)
-        throws IOException;
+    N1(int port, int backlog, boolean secure) throws Exception {
+        super(port, backlog, secure);
+        ssc.configureBlocking(false);
+    }
 
+    void runServer() throws Exception {
+        Dispatcher d = new Dispatcher1();
+        d.register(ssc, SelectionKey.OP_ACCEPT,
+                   new AcceptHandler(ssc, d, sslContext));
+        d.run();
+    }
 }

@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,21 +29,24 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.io.IOException;
+
 /**
- * Exception class used when a request can't be properly parsed.
+ * Method definitions used for preparing, sending, and release
+ * content.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-class MalformedRequestException extends Exception {
+interface Sendable {
 
-    MalformedRequestException() { }
+    void prepare() throws IOException;
 
-    MalformedRequestException(String msg) {
-        super(msg);
-    }
+    // Sends (some) content to the given channel.
+    // Returns true if more bytes remain to be written.
+    // Throws IllegalStateException if not prepared.
+    //
+    boolean send(ChannelIO cio) throws IOException;
 
-    MalformedRequestException(Exception x) {
-        super(x);
-    }
+    void release() throws IOException;
 }

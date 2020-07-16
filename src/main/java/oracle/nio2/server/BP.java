@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,51 +29,42 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
- * A Runnable class which sits in a loop accepting SocketChannels,
- * then registers the Channels with the read/write Selector.
+ * A multi-threaded server which creates a pool of threads for use
+ * by the server.  The Thread pool decides how to schedule those threads.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-class Acceptor implements Runnable {
+public class BP extends Server {
 
-    private ServerSocketChannel ssc;
-    private Dispatcher d;
+    private static final int POOL_MULTIPLE = 4;
 
-    private SSLContext sslContext;
-
-    Acceptor(ServerSocketChannel ssc, Dispatcher d, SSLContext sslContext) {
-        this.ssc = ssc;
-        this.d = d;
-        this.sslContext = sslContext;
+    BP(int port, int backlog, boolean secure) throws Exception {
+        super(port, backlog, secure);
     }
 
-    public void run() {
+    void runServer() throws Exception {
+
+        ExecutorService xec = Executors.newFixedThreadPool(
+            Runtime.getRuntime().availableProcessors() * POOL_MULTIPLE);
+
         for (;;) {
-            try {
-                SocketChannel sc = ssc.accept();
 
-                ChannelIO cio = (sslContext != null ?
-                    ChannelIOSecure.getInstance(
-                        sc, false /* non-blocking */, sslContext) :
-                    ChannelIO.getInstance(
-                        sc, false /* non-blocking */));
+            SocketChannel sc = ssc.accept();
 
-                RequestHandler rh = new RequestHandler(cio);
+            ChannelIO cio = (sslContext != null ?
+                ChannelIOSecure.getInstance(
+                    sc, true /* blocking */, sslContext) :
+                ChannelIO.getInstance(
+                    sc, true /* blocking */));
 
-                d.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
-
-            } catch (IOException x) {
-                x.printStackTrace();
-                break;
-            }
+            RequestServicer svc = new RequestServicer(cio);
+            xec.execute(svc);
         }
     }
 }

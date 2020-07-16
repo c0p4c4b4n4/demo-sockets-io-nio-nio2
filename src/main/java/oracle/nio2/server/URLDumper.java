@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,44 @@ package oracle.nio.server;/*
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.IOException;
-import java.nio.channels.SelectionKey;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
- * Base class for the Handlers.
+ * A simple example to illustrate using a URL to access a resource
+ * and then store the result to a File.
+ * <P>
+ * Any type of URL can be used:  http, https, ftp, etc.
  *
- * @author Mark Reinhold
  * @author Brad R. Wetmore
+ * @author Mark Reinhold
  */
-interface Handler {
+public class URLDumper {
+    public static void main(String[] args) throws Exception {
 
-    void handle(SelectionKey sk) throws IOException;
+        if (args.length != 2) {
+            System.out.println("Usage:  URLDumper <URL> <file>");
+            System.exit(1);
+        }
 
+        String location = args[0];
+        String file = args[1];
+
+        URL url = new URL(location);
+        FileOutputStream fos = new FileOutputStream(file);
+
+        byte [] bytes = new byte [4096];
+
+        InputStream is = url.openStream();
+
+        int read;
+
+        while ((read = is.read(bytes)) != -1) {
+            fos.write(bytes, 0, read);
+        }
+
+        is.close();
+        fos.close();
+    }
 }

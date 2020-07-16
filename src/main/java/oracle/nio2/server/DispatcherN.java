@@ -1,4 +1,4 @@
-package oracle.nio.server;/*
+package oracle.nio2.server;/*
  * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,23 +36,22 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 
 /**
- * A single-threaded dispatcher.
+ * A Multi-threaded dispatcher.
  * <P>
- * When a SelectionKey is ready, it dispatches the job in this
- * thread.
+ * In this example, one thread does accepts, and the second
+ * does read/writes.
  *
  * @author Mark Reinhold
  * @author Brad R. Wetmore
  */
-class Dispatcher1 implements Dispatcher {
+class DispatcherN implements Dispatcher {
 
     private Selector sel;
 
-    Dispatcher1() throws IOException {
+    DispatcherN() throws IOException {
         sel = Selector.open();
     }
 
-    // Doesn't really need to be runnable
     public void run() {
         for (;;) {
             try {
@@ -63,6 +62,8 @@ class Dispatcher1 implements Dispatcher {
         }
     }
 
+    private Object gate = new Object();
+
     private void dispatch() throws IOException {
         sel.select();
         for (Iterator i = sel.selectedKeys().iterator(); i.hasNext(); ) {
@@ -71,10 +72,15 @@ class Dispatcher1 implements Dispatcher {
             Handler h = (Handler)sk.attachment();
             h.handle(sk);
         }
+        synchronized (gate) { }
     }
 
     public void register(SelectableChannel ch, int ops, Handler h)
             throws IOException {
-        ch.register(sel, ops, h);
+        synchronized (gate) {
+            sel.wakeup();
+            ch.register(sel, ops, h);
+        }
     }
+
 }
