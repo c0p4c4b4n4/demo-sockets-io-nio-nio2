@@ -1,4 +1,4 @@
-package ttt.nio;
+package nio.selector_echo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
