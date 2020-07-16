@@ -3,16 +3,16 @@ package nio.selector;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.Set;
 
 public class SelectorServer2 {
 
-    private static final  int DEFAULT_PORT = 9999;
+    private static final int DEFAULT_PORT = 9999;
 
     public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
@@ -31,32 +31,35 @@ public class SelectorServer2 {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-            int readyChannelsNumber = selector.select();
-            if (readyChannelsNumber == 0)
-                continue;
+            int numReadyChannels = selector.select();
+            if (numReadyChannels == 0)
+                continue; // there are no ready channels to process
 
-            Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
-            while (keysIterator.hasNext()) {
-                SelectionKey key = (SelectionKey) keysIterator.next();
+            Set<SelectionKey> selectedKeys = selector.selectedKeys();
+            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+
+            while (keyIterator.hasNext()) {
+                SelectionKey key = keyIterator.next();
                 if (key.isAcceptable()) {
-                    SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();
-                    if (socketChannel == null)
+                    // A connection was accepted by a ServerSocketChannel.
+                    ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                    SocketChannel client = server.accept();
+                    if (client == null) // in case accept() returns null
                         continue;
 
-                    System.out.println("Receiving connection");
-
-                    ByteBuffer bb = ByteBuffer.allocateDirect(8);
-                    bb.clear();
-                    bb.putLong(System.currentTimeMillis());
-                    bb.flip();
-
-                    System.out.println("Writing current time");
-                    while (bb.hasRemaining())
-                        socketChannel.write(bb);
-
-                    socketChannel.close();
+                    client.configureBlocking(false); // must be nonblocking
+                    // Register socket channel with selector for read operations.
+                    client.register(selector, SelectionKey.OP_READ);
+                } else if (key.isReadable()) {
+                    // A socket channel is ready for reading.
+                    SocketChannel client = (SocketChannel) key.channel();
+                    // Perform work on the socket channel.
+                } else if (key.isWritable()) {
+                    // A socket channel is ready for writing.
+                    SocketChannel client = (SocketChannel) key.channel();
+                    // Perform work on the socket channel.
                 }
-                keysIterator.remove();
+                keyIterator.remove();
             }
         }
     }
