@@ -2,10 +2,10 @@ package nio.c;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.channels.Selector;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 class Handler implements Runnable {
     private final SocketChannel _socketChannel;
@@ -64,11 +64,7 @@ class Handler implements Runnable {
                 _socketChannel.close();
                 System.out.println("read(): client connection might have been dropped!");
             } else {
-                ReactiveEchoServer.getWorkerPool().execute(new Runnable() {
-                    public void run() {
-                        process();
-                    }
-                });
+                process();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
