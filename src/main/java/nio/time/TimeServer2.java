@@ -17,7 +17,7 @@ import java.util.Set;
  * the I/O (NIO) facilities added to Java SE 1.4.
  */
 
-public class NBTimeServer {
+public class TimeServer2 {
 
     public static void main(String[] args) throws IOException {
         // Selector for incoming time requests
