@@ -1,5 +1,6 @@
+package oracle.nio;
+
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -36,8 +37,7 @@ public class TimeServer {
     //
     private static ServerSocketChannel setup() throws IOException {
   ServerSocketChannel ssc = ServerSocketChannel.open();
-  InetSocketAddress isa
-      = new InetSocketAddress(InetAddress.getLocalHost(), port);
+  InetSocketAddress isa = new InetSocketAddress("localhost", 8013);
   ssc.socket().bind(isa);
   return ssc;
     }
