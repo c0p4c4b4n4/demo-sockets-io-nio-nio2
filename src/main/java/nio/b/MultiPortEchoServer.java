@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class MultiPortEchoServer {
-    private static final ByteBuffer echoBuffer = ByteBuffer.allocate(1024);
+    private static final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
 
     static public void main(String[] args) throws Exception {
@@ -66,17 +66,14 @@ public class MultiPortEchoServer {
                     SocketChannel sc = (SocketChannel) key.channel();
 
                     while (true) {
-                        echoBuffer.clear();
-
-                        int r = sc.read(echoBuffer);
-
-                        if (r <= 0) {
+                        buffer.clear();
+                        int n = sc.read(buffer);
+                        if (n <= 0) {
                             break;
                         }
+                        buffer.flip();
 
-                        echoBuffer.flip();
-
-                        sc.write(echoBuffer);
+                        sc.write(buffer);
                     }
 
                     it.remove();
