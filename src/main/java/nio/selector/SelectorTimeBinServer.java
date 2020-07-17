@@ -10,7 +10,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-public class SelectorServer {
+public class SelectorTimeBinServer {
 
     private static final int DEFAULT_PORT = 9999;
 

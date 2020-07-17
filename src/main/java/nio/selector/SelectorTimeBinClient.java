@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 
-public class SelectorClient {
+public class SelectorTimeBinClient {
     private static final int DEFAULT_PORT = 9999;
 
     public static void main(String[] args) throws IOException {

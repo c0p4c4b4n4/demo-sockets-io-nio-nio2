@@ -19,7 +19,7 @@ public class TimeClient {
     private static final Charset charset = StandardCharsets.UTF_8;
     private static final CharsetDecoder decoder = charset.newDecoder();
 
-    private static ByteBuffer dbuf = ByteBuffer.allocateDirect(1024);
+    private static final ByteBuffer dbuf = ByteBuffer.allocateDirect(1024);
 
     public static void main(String[] args) throws IOException {
         SocketChannel sc = null;
