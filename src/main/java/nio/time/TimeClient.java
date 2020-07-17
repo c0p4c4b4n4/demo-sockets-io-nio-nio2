@@ -8,6 +8,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 
 /* Ask a list of hosts what time it is.  Demonstrates NIO socket channels
  * (connection and reading), buffer handling, charsets, and regular
@@ -15,8 +16,8 @@ import java.nio.charset.CharsetDecoder;
  */
 public class TimeClient {
 
-    private static Charset charset = Charset.forName("US-ASCII");
-    private static CharsetDecoder decoder = charset.newDecoder();
+    private static final Charset charset = StandardCharsets.UTF_8;
+    private static final CharsetDecoder decoder = charset.newDecoder();
 
     private static ByteBuffer dbuf = ByteBuffer.allocateDirect(1024);
 

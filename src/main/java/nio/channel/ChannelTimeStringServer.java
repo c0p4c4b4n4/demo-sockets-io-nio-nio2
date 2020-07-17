@@ -17,24 +17,24 @@ public class ChannelTimeStringServer {
 
         serverSocketChannel.socket().bind(new InetSocketAddress(9999));
 
-        String msg = LocalDateTime.now().toString();
-        ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
-
         while (true) {
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (socketChannel != null) {
                 System.out.println("received connection from " + socketChannel.socket().getRemoteSocketAddress());
 
+                String msg = LocalDateTime.now().toString();
+                ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
                 buffer.rewind();
 
                 socketChannel.write(buffer);
                 socketChannel.close();
-            } else
+            } else {
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException ie) {
-                    System.err.println(ie);
+                } catch (InterruptedException e) {
+                    System.err.println(e);
                 }
+            }
         }
     }
 }
