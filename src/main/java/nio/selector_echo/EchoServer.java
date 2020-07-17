@@ -19,7 +19,7 @@ public class EchoServer {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 5454));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 9999));
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);

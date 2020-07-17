@@ -8,7 +8,7 @@ import java.nio.channels.SocketChannel;
 public class EchoClient {
 
     public static void main(String[] args) throws IOException {
-        SocketChannel client = SocketChannel.open(new InetSocketAddress("localhost", 5454));
+        SocketChannel client = SocketChannel.open(new InetSocketAddress("localhost", 9999));
 
         String msg = "hello";
 
