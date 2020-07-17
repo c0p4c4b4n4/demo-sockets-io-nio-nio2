@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class ChannelClient {
+public class ChannelTimeStringClient {
 
     public static void main(String[] args) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();

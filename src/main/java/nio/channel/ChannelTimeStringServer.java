@@ -5,8 +5,9 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.time.LocalDateTime;
 
-public class ChannelServer {
+public class ChannelTimeStringServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");
@@ -16,7 +17,7 @@ public class ChannelServer {
 
         serverSocketChannel.socket().bind(new InetSocketAddress(9999));
 
-        String msg = "local address: " + serverSocketChannel.socket().getLocalSocketAddress();
+        String msg = LocalDateTime.now().toString();
         ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
 
         while (true) {
