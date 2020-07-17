@@ -1,4 +1,4 @@
-package nio.selector_echo_2;
+package nio.selector_echo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
-class EchoServer {
+class EchoServer2 {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
