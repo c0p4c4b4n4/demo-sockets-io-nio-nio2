@@ -11,14 +11,14 @@ public class EchoClient {
         String msg = "hello";
 
         OutputStream os = socket.getOutputStream();
-        OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.US_ASCII);
+        OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         PrintWriter pw = new PrintWriter(osw);
         pw.println(msg);
         System.out.println("client sent: " + msg);
         pw.flush();
 
         InputStream is = socket.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is, StandardCharsets.US_ASCII);
+        InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
         System.out.println("client received: " + br.readLine());
     }
