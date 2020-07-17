@@ -6,7 +6,6 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -16,31 +15,24 @@ import java.nio.charset.StandardCharsets;
  */
 public class TimeClient {
 
-    private static final Charset charset = StandardCharsets.UTF_8;
-    private static final CharsetDecoder decoder = charset.newDecoder();
+    private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
-    private static final ByteBuffer dbuf = ByteBuffer.allocateDirect(1024);
+    private static final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
     public static void main(String[] args) throws IOException {
-        SocketChannel sc = null;
+        SocketChannel socketChannel = SocketChannel.open();
+        socketChannel.connect(new InetSocketAddress(InetAddress.getByName("localhost"), 8013));
 
-        try {
-            sc = SocketChannel.open();
-            sc.connect(new InetSocketAddress(InetAddress.getByName("localhost"), 8013));
+        // For simplicity we assume
+        // that the time comes back to us in a single packet, so that we
+        // only need to read once.
+        buffer.clear();
+        socketChannel.read(buffer);
 
-            // Read the time from the remote host.  For simplicity we assume
-            // that the time comes back to us in a single packet, so that we
-            // only need to read once.
-            dbuf.clear();
-            sc.read(dbuf);
+        buffer.flip();
+        CharBuffer cb = decoder.decode(buffer);
 
-            // Print the remote address and the received time
-            dbuf.flip();
-            CharBuffer cb = decoder.decode(dbuf);
-            System.out.print(" : " + cb);
-        } finally {
-            if (sc != null)
-                sc.close();
-        }
+        System.out.print("client received: " + cb);
+        socketChannel.close();
     }
 }
