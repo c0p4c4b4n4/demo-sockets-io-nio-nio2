@@ -85,15 +85,4 @@ public class AsyncEchoServer2 {
     public static void main(String[] args) {
         new AsyncEchoServer2();
     }
-
-    public static Process start() throws IOException, InterruptedException {
-        String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
-        String classpath = System.getProperty("java.class.path");
-        String className = AsyncEchoServer2.class.getCanonicalName();
-
-        ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, className);
-
-        return builder.start();
-    }
 }

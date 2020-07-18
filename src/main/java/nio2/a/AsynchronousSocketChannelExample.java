@@ -1,6 +1,7 @@
 package nio2.a;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -19,12 +20,12 @@ public class AsynchronousSocketChannelExample {
     public AsynchronousSocketChannelExample() throws IOException, InterruptedException, ExecutionException {
         // open a server channel and bind to a free address, then accept a connection
         System.out.println("Open server channel");
-        AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open().bind(null);
+        AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress("localhost", 9900));
         System.out.println("Initiate accept");
         Future<AsynchronousSocketChannel> future = server.accept();
         
         // create a client
-        Client client = new Client(server.getLocalAddress());
+        Client client = new Client(new InetSocketAddress("localhost", 9900));
         
         // wait for the accept to finish
         AsynchronousSocketChannel worker = future.get();
