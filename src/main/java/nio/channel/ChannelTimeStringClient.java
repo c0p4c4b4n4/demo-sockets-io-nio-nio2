@@ -25,6 +25,7 @@ public class ChannelTimeStringClient {
 
             buffer.clear();
         }
+
         socketChannel.close();
     }
 }

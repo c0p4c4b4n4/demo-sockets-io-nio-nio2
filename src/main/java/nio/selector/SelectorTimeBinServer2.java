@@ -33,13 +33,13 @@ public class SelectorTimeBinServer2 {
         while (true) {
             int numReadyChannels = selector.select();
             if (numReadyChannels == 0)
-                continue; // there are no ready channels to process
+                continue;
 
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+            Iterator<SelectionKey> keysIterator = selectedKeys.iterator();
 
-            while (keyIterator.hasNext()) {
-                SelectionKey key = keyIterator.next();
+            while (keysIterator.hasNext()) {
+                SelectionKey key = keysIterator.next();
                 if (key.isAcceptable()) {
                     // A connection was accepted by a ServerSocketChannel.
                     ServerSocketChannel server = (ServerSocketChannel) key.channel();
@@ -59,7 +59,7 @@ public class SelectorTimeBinServer2 {
                     SocketChannel client = (SocketChannel) key.channel();
                     // Perform work on the socket channel.
                 }
-                keyIterator.remove();
+                keysIterator.remove();
             }
         }
     }

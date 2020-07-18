@@ -17,17 +17,18 @@ public class SelectorTimeBinClient {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.connect(new InetSocketAddress("localhost", port));
 
-        ByteBuffer bb = ByteBuffer.allocateDirect(8);
-
         long time = 0;
-        while (socketChannel.read(bb) != -1) {
-            bb.flip();
-            while (bb.hasRemaining()) {
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+        while (socketChannel.read(buffer) != -1) {
+            buffer.flip();
+            while (buffer.hasRemaining()) {
                 time <<= 8;
-                time |= bb.get() & 255;
+                time |= buffer.get() & 255;
             }
-            bb.clear();
+            buffer.clear();
         }
+
         System.out.println(new Date(time));
 
         socketChannel.close();
