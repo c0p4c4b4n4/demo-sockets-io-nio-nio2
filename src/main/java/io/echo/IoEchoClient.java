@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class EchoClient {
+public class IoEchoClient {
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo client started");

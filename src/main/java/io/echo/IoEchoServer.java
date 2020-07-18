@@ -5,14 +5,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class EchoServer {
+public class IoEchoServer {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(9001);
         System.out.println("echo server started: " + serverSocket);
 
-        while (true) {
+        int i = 0;
+        while (i++ < 3) {
             Socket socket = serverSocket.accept();
+            System.out.println("incoming connection: " + socket);
             try {
                 InputStream is = socket.getInputStream();
                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -30,5 +32,8 @@ public class EchoServer {
                 socket.close();
             }
         }
+
+        System.out.println("echo server finished");
+        serverSocket.close();
     }
 }
