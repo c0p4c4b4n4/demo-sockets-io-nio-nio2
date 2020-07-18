@@ -20,7 +20,7 @@ public class EchoServer3 {
         ServerSocketChannel ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false);
         ServerSocket ss = ssc.socket();
-        InetSocketAddress address = new InetSocketAddress("localhost", 9999);
+        InetSocketAddress address = new InetSocketAddress("localhost", 9001);
         ss.bind(address);
 
         SelectionKey key0 = ssc.register(selector, SelectionKey.OP_ACCEPT);

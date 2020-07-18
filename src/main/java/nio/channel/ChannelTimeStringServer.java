@@ -15,7 +15,7 @@ public class ChannelTimeStringServer {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+        serverSocketChannel.socket().bind(new InetSocketAddress(9002));
 
         while (true) {
             SocketChannel socketChannel = serverSocketChannel.accept();

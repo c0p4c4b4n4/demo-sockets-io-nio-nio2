@@ -7,8 +7,8 @@ import java.nio.charset.StandardCharsets;
 public class EchoClient {
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 9999);
-        String msg = "hello";
+        Socket socket = new Socket("localhost", 9001);
+        String msg = "abcdefghijklmnopqrstuvwxyz";
 
         OutputStream os = socket.getOutputStream();
         OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);

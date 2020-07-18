@@ -16,7 +16,7 @@ class EchoServer2 {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+        serverSocketChannel.socket().bind(new InetSocketAddress(9001));
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);

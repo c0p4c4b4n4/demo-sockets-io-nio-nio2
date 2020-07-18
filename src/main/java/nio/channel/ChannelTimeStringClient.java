@@ -11,7 +11,7 @@ public class ChannelTimeStringClient {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
 
-        socketChannel.connect(new InetSocketAddress("localhost", 9999));
+        socketChannel.connect(new InetSocketAddress("localhost", 9002));
 
         while (!socketChannel.finishConnect())
             System.out.println("waiting to finish connection");

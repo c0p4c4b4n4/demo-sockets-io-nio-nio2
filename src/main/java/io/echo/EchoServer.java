@@ -10,7 +10,7 @@ public class EchoServer {
     public static void main(String[] args) throws IOException {
         System.out.println("echo server started...");
 
-        ServerSocket serverSocket = new ServerSocket(9999);
+        ServerSocket serverSocket = new ServerSocket(9001);
 
         while (true) {
             Socket socket = serverSocket.accept();

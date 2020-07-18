@@ -8,13 +8,12 @@ import java.nio.channels.SocketChannel;
 public class EchoClient {
 
     public static void main(String[] args) throws IOException {
-        SocketChannel client = SocketChannel.open(new InetSocketAddress("localhost", 9999));
+        SocketChannel client = SocketChannel.open(new InetSocketAddress("localhost", 9001));
 
-        String msg = "hello";
-
+        String msg = "abcdefghijklmnopqrstuvwxyz";
         ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
-
         client.write(buffer);
+
         buffer.clear();
         client.read(buffer);
         String response = new String(buffer.array()).trim();

@@ -12,14 +12,12 @@ import java.util.Set;
 
 public class EchoServer {
 
-    private static final String POISON_PILL = "POISON_PILL";
-
     public static void main(String[] args) throws IOException {
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 9999));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -44,10 +42,8 @@ public class EchoServer {
                 if (key.isReadable()) {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     socketChannel.read(buffer);
-                    if (new String(buffer.array()).trim().equals(POISON_PILL)) {
-                        socketChannel.close();
-                        System.out.println("Not accepting socketChannel messages anymore");
-                    }
+
+//                    System.out.println("server received: " + new String(buffer.array()));
 
                     buffer.flip();
                     socketChannel.write(buffer);
