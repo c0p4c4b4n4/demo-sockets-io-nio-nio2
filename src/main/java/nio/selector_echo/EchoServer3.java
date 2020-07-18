@@ -15,45 +15,29 @@ public class EchoServer3 {
     private static final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
     static public void main(String[] args) throws Exception {
-        if (args.length <= 0) {
-            System.err.println("Usage: java MultiPortEchoServer port [port port ...]");
-            System.exit(1);
-        }
-
-        int[] ports = new int[args.length];
-
-        for (int i = 0; i < args.length; ++i) {
-            ports[i] = Integer.parseInt(args[i]);
-        }
-
-        // Create a new selector
         Selector selector = Selector.open();
 
-        // Open a listener on each port, and register each one with the selector
-        for (int i = 0; i < ports.length; ++i) {
-            ServerSocketChannel ssc = ServerSocketChannel.open();
-            ssc.configureBlocking(false);
-            ServerSocket ss = ssc.socket();
-            InetSocketAddress address = new InetSocketAddress(ports[i]);
-            ss.bind(address);
+        ServerSocketChannel ssc = ServerSocketChannel.open();
+        ssc.configureBlocking(false);
+        ServerSocket ss = ssc.socket();
+        InetSocketAddress address = new InetSocketAddress("localhost", 9999);
+        ss.bind(address);
 
-            SelectionKey key = ssc.register(selector, SelectionKey.OP_ACCEPT);
-            System.out.println("Going to listen on " + ports[i]);
-        }
+        SelectionKey key0 = ssc.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
             int num = selector.select();
 
-            Set selectedKeys = selector.selectedKeys();
-            Iterator it = selectedKeys.iterator();
+            Set<SelectionKey> selectedKeys = selector.selectedKeys();
+            Iterator<SelectionKey> it = selectedKeys.iterator();
 
             while (it.hasNext()) {
                 SelectionKey key = (SelectionKey) it.next();
 
                 if ((key.readyOps() & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
                     // Accept the new connection
-                    ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
-                    SocketChannel sc = ssc.accept();
+                    ServerSocketChannel ssc2 = (ServerSocketChannel) key.channel();
+                    SocketChannel sc = ssc2.accept();
                     sc.configureBlocking(false);
 
                     // Add the new connection to the selector
