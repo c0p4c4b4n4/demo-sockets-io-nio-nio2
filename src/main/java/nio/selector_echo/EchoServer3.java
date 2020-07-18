@@ -1,4 +1,4 @@
-package nio.b;
+package nio.selector_echo;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -10,9 +10,9 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class MultiPortEchoServer {
-    private static final ByteBuffer buffer = ByteBuffer.allocate(1024);
+public class EchoServer3 {
 
+    private static final ByteBuffer buffer = ByteBuffer.allocate(1024);
 
     static public void main(String[] args) throws Exception {
         if (args.length <= 0) {
