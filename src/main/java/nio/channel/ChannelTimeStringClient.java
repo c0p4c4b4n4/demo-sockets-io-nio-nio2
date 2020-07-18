@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class ChannelTimeStringClient {
+
+    private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
     public static void main(String[] args) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();

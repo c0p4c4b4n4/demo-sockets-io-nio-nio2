@@ -7,13 +7,14 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
 
-public class ChannelTimeStringServer {
+public class ChannelTimeNonBlockingServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
+        System.out.println("is blocking: " + serverSocketChannel.isBlocking());
 
         serverSocketChannel.socket().bind(new InetSocketAddress(9002));
 
