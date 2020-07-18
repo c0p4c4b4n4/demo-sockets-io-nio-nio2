@@ -26,7 +26,7 @@ public class EchoServer3 {
         SelectionKey key0 = ssc.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-            int num = selector.select();
+            int num = selector.select(); // returns the number of events that occurred
 
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
             Iterator<SelectionKey> it = selectedKeys.iterator();
@@ -34,7 +34,7 @@ public class EchoServer3 {
             while (it.hasNext()) {
                 SelectionKey key = (SelectionKey) it.next();
 
-                if ((key.readyOps() & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT) {
+                if (key.isAcceptable()) {
                     // Accept the new connection
                     ServerSocketChannel ssc2 = (ServerSocketChannel) key.channel();
                     SocketChannel sc = ssc2.accept();
@@ -45,7 +45,7 @@ public class EchoServer3 {
                     it.remove();
 
                     System.out.println("Got connection from " + sc);
-                } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
+                } else if (key.isReadable()) {
                     // Read the data
                     SocketChannel sc = (SocketChannel) key.channel();
 
