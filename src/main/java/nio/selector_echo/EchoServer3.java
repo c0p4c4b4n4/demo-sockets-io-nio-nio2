@@ -52,11 +52,12 @@ public class EchoServer3 {
                     while (true) {
                         buffer.clear();
                         int n = sc.read(buffer);
+
                         if (n <= 0) {
                             break;
                         }
-                        buffer.flip();
 
+                        buffer.flip();
                         sc.write(buffer);
                     }
 
