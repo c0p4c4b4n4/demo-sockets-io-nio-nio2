@@ -1,4 +1,4 @@
-package nio.channel;
+package nio.channel_time;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,7 +7,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
 
-public class ChannelTimeNonBlockingServer {
+public class TimeNonBlockingServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server...");

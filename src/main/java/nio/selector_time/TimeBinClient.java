@@ -1,4 +1,4 @@
-package nio.selector;
+package nio.selector_time;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Date;
 
-public class SelectorTimeBinClient {
+public class TimeBinClient {
     private static final int DEFAULT_PORT = 9999;
 
     public static void main(String[] args) throws IOException {

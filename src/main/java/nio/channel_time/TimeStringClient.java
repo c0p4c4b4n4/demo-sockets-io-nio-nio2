@@ -1,4 +1,4 @@
-package nio.channel;
+package nio.channel_time;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,7 +7,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class ChannelTimeStringClient {
+public class TimeStringClient {
 
     private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
