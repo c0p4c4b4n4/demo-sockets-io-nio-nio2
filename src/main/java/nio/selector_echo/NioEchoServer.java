@@ -13,6 +13,7 @@ import java.util.Set;
 public class NioEchoServer {
 
     public static void main(String[] args) throws IOException {
+        System.out.println("echo server is starting...");
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
@@ -36,22 +37,27 @@ public class NioEchoServer {
                     i++;
 
                     SocketChannel socketChannel = serverSocketChannel.accept();
+                    System.out.println("echo client connected: " + socketChannel);
                     socketChannel.configureBlocking(false);
                     socketChannel.register(selector, SelectionKey.OP_READ);
                 }
 
                 if (key.isReadable()) {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
-                    System.out.println("socket channel: " + socketChannel);
 
                     ByteBuffer buffer = ByteBuffer.allocate(1024);
-                    socketChannel.read(buffer);
+                    int n = socketChannel.read(buffer);
 
-                    System.out.println("echo server received: " + new String(buffer.array()));
+                    if (n < 0) {
+                        socketChannel.close();
+                        System.out.println("echo client disconnected");
+                    } else {
+                        System.out.println("echo server received: " + new String(buffer.array()));
 
-                    buffer.flip();
-                    socketChannel.write(buffer);
-                    buffer.clear();
+                        buffer.flip();
+                        socketChannel.write(buffer);
+                        buffer.clear();
+                    }
                 }
             }
         }
