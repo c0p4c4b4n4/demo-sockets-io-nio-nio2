@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 
 public class NioEchoClient {
+
+    private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo client started");
@@ -18,8 +22,8 @@ public class NioEchoClient {
 
         buffer.clear();
         socketChannel.read(buffer);
-        System.out.println("echo client received: " + new String(buffer.array()));
-        buffer.clear();
+        buffer.flip();
+        System.out.println("echo client received: " + decoder.decode(buffer));
 
         socketChannel.close();
         System.out.println("echo client finished");
