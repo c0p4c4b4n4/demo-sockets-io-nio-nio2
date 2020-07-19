@@ -7,11 +7,13 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class TimeStringClient {
+public class NioTimeClient {
 
     private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
     public static void main(String[] args) throws IOException {
+        System.out.println("time client started");
+
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
 
@@ -20,7 +22,7 @@ public class TimeStringClient {
         while (!socketChannel.finishConnect())
             System.out.println("waiting to finish connection");
 
-        ByteBuffer buffer = ByteBuffer.allocate(200);
+        ByteBuffer buffer = ByteBuffer.allocate(10);
         while (socketChannel.read(buffer) >= 0) {
             buffer.flip();
 
@@ -31,5 +33,6 @@ public class TimeStringClient {
         }
 
         socketChannel.close();
+        System.out.println("time client finished");
     }
 }
