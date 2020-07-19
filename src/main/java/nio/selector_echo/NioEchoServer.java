@@ -10,30 +10,31 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class EchoServer {
+public class NioEchoServer {
 
     public static void main(String[] args) throws IOException {
-
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
+        System.out.println("echo server started: " + serverSocketChannel);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-
-        while (true) {
+        int i = 0;
+        while (i < 3) {
             selector.select();
 
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
-
             Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
             while (keyIterator.hasNext()) {
                 SelectionKey key = keyIterator.next();
+                keyIterator.remove();
 
                 if (key.isAcceptable()) {
+                    i++;
+
                     SocketChannel socketChannel = serverSocketChannel.accept();
                     socketChannel.configureBlocking(false);
                     socketChannel.register(selector, SelectionKey.OP_READ);
@@ -41,18 +42,21 @@ public class EchoServer {
 
                 if (key.isReadable()) {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
+                    System.out.println("socket channel: " + socketChannel);
+
+                    ByteBuffer buffer = ByteBuffer.allocate(1024);
                     socketChannel.read(buffer);
 
-//                    System.out.println("server received: " + new String(buffer.array()));
+                    System.out.println("echo server received: " + new String(buffer.array()));
 
                     buffer.flip();
                     socketChannel.write(buffer);
                     buffer.clear();
                 }
-
-                keyIterator.remove();
             }
         }
-    }
 
+        System.out.println("echo server finished");
+        serverSocketChannel.close();
+    }
 }
