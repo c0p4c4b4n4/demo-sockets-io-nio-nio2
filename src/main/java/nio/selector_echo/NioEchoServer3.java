@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioEchoServer {
+public class NioEchoServer3 {
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo server is starting...");
@@ -46,17 +46,20 @@ public class NioEchoServer {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ByteBuffer buffer = ByteBuffer.allocate(10);
-                    int n = socketChannel.read(buffer);
 
-                    if (n < 0) {
-                        socketChannel.close();
-                        System.out.println("echo client disconnected");
-                    } else {
-                        System.out.println("echo server received: " + new String(buffer.array()));
+                    while (true) {
+                        buffer.clear();
+                        int n = socketChannel.read(buffer);
+                        System.out.println("read bytes: " + n);
+
+                        if (n <= 0) {
+                            socketChannel.close();
+                            System.out.println("echo client disconnected");
+                            break;
+                        }
 
                         buffer.flip();
                         socketChannel.write(buffer);
-                        buffer.clear();
                     }
                 }
             }

@@ -20,10 +20,16 @@ public class NioEchoClient {
         socketChannel.write(buffer);
         System.out.println("echo client sent: " + msg);
 
-        buffer.clear();
-        socketChannel.read(buffer);
-        buffer.flip();
-        System.out.println("echo client received: " + decoder.decode(buffer));
+        while (true) {
+            buffer.clear();
+
+            int n = socketChannel.read(buffer);
+            if (n <= 0)
+                break;
+
+            buffer.flip();
+            System.out.println("echo client received: " + decoder.decode(buffer));
+        }
 
         socketChannel.close();
         System.out.println("echo client finished");
