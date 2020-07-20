@@ -21,6 +21,7 @@ public class IoEchoServer {
                 BufferedReader br = new BufferedReader(isr);
                 String msg = br.readLine();
                 System.out.println("echo server received: " + msg);
+                msg = msg.toUpperCase();
 
                 OutputStream os = socket.getOutputStream();
                 OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
