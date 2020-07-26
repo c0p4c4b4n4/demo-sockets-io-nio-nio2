@@ -1,0 +1,5 @@
+sequenceDiagram
+    Application->>Kernel: System call
+    activate Kernel
+    Kernel-->>Application: Data movement from kernel spate to user space
+    deactivate Kernel
