@@ -3,7 +3,7 @@ sequenceDiagram
     Application->>Kernel: System call
     deactivate Application
     activate Kernel
-    Kernel-->>Application: Data movement from kernel spate to user space
+    Kernel-->>Application: Read data
     deactivate Kernel
     activate Application
     deactivate Application

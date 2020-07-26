@@ -1,0 +1,16 @@
+sequenceDiagram
+    activate Application
+    Application->>Kernel: System call
+    Kernel-->>Application: Return
+    activate Kernel
+    Note right of Kernel: Wait for data
+    deactivate Kernel
+    activate Kernel
+    Note right of Kernel: Read data
+    Kernel-->>Application: Read data by callback
+    deactivate Kernel
+    deactivate Application
+    activate Application
+    Note right of Application: Event handler
+    deactivate Application
+
