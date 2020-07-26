@@ -1,0 +1,17 @@
+sequenceDiagram
+    activate Application
+    loop Wait for data
+      Application->>Kernel: System call
+      deactivate Application
+      activate Kernel
+      Kernel-->>Application: Data movement from kernel spate to user space
+    end
+    deactivate Kernel
+    activate Application
+    Application->>Kernel: System call
+    deactivate Application
+    activate Kernel
+    Kernel-->>Application: Data movement from kernel spate to user space
+    deactivate Kernel
+    activate Application
+    deactivate Application
