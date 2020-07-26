@@ -1,17 +1,17 @@
 sequenceDiagram
     activate Application
-    loop Wait for data
+    loop Wait until data are available
       Application->>Kernel: System call
       deactivate Application
       activate Kernel
-      Kernel-->>Application: Data movement from kernel spate to user space
+      Kernel-->>Application: No data ready
     end
     deactivate Kernel
     activate Application
     Application->>Kernel: System call
     deactivate Application
     activate Kernel
-    Kernel-->>Application: Data movement from kernel spate to user space
+    Kernel-->>Application: Read data
     deactivate Kernel
     activate Application
     deactivate Application
