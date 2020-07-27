@@ -8,7 +8,7 @@ sequenceDiagram
     Note right of K: wait for data
     deactivate K
     activate K
-    Note right of K: read data
+    Note right of K: copy data
     K-->>A: returned data
     deactivate K
     activate A

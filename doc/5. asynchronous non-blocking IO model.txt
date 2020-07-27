@@ -9,7 +9,7 @@ sequenceDiagram
     Note right of A: other processing
     deactivate K
     activate K
-    Note right of K: read data
+    Note right of K: copy data
     K--xA: callback
     deactivate K
     deactivate A

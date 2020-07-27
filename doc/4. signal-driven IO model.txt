@@ -9,7 +9,7 @@ sequenceDiagram
     K--xA: signal
     A->>K: system call
     deactivate A
-    Note right of K: read data
+    Note right of K: copy data
     K-->>A: return
     deactivate K
     activate A

@@ -13,7 +13,7 @@ sequenceDiagram
     A->>K: system call
     deactivate K
     activate K
-    Note right of K: read data
+    Note right of K: copy data
     K-->>A: returned data
     deactivate K
     deactivate A
