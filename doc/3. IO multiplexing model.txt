@@ -17,3 +17,5 @@ sequenceDiagram
     K-->>A: returned data
     deactivate K
     activate A
+    deactivate A
+    activate A
