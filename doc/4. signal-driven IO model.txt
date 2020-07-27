@@ -6,7 +6,7 @@ sequenceDiagram
     activate K
     K-->>A: return
     Note right of K: wait for data
-    K-->>A: signal
+    K--xA: signal
     A->>K: system call
     deactivate A
     Note right of K: read data

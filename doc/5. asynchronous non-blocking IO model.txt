@@ -10,7 +10,7 @@ sequenceDiagram
     deactivate K
     activate K
     Note right of K: read data
-    K-->>A: callback
+    K--xA: callback
     deactivate K
     deactivate A
     activate A
