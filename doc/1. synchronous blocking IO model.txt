@@ -1,10 +1,9 @@
 sequenceDiagram
     activate Application
-    Application->>Kernel: System call
+    Application->>Kernel: system call
     deactivate Application
     activate Kernel
-    Kernel-->>Application: Read data
+    Kernel-->>Application: read data
     deactivate Kernel
     activate Application
     deactivate Application
-

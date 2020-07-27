@@ -1,10 +1,10 @@
 sequenceDiagram
     activate Application
-    loop Wait until data are available
-      Application->>Kernel: system call
-      deactivate Application
-      activate Kernel
-      Kernel-->>Application: no data ready
+    loop Wait until data is available
+        Application->>Kernel: system call
+        deactivate Application
+        activate Kernel
+        Kernel-->>Application: no data available
     end
     deactivate Kernel
     activate Application
