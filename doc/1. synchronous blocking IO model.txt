@@ -11,4 +11,3 @@ sequenceDiagram
     deactivate Kernel
     activate Application
     deactivate Application
-
