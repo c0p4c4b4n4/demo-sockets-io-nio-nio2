@@ -6,6 +6,7 @@ sequenceDiagram
     deactivate A
     activate K
     Note right of K: wait for data
+    Note left of A: is blocked
     deactivate K
     activate K
     Note right of K: copy data

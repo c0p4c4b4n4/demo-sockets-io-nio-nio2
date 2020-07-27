@@ -3,10 +3,10 @@ sequenceDiagram
     participant K as Kernel
     activate A
     A->>K: system call
-    K-->>A: return
     activate K
+    K-->>A: return
     Note right of K: wait for data
-    Note right of A: other processing
+    Note left of A: isn't blocked
     deactivate K
     activate K
     Note right of K: copy data
@@ -14,6 +14,5 @@ sequenceDiagram
     deactivate K
     deactivate A
     activate A
-    Note right of A: callback processing
+    Note left of A: callback processing
     deactivate A
-

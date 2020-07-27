@@ -6,15 +6,14 @@ sequenceDiagram
     deactivate A
     activate A
     activate K
-    Note right of K: wait for data
+    Note right of K: wait for data<br>in many<br>desriptors
+    Note left of A: is blocked<br>until one<br>of the descriptors<br>is readable
     K-->>A: returned readable
-    deactivate A
-    activate A
     A->>K: system call
+    deactivate A
     deactivate K
     activate K
     Note right of K: copy data
     K-->>A: returned data
     deactivate K
-    deactivate A
     activate A

@@ -6,12 +6,11 @@ sequenceDiagram
     activate K
     K-->>A: return
     Note right of K: wait for data
+    Note left of A: isn't blocked
     K--xA: signal
     A->>K: system call
     deactivate A
     Note right of K: copy data
-    K-->>A: return
+    K-->>A: returned data
     deactivate K
     activate A
-    activate A
-    deactivate A

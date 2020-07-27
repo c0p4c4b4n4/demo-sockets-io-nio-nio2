@@ -7,6 +7,7 @@ sequenceDiagram
         deactivate A
         activate K
         Note right of K: wait for data
+        Note left of A: polling
         K-->>A: no data available
     end
     deactivate K
