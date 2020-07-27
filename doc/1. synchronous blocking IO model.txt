@@ -3,7 +3,12 @@ sequenceDiagram
     Application->>Kernel: system call
     deactivate Application
     activate Kernel
-    Kernel-->>Application: read data
+    Note right of Kernel: wait for data
+    deactivate Kernel
+    activate Kernel
+    Note right of Kernel: read data
+    Kernel-->>Application: returned data
     deactivate Kernel
     activate Application
     deactivate Application
+
