@@ -1,17 +1,19 @@
 sequenceDiagram
-    activate Application
-    Application->>Kernel: system call
-    Kernel-->>Application: return
-    activate Kernel
-    Note right of Kernel: wait for data
-    Note right of Application: other processing
-    deactivate Kernel
-    activate Kernel
-    Note right of Kernel: read data
-    Kernel-->>Application: callback
-    deactivate Kernel
-    deactivate Application
-    activate Application
-    Note right of Application: callback processing
-    deactivate Application
+    participant A as Application
+    participant K as Kernel
+    activate A
+    A->>K: system call
+    K-->>A: return
+    activate K
+    Note right of K: wait for data
+    Note right of A: other processing
+    deactivate K
+    activate K
+    Note right of K: read data
+    K-->>A: callback
+    deactivate K
+    deactivate A
+    activate A
+    Note right of A: callback processing
+    deactivate A
 
