@@ -6,8 +6,8 @@ sequenceDiagram
     deactivate A
     activate A
     activate K
-    Note right of K: wait for data<br>in many<br>channels
-    Note left of A: is blocked<br>until at least<br>one channel<br>is readable
+    Note right of K: wait for data<br>in many<br>desriptors
+    Note left of A: is blocked<br>until one<br>of the descriptors<br>is readable
     K-->>A: returned readable
     A->>K: system call
     deactivate A
