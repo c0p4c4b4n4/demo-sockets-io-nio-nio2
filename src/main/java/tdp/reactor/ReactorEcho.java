@@ -112,6 +112,7 @@ class AcceptEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws Exception {
+        System.out.println("accept");
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) handle.channel();
         SocketChannel socketChannel = serverSocketChannel.accept();
         if (socketChannel != null) {
@@ -133,6 +134,8 @@ class ReadEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws Exception {
+        System.out.println("read");
+
         SocketChannel socketChannel = (SocketChannel) handle.channel();
 
         socketChannel.read(inputBuffer); // Read data from client
@@ -158,6 +161,8 @@ class WriteEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws Exception {
+        System.out.println("write");
+
         SocketChannel socketChannel = (SocketChannel) handle.channel();
         ByteBuffer inputBuffer = (ByteBuffer) handle.attachment();
         socketChannel.write(inputBuffer);
