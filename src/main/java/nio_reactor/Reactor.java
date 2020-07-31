@@ -1,5 +1,6 @@
 package nio_reactor;
 
+import java.io.IOException;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -14,7 +15,7 @@ public class Reactor {
     private Map<Integer, EventHandler> registeredHandlers = new ConcurrentHashMap<Integer, EventHandler>();
     private Selector demultiplexer;
 
-    public Reactor() throws Exception {
+    public Reactor() throws IOException {
         demultiplexer = Selector.open();
     }
 
@@ -26,7 +27,7 @@ public class Reactor {
         registeredHandlers.put(eventType, eventHandler);
     }
 
-    public void registerChannel(int eventType, SelectableChannel channel) throws Exception {
+    public void registerChannel(int eventType, SelectableChannel channel) throws IOException {
         channel.register(demultiplexer, eventType);
     }
 
