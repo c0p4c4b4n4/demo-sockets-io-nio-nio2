@@ -22,13 +22,11 @@ public class Reactor {
         return demultiplexer;
     }
 
-    public void registerEventHandler(
-            int eventType, EventHandler eventHandler) {
+    public void registerEventHandler(int eventType, EventHandler eventHandler) {
         registeredHandlers.put(eventType, eventHandler);
     }
 
-    public void registerChannel(
-            int eventType, SelectableChannel channel) throws Exception {
+    public void registerChannel(int eventType, SelectableChannel channel) throws Exception {
         channel.register(demultiplexer, eventType);
     }
 

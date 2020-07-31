@@ -17,17 +17,9 @@ public class ReactorManager {
 
         Reactor reactor = new Reactor();
         reactor.registerChannel(SelectionKey.OP_ACCEPT, server);
-
-        reactor.registerEventHandler(
-                SelectionKey.OP_ACCEPT, new AcceptEventHandler(
-                        reactor.getDemultiplexer()));
-
-        reactor.registerEventHandler(
-                SelectionKey.OP_READ, new ReadEventHandler(
-                        reactor.getDemultiplexer()));
-
-        reactor.registerEventHandler(
-                SelectionKey.OP_WRITE, new WriteEventHandler());
+        reactor.registerEventHandler(SelectionKey.OP_ACCEPT, new AcceptEventHandler(reactor.getDemultiplexer()));
+        reactor.registerEventHandler(SelectionKey.OP_READ, new ReadEventHandler(reactor.getDemultiplexer()));
+        reactor.registerEventHandler(SelectionKey.OP_WRITE, new WriteEventHandler());
 
         reactor.run();
 
