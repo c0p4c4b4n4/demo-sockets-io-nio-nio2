@@ -1,4 +1,4 @@
-package tdp.ProactorEcho.server;
+package tdp.proactor.ProactorEcho.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

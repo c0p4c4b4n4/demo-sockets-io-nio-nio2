@@ -1,4 +1,4 @@
-package tdp;
+package tdp.proactor;
 
 public class ProactorInitiator {
   

@@ -1,4 +1,4 @@
-package tdp.ProactorEcho.client;
+package tdp.proactor.ProactorEcho.client;
 
 import server.ProactorInitiator;
 

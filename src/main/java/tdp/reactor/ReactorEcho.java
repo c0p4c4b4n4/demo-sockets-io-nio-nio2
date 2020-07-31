@@ -1,4 +1,4 @@
-package tdp;
+package tdp.reactor;
 
 public class ReactorInitiator {
 
