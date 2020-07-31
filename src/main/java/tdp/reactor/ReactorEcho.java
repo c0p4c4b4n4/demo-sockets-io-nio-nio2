@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class ReactorInitiator {
 
-    private static final int NIO_SERVER_PORT = 9993;
+    private static final int SERVER_PORT = 9001;
 
     public void initiateReactiveServer(int port) throws Exception {
 
@@ -38,9 +38,9 @@ class ReactorInitiator {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Starting NIO server at port : " +
-                NIO_SERVER_PORT);
+                SERVER_PORT);
         new ReactorInitiator().
-                initiateReactiveServer(NIO_SERVER_PORT);
+                initiateReactiveServer(SERVER_PORT);
     }
 
 }
