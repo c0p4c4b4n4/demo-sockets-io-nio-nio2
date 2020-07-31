@@ -7,7 +7,7 @@ import java.nio.channels.ServerSocketChannel;
 
 public class ReactorManager {
 
-    private static final int SERVER_PORT = 7070;
+    private static final int SERVER_PORT = 9001;
 
     public void startReactor(int port) throws Exception {
 
