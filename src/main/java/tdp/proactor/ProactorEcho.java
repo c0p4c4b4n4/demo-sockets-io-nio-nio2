@@ -11,16 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class ProactorInitiator {
 
-    static int ASYNC_SERVER_PORT = 4333;
+    private static final int SERVER_PORT = 9001;
 
-    public void initiateProactiveServer(int port)
-            throws IOException {
-
-        final AsynchronousServerSocketChannel listener =
-                AsynchronousServerSocketChannel.open().bind(
-                        new InetSocketAddress(port));
-        AcceptCompletionHandler acceptCompletionHandler =
-                new AcceptCompletionHandler(listener);
+    public void initiateProactiveServer(int port) throws IOException {
+        AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(port));
+        AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(listener);
 
         SessionState state = new SessionState();
         listener.accept(state, acceptCompletionHandler);
@@ -28,10 +23,8 @@ class ProactorInitiator {
 
     public static void main(String[] args) {
         try {
-            System.out.println("Async server listening on port : " +
-                    ASYNC_SERVER_PORT);
-            new ProactorInitiator().initiateProactiveServer(
-                    ASYNC_SERVER_PORT);
+            System.out.println("Async server listening on port : " + SERVER_PORT);
+            new ProactorInitiator().initiateProactiveServer(SERVER_PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,55 +40,44 @@ class ProactorInitiator {
     }
 }
 
-class AcceptCompletionHandler
-        implements
-        CompletionHandler<AsynchronousSocketChannel, SessionState> {
+class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, SessionState> {
 
-    private AsynchronousServerSocketChannel listener;
+    private final AsynchronousServerSocketChannel listener;
 
-    public AcceptCompletionHandler(
-            AsynchronousServerSocketChannel listener) {
+    public AcceptCompletionHandler(AsynchronousServerSocketChannel listener) {
         this.listener = listener;
     }
 
     @Override
-    public void completed(AsynchronousSocketChannel socketChannel,
-                          SessionState sessionState) {
+    public void completed(AsynchronousSocketChannel socketChannel, SessionState sessionState) {
         // accept the next connection
         SessionState newSessionState = new SessionState();
         listener.accept(newSessionState, this);
 
         // handle this connection
         ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
-        ReadCompletionHandler readCompletionHandler =
-                new ReadCompletionHandler(socketChannel, inputBuffer);
-        socketChannel.read(
-                inputBuffer, sessionState, readCompletionHandler);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
+        socketChannel.read(inputBuffer, sessionState, readCompletionHandler);
     }
 
     @Override
     public void failed(Throwable exc, SessionState sessionState) {
         // Handle connection failure...
     }
-
 }
 
-class ReadCompletionHandler implements
-        CompletionHandler<Integer, SessionState> {
+class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> {
 
-    private AsynchronousSocketChannel socketChannel;
-    private ByteBuffer inputBuffer;
+    private final AsynchronousSocketChannel socketChannel;
+    private final ByteBuffer inputBuffer;
 
-    public ReadCompletionHandler(
-            AsynchronousSocketChannel socketChannel,
-            ByteBuffer inputBuffer) {
+    public ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
         this.socketChannel = socketChannel;
         this.inputBuffer = inputBuffer;
     }
 
     @Override
-    public void completed(
-            Integer bytesRead, SessionState sessionState) {
+    public void completed(Integer bytesRead, SessionState sessionState) {
 
         byte[] buffer = new byte[bytesRead];
         inputBuffer.rewind();
@@ -108,35 +90,29 @@ class ReadCompletionHandler implements
                 message);
 
         // Echo the message back to client
-        WriteCompletionHandler writeCompletionHandler =
-                new WriteCompletionHandler(socketChannel);
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
 
         ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);
 
-        socketChannel.write(
-                outputBuffer, sessionState, writeCompletionHandler);
+        socketChannel.write(outputBuffer, sessionState, writeCompletionHandler);
     }
 
     @Override
     public void failed(Throwable exc, SessionState attachment) {
         //Handle read failure.....
     }
-
 }
 
-class WriteCompletionHandler implements
-        CompletionHandler<Integer, SessionState> {
+class WriteCompletionHandler implements CompletionHandler<Integer, SessionState> {
 
-    private AsynchronousSocketChannel socketChannel;
+    private final AsynchronousSocketChannel socketChannel;
 
-    public WriteCompletionHandler(
-            AsynchronousSocketChannel socketChannel) {
+    public WriteCompletionHandler(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 
     @Override
-    public void completed(
-            Integer bytesWritten, SessionState attachment) {
+    public void completed(Integer bytesWritten, SessionState attachment) {
         try {
             socketChannel.close();
         } catch (IOException e) {
@@ -148,15 +124,13 @@ class WriteCompletionHandler implements
     public void failed(Throwable exc, SessionState attachment) {
         // Handle write failure.....
     }
-
 }
 
 
 // used to hold client session specific state across a series of completion events
 class SessionState {
 
-    private Map<String, String> sessionProps =
-            new ConcurrentHashMap<String, String>();
+    private Map<String, String> sessionProps = new ConcurrentHashMap<String, String>();
 
     public String getProperty(String key) {
         return sessionProps.get(key);
@@ -165,5 +139,4 @@ class SessionState {
     public void setProperty(String key, String value) {
         sessionProps.put(key, value);
     }
-
 }
