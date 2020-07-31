@@ -29,7 +29,7 @@ class ReactorInitiator {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Starting NIO server at port : " + SERVER_PORT);
+        System.out.println("Starting NIO server at port: " + SERVER_PORT);
         new ReactorInitiator().initiateReactiveServer(SERVER_PORT);
     }
 
@@ -143,7 +143,7 @@ class ReadEventHandler implements EventHandler {
         byte[] buffer = new byte[inputBuffer.limit()];
         inputBuffer.get(buffer);
 
-        System.out.println("Received message from client : " +                new String(buffer));
+        System.out.println("Received message from client : " + new String(buffer));
         inputBuffer.flip();
         // Rewind the buffer to start reading from the beginning
         // Register the interest for writable readiness event for

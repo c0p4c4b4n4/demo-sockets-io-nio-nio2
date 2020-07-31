@@ -21,21 +21,13 @@ class ProactorInitiator {
         listener.accept(state, acceptCompletionHandler);
     }
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("Async server listening on port : " + SERVER_PORT);
-            new ProactorInitiator().initiateProactiveServer(SERVER_PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws IOException, InterruptedException {
+        System.out.println("Starting NIO2 server at port: " + SERVER_PORT);
+        new ProactorInitiator().initiateProactiveServer(SERVER_PORT);
 
         // Sleep indefinitely since otherwise the JVM would terminate
         while (true) {
-            try {
-                Thread.sleep(Long.MAX_VALUE);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Thread.sleep(Long.MAX_VALUE);
         }
     }
 }
