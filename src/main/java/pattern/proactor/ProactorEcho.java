@@ -1,4 +1,4 @@
-package tdp.proactor;
+package pattern.proactor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

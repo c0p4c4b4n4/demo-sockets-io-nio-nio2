@@ -1,4 +1,4 @@
-package tdp.reactor;
+package pattern.reactor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
