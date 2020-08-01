@@ -7,8 +7,6 @@ import java.nio.charset.StandardCharsets;
 public class IoEchoBufferedReaderClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("echo client started");
-
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
             Socket socket = new Socket("localhost", 9001);
@@ -32,7 +30,5 @@ public class IoEchoBufferedReaderClient {
             socket.close();
             System.out.println("echo client disconnected");
         }
-
-        System.out.println("echo client finished");
     }
 }
