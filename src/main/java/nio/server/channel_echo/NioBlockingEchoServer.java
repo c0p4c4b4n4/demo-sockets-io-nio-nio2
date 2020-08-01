@@ -3,6 +3,7 @@ package nio.server.channel_echo;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -27,9 +28,20 @@ public class NioBlockingEchoServer {
             SocketChannel socketChannel = serverSocketChannel.accept();
             System.out.println("incoming connection: " + socketChannel);
 
-            String msg = LocalDateTime.now().toString() + "\r\n";
-            socketChannel.write(encoder.encode(CharBuffer.wrap(msg)));
-            System.out.println("time server sent: " + msg);
+            ByteBuffer buffer = ByteBuffer.allocate(10);
+            while (true) {
+                buffer.clear();
+                int n = socketChannel.read(buffer);
+                if (n <= 0) {
+                    break;
+                }
+                buffer.flip();
+
+                socketChannel.write(buffer);
+                System.out.println("time server sent: " + new String( buffer.array(), StandardCharsets.UTF_8 ));
+            }
+//            String msg = LocalDateTime.now().toString() + "\r\n";
+//            socketChannel.write(encoder.encode(CharBuffer.wrap(msg)));
 
             socketChannel.close();
         }
