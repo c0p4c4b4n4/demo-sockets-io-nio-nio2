@@ -8,30 +8,23 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.*;
 
-public class EchoServer2 {
+public class IoEchoThreadPoolServer {
 
-    private static final int PORT = 4000;
-    private static final int BUFFER_SIZE = 1024;
-
-    public static void main(String[] args) {
-        try {
-            ServerSocket server = new ServerSocket(PORT);
-            ExecutorService executor = Executors.newCachedThreadPool();
-            while (true) {
-                Socket socket = server.accept();
-                executor.submit(new Handler(socket));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void main(String[] args) throws IOException {
+        ServerSocket server = new ServerSocket(9001);
+        ExecutorService executor = Executors.newCachedThreadPool();
+        while (true) {
+            Socket socket = server.accept();
+            executor.submit(new Worker(socket));
         }
     }
 
-    private static class Handler implements Runnable {
+    private static class Worker implements Runnable {
 
         private final Socket socket;
 
-        Handler(Socket s) {
-            socket = s;
+        Worker(Socket socket) {
+            this.socket = socket;
         }
 
         @Override
@@ -39,18 +32,19 @@ public class EchoServer2 {
             try {
                 InputStream in = socket.getInputStream();
                 OutputStream out = socket.getOutputStream();
+
                 int read = 0;
-                byte[] buf = new byte[BUFFER_SIZE];
+                byte[] buf = new byte[1024];
                 while ((read = in.read(buf)) != -1) {
                     out.write(buf, 0, read);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e);
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println(e);
                 }
             }
         }

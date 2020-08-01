@@ -1,40 +1,53 @@
 package io.echo;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class IoEchoServer {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(9001);
-        System.out.println("echo server started: " + serverSocket);
+        ServerSocket server = new ServerSocket(9001);
+        ExecutorService executor = Executors.newCachedThreadPool();
+        while (true) {
+            Socket socket = server.accept();
+            executor.submit(new Worker(socket));
+        }
+    }
 
-        int i = 0;
-        while (i++ < 3) {
-            Socket socket = serverSocket.accept();
-            System.out.println("incoming connection: " + socket);
-            try {
-                InputStream is = socket.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(isr);
-                String msg = br.readLine();
-                System.out.println("echo server received: " + msg);
-                msg = msg.toUpperCase();
+    private static class Worker implements Runnable {
 
-                OutputStream os = socket.getOutputStream();
-                OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-                PrintWriter pw = new PrintWriter(osw);
-                pw.println(msg);
-                System.out.println("echo server sent: " + msg);
-                pw.flush();
-            } finally {
-                socket.close();
-            }
+        private final Socket socket;
+
+        Worker(Socket socket) {
+            this.socket = socket;
         }
 
-        System.out.println("echo server finished");
-        serverSocket.close();
+        @Override
+        public void run() {
+            try {
+                InputStream in = socket.getInputStream();
+                OutputStream out = socket.getOutputStream();
+
+                int read = 0;
+                byte[] buf = new byte[1024];
+                while ((read = in.read(buf)) != -1) {
+                    out.write(buf, 0, read);
+                }
+            } catch (IOException e) {
+                System.err.println(e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            }
+        }
     }
 }
+
