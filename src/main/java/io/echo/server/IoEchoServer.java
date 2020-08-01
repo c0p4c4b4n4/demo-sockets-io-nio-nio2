@@ -14,7 +14,8 @@ public class IoEchoServer {
         ServerSocket serverSocket = new ServerSocket(9001);
         System.out.println("echo server started: " + serverSocket);
 
-        while (true) {
+        int i = 0;
+        while (i++ < 3) {
             Socket socket = serverSocket.accept();
             System.out.println("incoming connection: " + socket);
 
@@ -24,11 +25,16 @@ public class IoEchoServer {
             int read;
             byte[] buf = new byte[1024];
             while ((read = in.read(buf)) != -1) {
+                System.out.println("read bytes: " + read);
                 out.write(buf, 0, read);
             }
 
             socket.close();
+            System.out.println("socket closed");
         }
+
+        serverSocket.close();
+        System.out.println("echo server finished");
     }
 }
 

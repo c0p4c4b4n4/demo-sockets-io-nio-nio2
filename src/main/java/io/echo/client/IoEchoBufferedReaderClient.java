@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 public class IoEchoBufferedReaderClient {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("echo client is starting");
         Socket socket = new Socket("localhost", 9001);
         System.out.println("echo client started: " + socket);
 
@@ -25,6 +24,7 @@ public class IoEchoBufferedReaderClient {
         BufferedReader br = new BufferedReader(isr);
         System.out.println("echo client received: " + br.readLine());
 
+        socket.close();
         System.out.println("echo client finished");
     }
 }
