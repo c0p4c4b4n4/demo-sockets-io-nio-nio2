@@ -8,7 +8,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
 
-public class NioNonBlockingTimeServer {
+public class NioNonBlockingEchoServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println("time server is starting...");

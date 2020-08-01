@@ -7,7 +7,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class NioTimeClient {
+public class _NioTimeClient {
 
     private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 

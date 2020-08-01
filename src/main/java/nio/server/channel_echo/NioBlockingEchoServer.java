@@ -10,7 +10,7 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-public class NioBlockingTimeServer {
+public class NioBlockingEchoServer {
 
     private static final CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder();
 
