@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,7 +26,7 @@ public class IoEchoServer {
             int read;
             byte[] buf = new byte[1024];
             while ((read = in.read(buf)) != -1) {
-                System.out.println("read bytes: " + read);
+                System.out.println("server received: " + new String(buf, StandardCharsets.UTF_8));
                 out.write(buf, 0, read);
             }
 
