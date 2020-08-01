@@ -1,4 +1,4 @@
-package nio.b;
+package nio.server.multiplexer;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;

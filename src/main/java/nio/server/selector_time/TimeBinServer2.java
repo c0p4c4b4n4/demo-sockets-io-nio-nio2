@@ -1,4 +1,4 @@
-package nio.selector_time;
+package nio.server.selector_time;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

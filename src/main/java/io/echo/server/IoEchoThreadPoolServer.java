@@ -1,4 +1,4 @@
-package io.echo;
+package io.echo.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ public class IoEchoThreadPoolServer {
                 InputStream in = socket.getInputStream();
                 OutputStream out = socket.getOutputStream();
 
-                int read = 0;
+                int read;
                 byte[] buf = new byte[1024];
                 while ((read = in.read(buf)) != -1) {
                     out.write(buf, 0, read);
