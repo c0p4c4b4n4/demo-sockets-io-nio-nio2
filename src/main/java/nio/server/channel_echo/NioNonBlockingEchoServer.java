@@ -28,11 +28,19 @@ public class NioNonBlockingEchoServer {
                 i++;
                 System.out.println("incoming connection: " + socketChannel);
 
-                String msg = LocalDateTime.now().toString() + "\r\n";
-                ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
-                buffer.rewind();
+                ByteBuffer buffer = ByteBuffer.allocate(10);
+                while (true) {
+                    buffer.clear();
+                    int n = socketChannel.read(buffer);
+                    if (n <= 0) {
+                        break;
+                    }
+                    buffer.flip();
 
-                socketChannel.write(buffer);
+                    socketChannel.write(buffer);
+                    System.out.println("time server sent: " + buffer.asCharBuffer().toString());
+                }
+
                 socketChannel.close();
             } else {
                 System.out.println("waiting for incoming connection...");

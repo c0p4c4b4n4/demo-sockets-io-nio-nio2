@@ -38,10 +38,8 @@ public class NioBlockingEchoServer {
                 buffer.flip();
 
                 socketChannel.write(buffer);
-                System.out.println("time server sent: " + new String( buffer.array(), StandardCharsets.UTF_8 ));
+                System.out.println("time server sent: " + buffer.asCharBuffer().toString());
             }
-//            String msg = LocalDateTime.now().toString() + "\r\n";
-//            socketChannel.write(encoder.encode(CharBuffer.wrap(msg)));
 
             socketChannel.close();
         }
