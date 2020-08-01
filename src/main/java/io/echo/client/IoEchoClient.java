@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
 public class IoEchoClient {
@@ -19,17 +20,23 @@ public class IoEchoClient {
 
         String msg = "abcdefghijklmnopqrstuvwxyz";
 
-        OutputStream os = socket.getOutputStream();
-        OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
-        PrintWriter pw = new PrintWriter(osw);
-        pw.println(msg);
-        System.out.println("echo client sent: " + msg);
-        pw.flush();
+        InputStream in = socket.getInputStream();
+        OutputStream out = socket.getOutputStream();
 
-        InputStream is = socket.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-        BufferedReader br = new BufferedReader(isr);
-        System.out.println("echo client received: " + br.readLine());
+        byte[] bytes = msg.getBytes();
+        out.write(bytes);
+
+        int totalBytesReceived = 0;
+        int bytesReceived;
+        while (totalBytesReceived < bytes.length) {
+            if ((bytesReceived = in.read(bytes, totalBytesReceived, bytes.length - totalBytesReceived)) == -1)
+                throw new SocketException("Connection closed prematurely");
+            totalBytesReceived += bytesReceived;
+        }
+
+        System.out.println("echo client received: " + new String(bytes));
+
+        socket.close();
 
         System.out.println("echo client finished");
     }
