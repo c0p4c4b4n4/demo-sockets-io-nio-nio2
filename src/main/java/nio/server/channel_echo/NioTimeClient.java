@@ -1,4 +1,4 @@
-package nio.server.channel_echo.channel_time;
+package nio.server.channel_echo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
