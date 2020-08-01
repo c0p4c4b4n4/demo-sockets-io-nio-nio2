@@ -11,9 +11,12 @@ import java.util.concurrent.Executors;
 public class IoEchoServer {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(9001);
+        ServerSocket serverSocket = new ServerSocket(9001);
+        System.out.println("echo server started: " + serverSocket);
+
         while (true) {
-            Socket socket = server.accept();
+            Socket socket = serverSocket.accept();
+            System.out.println("incoming connection: " + socket);
 
             InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
