@@ -1,4 +1,4 @@
-package io.echo.server;
+package io.server;
 
 import java.io.IOException;
 import java.io.InputStream;
