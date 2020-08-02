@@ -5,47 +5,46 @@ import java.io.IOException;
 import java.nio.channels.CompletionHandler;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
-public class ReadWriteHandler
-        implements CompletionHandler<Integer, Attachment> {
-    private final static Charset CSUTF8 = Charset.forName("UTF-8");
+public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> {
 
     @Override
-    public void completed(Integer result, Attachment att) {
-        if (result == -1) {
-            try {
-                att.channelClient.close();
-                System.out.printf("Stopped listening to client %s%n",
-                        att.clientAddr);
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
+    public void completed(Integer result, Attachment attachment) {
+        try {
+            if (result == -1) {
+                attachment.channelClient.close();
+                System.out.printf("Stopped listening to client %s%n", attachment.clientAddr);
+            } else {
+                if (attachment.isReadMode) {
+                    attachment.buffer.flip();
+
+                    int limit = attachment.buffer.limit();
+                    byte[] bytes = new byte[limit];
+
+                    attachment.buffer.get(bytes, 0, limit);
+                    System.out.printf("Client at %s sends message: %s%n", attachment.clientAddr, new String(bytes, StandardCharsets.UTF_8));
+
+                    attachment.isReadMode = false;
+
+                    attachment.buffer.rewind();
+                    attachment.channelClient.write(attachment.buffer, attachment, this);
+                } else {
+                    attachment.isReadMode = true;
+
+                    attachment.buffer.clear();
+                    attachment.channelClient.read(attachment.buffer, attachment, this);
+                }
             }
-            return;
-        }
-
-        if (att.isReadMode) {
-            att.buffer.flip();
-            int limit = att.buffer.limit();
-            byte bytes[] = new byte[limit];
-            att.buffer.get(bytes, 0, limit);
-            System.out.printf("Client at %s sends message: %s%n",
-                    att.clientAddr,
-                    new String(bytes, CSUTF8));
-
-            att.isReadMode = false;
-
-            att.buffer.rewind();
-            att.channelClient.write(att.buffer, att, this);
-        } else {
-            att.isReadMode = true;
-
-            att.buffer.clear();
-            att.channelClient.read(att.buffer, att, this);
+        } catch (IOException e) {
+            System.out.println("Failed to complete connection");
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void failed(Throwable t, Attachment att) {
+    public void failed(Throwable t, Attachment attachment) {
         System.out.println("Connection with client broken");
+        t.printStackTrace();
     }
 }

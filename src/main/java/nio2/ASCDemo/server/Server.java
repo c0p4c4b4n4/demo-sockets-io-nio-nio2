@@ -7,30 +7,17 @@ import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
 
 public class Server {
-    private final static int PORT = 9090;
 
-    private final static String HOST = "localhost";
+    public static void main(String[] args) throws IOException, InterruptedException {
+        AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
 
-    public static void main(String[] args) {
-        AsynchronousServerSocketChannel channelServer;
-        try {
-            channelServer = AsynchronousServerSocketChannel.open();
-            channelServer.bind(new InetSocketAddress(HOST, PORT));
-            System.out.printf("Server listening at %s%n",
-                    channelServer.getLocalAddress());
-        } catch (IOException ioe) {
-            System.err.println("Unable to open or bind server socket channel");
-            return;
-        }
+        System.out.println("echo server started: " + serverSocketChannel);
 
-        Attachment att = new Attachment();
-        att.channelServer = channelServer;
-        channelServer.accept(att, new ConnectionHandler());
+        Attachment attachment = new Attachment();
+        attachment.channelServer = serverSocketChannel;
+        serverSocketChannel.accept(attachment, new ConnectionHandler());
 
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException ie) {
-            System.out.println("Server terminating");
-        }
+        Thread.currentThread().join();
     }
 }

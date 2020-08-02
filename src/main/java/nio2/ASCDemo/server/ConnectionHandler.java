@@ -9,32 +9,34 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-public class ConnectionHandler
-        implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
+public class ConnectionHandler implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
+
     @Override
-    public void completed(AsynchronousSocketChannel channelClient,
-                          Attachment att) {
+    public void completed(AsynchronousSocketChannel channelClient, Attachment attachment) {
         try {
-            SocketAddress clientAddr = channelClient.getRemoteAddress();
-            System.out.printf("Accepted connection from %s%n", clientAddr);
+            SocketAddress socketAddress = channelClient.getRemoteAddress();
+            System.out.printf("Accepted connection from %s%n", socketAddress);
 
-            att.channelServer.accept(att, this);
+            attachment.channelServer.accept(attachment, this);
 
-            Attachment newAtt = new Attachment();
-            newAtt.channelServer = att.channelServer;
-            newAtt.channelClient = channelClient;
-            newAtt.isReadMode = true;
-            newAtt.buffer = ByteBuffer.allocate(2048);
-            newAtt.clientAddr = clientAddr;
-            ReadWriteHandler rwh = new ReadWriteHandler();
-            channelClient.read(newAtt.buffer, newAtt, rwh);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Attachment attachment2 = new Attachment();
+            attachment2.channelServer = attachment.channelServer;
+            attachment2.channelClient = channelClient;
+            attachment2.isReadMode = true;
+            attachment2.buffer = ByteBuffer.allocate(2048);
+            attachment2.clientAddr = socketAddress;
+
+            ReadWriteHandler readWriteHandler = new ReadWriteHandler();
+            channelClient.read(attachment2.buffer, attachment2, readWriteHandler);
+        } catch (IOException e) {
+            System.out.println("Failed to complete connection");
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void failed(Throwable t, Attachment att) {
+    public void failed(Throwable t, Attachment attachment) {
         System.out.println("Failed to accept connection");
+        t.printStackTrace();
     }
 }
