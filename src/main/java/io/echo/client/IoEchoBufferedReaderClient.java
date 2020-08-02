@@ -25,10 +25,10 @@ public class IoEchoBufferedReaderClient {
             BufferedReader br = new BufferedReader(isr);
 
             System.out.println("echo client received: " + br.readLine());
-            Thread.sleep(1000);
 
             socket.close();
             System.out.println("echo client disconnected");
+            Thread.sleep(1000);
         }
     }
 }
