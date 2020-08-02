@@ -16,21 +16,21 @@ public class AsynchronousSocketChannelExample {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new AsynchronousSocketChannelExample();
     }
-    
+
     public AsynchronousSocketChannelExample() throws IOException, InterruptedException, ExecutionException {
         // open a server channel and bind to a free address, then accept a connection
         System.out.println("Open server channel");
         AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress("localhost", 9900));
         System.out.println("Initiate accept");
         Future<AsynchronousSocketChannel> future = server.accept();
-        
+
         // create a client
         Client client = new Client(new InetSocketAddress("localhost", 9900));
-        
+
         // wait for the accept to finish
         AsynchronousSocketChannel worker = future.get();
         System.out.println("Accept completed");
-        
+
         // start client thread
         client.start();
         ByteBuffer readBuffer = ByteBuffer.allocate(100);
@@ -41,7 +41,7 @@ public class AsynchronousSocketChannelExample {
         } catch (TimeoutException e) {
             System.out.println("Client didn't respond in time");
         }
-        
+
         client.join();
         client.close();
         server.close();
@@ -51,7 +51,7 @@ public class AsynchronousSocketChannelExample {
 class Client extends Thread {
     AsynchronousSocketChannel client;
     Future<Void> connectFuture;
-    
+
     public Client(SocketAddress server) throws IOException {
         // open a new socket channel and connect to the server
         System.out.println("Open client channel");
@@ -59,7 +59,7 @@ class Client extends Thread {
         System.out.println("Connect to server");
         connectFuture = client.connect(server);
     }
-    
+
     public void run() {
         // if the connect hasn't happened yet cancel it
         if (!connectFuture.isDone()) {
@@ -78,7 +78,7 @@ class Client extends Thread {
             e.printStackTrace();
         }
     }
-    
+
     public void close() throws IOException {
         client.close();
     }

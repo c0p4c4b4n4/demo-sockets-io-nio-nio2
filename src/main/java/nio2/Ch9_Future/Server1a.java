@@ -14,7 +14,7 @@ public class Server1a {
     public static void main(String[] args) {
 
         final int DEFAULT_PORT = 5555;
-        final String IP = "127.0.0.1";        
+        final String IP = "127.0.0.1";
 
         //create asynchronous server-socket channel bound to the default group
         try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open()) {
@@ -37,7 +37,7 @@ public class Server1a {
                         System.out.println("Incoming connection from: " + asynchronousSocketChannel.getRemoteAddress());
 
                         final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
-                        
+
                         //transmitting data                  
                         while (asynchronousSocketChannel.read(buffer).get() != -1) {
 
@@ -51,7 +51,7 @@ public class Server1a {
                                 buffer.clear();
                             }
                         }
-                        
+
                         System.out.println(asynchronousSocketChannel.getRemoteAddress() + " was successfully served!");
 
                     } catch (IOException | InterruptedException | ExecutionException ex) {

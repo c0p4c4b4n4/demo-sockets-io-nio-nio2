@@ -15,7 +15,7 @@ public class Server1b {
         final int DEFAULT_PORT = 5555;
         final String IP = "127.0.0.1";
         ExecutorService taskExecutor = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
-       
+
         //create asynchronous server-socket channel bound to the default group
         try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open()) {
 
@@ -29,17 +29,17 @@ public class Server1b {
 
                 //display a waiting message while ... waiting clients
                 System.out.println("Waiting for connections ...");
-                
-                while (true) {                                 
+
+                while (true) {
                     Future<AsynchronousSocketChannel> asynchronousSocketChannelFuture = asynchronousServerSocketChannel.accept();
 
-                    try {                        
+                    try {
                         final AsynchronousSocketChannel asynchronousSocketChannel = asynchronousSocketChannelFuture.get();
                         Callable<String> worker = new Callable<String>() {
 
                             @Override
                             public String call() throws Exception {
-                                
+
                                 String host = asynchronousSocketChannel.getRemoteAddress().toString();
                                 System.out.println("Incoming connection from: " + host);
 
@@ -64,8 +64,8 @@ public class Server1b {
                                 return host;
                             }
                         };
-                        
-                        taskExecutor.submit(worker);                 
+
+                        taskExecutor.submit(worker);
 
                     } catch (InterruptedException | ExecutionException ex) {
                         System.err.println(ex);

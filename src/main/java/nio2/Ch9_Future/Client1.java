@@ -37,7 +37,7 @@ public class Client1 {
                 Void connect = asynchronousSocketChannel.connect(new InetSocketAddress(IP, DEFAULT_PORT)).get();
 
                 if (connect == null) {
-                    
+
                     System.out.println("Local address: " + asynchronousSocketChannel.getLocalAddress());
 
                     //transmitting data
@@ -61,8 +61,8 @@ public class Client1 {
                             System.out.println("50 was generated! Close the asynchronous socket channel!");
                             break;
                         } else {
-                            randomBuffer = ByteBuffer.wrap("Random number:".concat(String.valueOf(r)).getBytes());                             
-                            asynchronousSocketChannel.write(randomBuffer).get();          
+                            randomBuffer = ByteBuffer.wrap("Random number:".concat(String.valueOf(r)).getBytes());
+                            asynchronousSocketChannel.write(randomBuffer).get();
                         }
                     }
 
