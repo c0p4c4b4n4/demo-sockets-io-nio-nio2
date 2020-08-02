@@ -11,12 +11,12 @@ import java.util.concurrent.Future;
 public class Server1z {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open();
-        InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999);
-        serverChannel.bind(hostAddress);
-        Future<AsynchronousSocketChannel> acceptResult = serverChannel.accept();
+        AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
 
+        Future<AsynchronousSocketChannel> acceptResult = serverSocketChannel.accept();
         AsynchronousSocketChannel clientChannel = acceptResult.get();
+
         if ((clientChannel != null) && (clientChannel.isOpen())) {
             while (true) {
                 ByteBuffer buffer = ByteBuffer.allocate(32);
@@ -38,7 +38,7 @@ public class Server1z {
             }
 
             clientChannel.close();
-            serverChannel.close();
+            serverSocketChannel.close();
         }
     }
 }
