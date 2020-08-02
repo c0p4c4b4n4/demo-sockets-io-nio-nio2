@@ -10,47 +10,37 @@ import java.util.concurrent.*;
 
 public class Server1b {
 
-    public static void main(String[] args) {
-
-        final int DEFAULT_PORT = 5555;
-        final String IP = "127.0.0.1";
+    public static void main(String[] args) throws IOException {
         ExecutorService taskExecutor = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
         //create asynchronous server-socket channel bound to the default group
-        try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open()) {
+        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open()) {
 
-            if (asynchronousServerSocketChannel.isOpen()) {
+            if (serverSocketChannel.isOpen()) {
+                serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
+                serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
-                //set some options
-                asynchronousServerSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
-                asynchronousServerSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-                //bind the server-socket channel to local address
-                asynchronousServerSocketChannel.bind(new InetSocketAddress(IP, DEFAULT_PORT));
+                serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
 
-                //display a waiting message while ... waiting clients
                 System.out.println("Waiting for connections ...");
-
                 while (true) {
-                    Future<AsynchronousSocketChannel> asynchronousSocketChannelFuture = asynchronousServerSocketChannel.accept();
+                    Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
                     try {
-                        final AsynchronousSocketChannel asynchronousSocketChannel = asynchronousSocketChannelFuture.get();
+                        AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
                         Callable<String> worker = new Callable<String>() {
 
                             @Override
                             public String call() throws Exception {
-
-                                String host = asynchronousSocketChannel.getRemoteAddress().toString();
+                                String host = socketChannel.getRemoteAddress().toString();
                                 System.out.println("Incoming connection from: " + host);
 
-                                final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                                ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
-                                //transmitting data                  
-                                while (asynchronousSocketChannel.read(buffer).get() != -1) {
-
+                                while (socketChannel.read(buffer).get() != -1) {
                                     buffer.flip();
 
-                                    asynchronousSocketChannel.write(buffer).get();
+                                    socketChannel.write(buffer).get();
 
                                     if (buffer.hasRemaining()) {
                                         buffer.compact();
@@ -59,7 +49,7 @@ public class Server1b {
                                     }
                                 }
 
-                                asynchronousSocketChannel.close();
+                                socketChannel.close();
                                 System.out.println(host + " was successfully served!");
                                 return host;
                             }
@@ -72,8 +62,7 @@ public class Server1b {
 
                         System.err.println("\n Server is shutting down ...");
 
-                        //this will make the executor accept no new threads
-                        // and finish all existing threads in the queue
+                        //this will make the executor accept no new threads and finish all existing threads in the queue
                         taskExecutor.shutdown();
 
                         //wait until all threads are finish                        
@@ -86,10 +75,6 @@ public class Server1b {
             } else {
                 System.out.println("The asynchronous server-socket channel cannot be opened!");
             }
-
-        } catch (IOException ex) {
-            System.err.println(ex);
         }
-
     }
 }

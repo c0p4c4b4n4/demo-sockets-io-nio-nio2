@@ -11,40 +11,29 @@ import java.util.concurrent.Future;
 
 public class Server1a {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        // create asynchronous server-socket channel bound to the default group
+        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open()) {
 
-        final int DEFAULT_PORT = 5555;
-        final String IP = "127.0.0.1";
+            if (serverSocketChannel.isOpen()) {
+                serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
+                serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
-        //create asynchronous server-socket channel bound to the default group
-        try (AsynchronousServerSocketChannel asynchronousServerSocketChannel = AsynchronousServerSocketChannel.open()) {
+                serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
 
-            if (asynchronousServerSocketChannel.isOpen()) {
-
-                //set some options
-                asynchronousServerSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
-                asynchronousServerSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-                //bind the server-socket channel to local address
-                asynchronousServerSocketChannel.bind(new InetSocketAddress(IP, DEFAULT_PORT));
-
-                //display a waiting message while ... waiting clients
-                System.out.println("Waiting for connections ...");
+                System.out.println("waiting for connections ...");
                 while (true) {
-                    Future<AsynchronousSocketChannel> asynchronousSocketChannelFuture = asynchronousServerSocketChannel.accept();
+                    Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
-                    try (AsynchronousSocketChannel asynchronousSocketChannel = asynchronousSocketChannelFuture.get()) {
+                    try (AsynchronousSocketChannel socketChannel = socketChannelFuture.get()) {
+                        System.out.println("incoming connection: " + socketChannel.getRemoteAddress());
 
-                        System.out.println("Incoming connection from: " + asynchronousSocketChannel.getRemoteAddress());
+                        ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
-                        final ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
-
-                        //transmitting data                  
-                        while (asynchronousSocketChannel.read(buffer).get() != -1) {
-
+                        while (socketChannel.read(buffer).get() != -1) {
                             buffer.flip();
 
-                            asynchronousSocketChannel.write(buffer).get();
-
+                            socketChannel.write(buffer).get();
                             if (buffer.hasRemaining()) {
                                 buffer.compact();
                             } else {
@@ -52,19 +41,17 @@ public class Server1a {
                             }
                         }
 
-                        System.out.println(asynchronousSocketChannel.getRemoteAddress() + " was successfully served!");
+                        System.out.println(socketChannel.getRemoteAddress() + " was successfully served!");
 
                     } catch (IOException | InterruptedException | ExecutionException ex) {
                         System.err.println(ex);
                     }
                 }
+
+                //serverSocketChannel.close();
             } else {
                 System.out.println("The asynchronous server-socket channel cannot be opened!");
             }
-
-        } catch (IOException ex) {
-            System.err.println(ex);
         }
-
     }
 }
