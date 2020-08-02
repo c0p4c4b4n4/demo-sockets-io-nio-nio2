@@ -13,31 +13,31 @@ import java.nio.charset.StandardCharsets;
 
 public class IoEchoClient {
 
-    public static void main(String[] args) throws IOException {
-        System.out.println("echo client is starting");
-        Socket socket = new Socket("localhost", 9001);
-        System.out.println("echo client started: " + socket);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        String[] msgs = {"Alpha", "Bravo", "Charlie"};
+        for (String msg : msgs) {
+            Socket socket = new Socket("localhost", 9001);
+            System.out.println("echo client started: " + socket);
 
-        String msg = "abcdefghijklmnopqrstuvwxyz";
+            InputStream is = socket.getInputStream();
+            OutputStream os = socket.getOutputStream();
 
-        InputStream in = socket.getInputStream();
-        OutputStream out = socket.getOutputStream();
+            byte[] bytes = msg.getBytes();
+            os.write(bytes);
 
-        byte[] bytes = msg.getBytes();
-        out.write(bytes);
+            int totalRead = 0;
+            int read;
+            while (totalRead < bytes.length) {
+                if ((read = is.read(bytes, totalRead, bytes.length - totalRead)) == -1)
+                    throw new SocketException("Connection closed prematurely");
+                totalRead += read;
+            }
 
-        int totalBytesReceived = 0;
-        int bytesReceived;
-        while (totalBytesReceived < bytes.length) {
-            if ((bytesReceived = in.read(bytes, totalBytesReceived, bytes.length - totalBytesReceived)) == -1)
-                throw new SocketException("Connection closed prematurely");
-            totalBytesReceived += bytesReceived;
+            System.out.println("echo client received: " + new String(bytes));
+
+            socket.close();
+            System.out.println("echo client disconnected");
+            Thread.sleep(1000);
         }
-
-        System.out.println("echo client received: " + new String(bytes));
-
-        socket.close();
-
-        System.out.println("echo client finished");
     }
 }

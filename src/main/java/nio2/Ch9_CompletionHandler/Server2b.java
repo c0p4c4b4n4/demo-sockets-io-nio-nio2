@@ -72,7 +72,7 @@ public class Server2b {
                             try {
                                 result.close();
                             } catch (IOException e) {
-                                System.err.println(e);
+                                e.printStackTrace();
                             }
                         }
                     }

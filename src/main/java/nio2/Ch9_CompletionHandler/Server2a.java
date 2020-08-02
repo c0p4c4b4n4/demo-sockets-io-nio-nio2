@@ -61,7 +61,7 @@ public class Server2a {
                             try {
                                 result.close();
                             } catch (IOException e) {
-                                System.err.println(e);
+                                e.printStackTrace();
                             }
                         }
                     }

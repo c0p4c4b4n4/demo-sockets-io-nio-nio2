@@ -1,4 +1,4 @@
-package pattern.proactor;
+package patterns.proactor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

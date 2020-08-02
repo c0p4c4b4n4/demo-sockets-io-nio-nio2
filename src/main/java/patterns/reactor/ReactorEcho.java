@@ -1,4 +1,4 @@
-package pattern.reactor;
+package patterns.reactor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -11,12 +11,21 @@ import java.util.concurrent.*;
 public class IoEchoThreadPoolServer {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(9001);
+        ServerSocket serverSocket = new ServerSocket(9001);
+        System.out.println("echo server started: " + serverSocket);
+
         ExecutorService executor = Executors.newCachedThreadPool();
-        while (true) {
-            Socket socket = server.accept();
+
+        int i = 0;
+        while (i++ < 3) {
+            Socket socket = serverSocket.accept();
             executor.submit(new Worker(socket));
         }
+
+        executor.shutdown();
+
+        serverSocket.close();
+        System.out.println("echo server finished");
     }
 
     private static class Worker implements Runnable {
@@ -30,21 +39,21 @@ public class IoEchoThreadPoolServer {
         @Override
         public void run() {
             try {
-                InputStream in = socket.getInputStream();
-                OutputStream out = socket.getOutputStream();
+                InputStream is = socket.getInputStream();
+                OutputStream os = socket.getOutputStream();
 
                 int read;
-                byte[] buf = new byte[1024];
-                while ((read = in.read(buf)) != -1) {
-                    out.write(buf, 0, read);
+                byte[] bytes = new byte[1024];
+                while ((read = is.read(bytes)) != -1) {
+                    os.write(bytes, 0, read);
                 }
             } catch (IOException e) {
-                System.err.println(e);
+                e.printStackTrace();
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
             }
         }

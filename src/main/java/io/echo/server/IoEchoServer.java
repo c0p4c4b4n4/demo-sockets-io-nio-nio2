@@ -20,14 +20,14 @@ public class IoEchoServer {
             Socket socket = serverSocket.accept();
             System.out.println("incoming connection: " + socket);
 
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
+            InputStream is = socket.getInputStream();
+            OutputStream os = socket.getOutputStream();
 
             int read;
-            byte[] buf = new byte[1024];
-            while ((read = in.read(buf)) != -1) {
-                System.out.println("server received: " + new String(buf, StandardCharsets.UTF_8));
-                out.write(buf, 0, read);
+            byte[] bytes = new byte[1024];
+            while ((read = is.read(bytes)) != -1) {
+                System.out.println("server received: " + new String(bytes, StandardCharsets.UTF_8));
+                os.write(bytes, 0, read);
             }
 
             socket.close();
