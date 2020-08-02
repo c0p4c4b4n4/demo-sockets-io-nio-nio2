@@ -56,7 +56,7 @@ public class NioEchoServer {
 
                         buffer.flip();
                         socketChannel.write(buffer);
-                        buffer.clear();
+                        buffer.clear(); // if the buffer is reusable
                     }
                 }
             }
