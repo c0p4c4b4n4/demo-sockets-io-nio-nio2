@@ -1,4 +1,4 @@
-package patterns.proactor;
+package patterns.proactor_echo;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;

@@ -1,15 +1,10 @@
-package patterns.proactor;
+package patterns.proactor_echo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-class ProactorInitiator {
+public class ProactorInitiator {
 
     private static final int SERVER_PORT = 9001;
 
@@ -22,10 +17,10 @@ class ProactorInitiator {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Starting NIO2 server at port: " + SERVER_PORT);
+        System.out.println("Starting Proactor NIO2 echo server at port: " + SERVER_PORT);
         new ProactorInitiator().initiateProactiveServer(SERVER_PORT);
 
-        // Sleep indefinitely since otherwise the JVM would terminate
+        // sleep indefinitely since otherwise the JVM would terminate
         while (true) {
             Thread.sleep(Long.MAX_VALUE);
         }

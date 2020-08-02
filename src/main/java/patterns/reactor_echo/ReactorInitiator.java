@@ -1,16 +1,16 @@
-package patterns.reactor;
+package patterns.reactor_echo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 
-class ReactorInitiator {
+public class ReactorInitiator {
 
     private static final int SERVER_PORT = 9001;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Starting NIO server at port: " + SERVER_PORT);
+        System.out.println("Starting Reactor NIO echo server at port: " + SERVER_PORT);
         new ReactorInitiator().initiateReactiveServer(SERVER_PORT);
     }
 
@@ -26,6 +26,5 @@ class ReactorInitiator {
         dispatcher.registerEventHandler(SelectionKey.OP_WRITE, new WriteEventHandler());
 
         dispatcher.run();
-
     }
 }

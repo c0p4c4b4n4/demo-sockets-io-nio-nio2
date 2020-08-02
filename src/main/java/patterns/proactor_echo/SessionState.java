@@ -1,4 +1,4 @@
-package patterns.proactor;
+package patterns.proactor_echo;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

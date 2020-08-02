@@ -1,4 +1,4 @@
-package patterns.reactor;
+package patterns.reactor_echo;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;

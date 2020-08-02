@@ -1,4 +1,4 @@
-package patterns.reactor;
+package patterns.reactor_echo;
 
 import java.io.IOException;
 import java.nio.channels.SelectableChannel;
