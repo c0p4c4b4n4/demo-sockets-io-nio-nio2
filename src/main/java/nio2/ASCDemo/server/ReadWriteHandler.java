@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import java.nio.channels.CompletionHandler;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> {
@@ -13,8 +12,8 @@ public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> 
     public void completed(Integer result, Attachment attachment) {
         try {
             if (result == -1) {
-                attachment.channelClient.close();
-                System.out.printf("Stopped listening to client %s%n", attachment.clientAddr);
+                attachment.socketChannel.close();
+                System.out.printf("Stopped listening to client %s%n", attachment.clientSocketAddress);
             } else {
                 if (attachment.isReadMode) {
                     attachment.buffer.flip();
@@ -23,17 +22,17 @@ public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> 
                     byte[] bytes = new byte[limit];
 
                     attachment.buffer.get(bytes, 0, limit);
-                    System.out.printf("Client at %s sends message: %s%n", attachment.clientAddr, new String(bytes, StandardCharsets.UTF_8));
+                    System.out.printf("Client at %s sends message: %s%n", attachment.clientSocketAddress, new String(bytes, StandardCharsets.UTF_8));
 
                     attachment.isReadMode = false;
 
                     attachment.buffer.rewind();
-                    attachment.channelClient.write(attachment.buffer, attachment, this);
+                    attachment.socketChannel.write(attachment.buffer, attachment, this);
                 } else {
                     attachment.isReadMode = true;
 
                     attachment.buffer.clear();
-                    attachment.channelClient.read(attachment.buffer, attachment, this);
+                    attachment.socketChannel.read(attachment.buffer, attachment, this);
                 }
             }
         } catch (IOException e) {

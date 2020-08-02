@@ -8,9 +8,9 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 
 public class Attachment {
-    public AsynchronousServerSocketChannel channelServer;
-    public AsynchronousSocketChannel channelClient;
+    public AsynchronousServerSocketChannel serverSocketChannel;
+    public AsynchronousSocketChannel socketChannel;
     public boolean isReadMode;
     public ByteBuffer buffer;
-    public SocketAddress clientAddr;
+    public SocketAddress clientSocketAddress;
 }

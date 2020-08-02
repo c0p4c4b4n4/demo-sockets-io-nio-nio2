@@ -15,7 +15,7 @@ public class Server {
         System.out.println("echo server started: " + serverSocketChannel);
 
         Attachment attachment = new Attachment();
-        attachment.channelServer = serverSocketChannel;
+        attachment.serverSocketChannel = serverSocketChannel;
         serverSocketChannel.accept(attachment, new ConnectionHandler());
 
         Thread.currentThread().join();

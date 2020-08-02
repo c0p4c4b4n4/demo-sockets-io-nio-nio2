@@ -17,14 +17,14 @@ public class ConnectionHandler implements CompletionHandler<AsynchronousSocketCh
             SocketAddress socketAddress = channelClient.getRemoteAddress();
             System.out.printf("Accepted connection from %s%n", socketAddress);
 
-            attachment.channelServer.accept(attachment, this);
+            attachment.serverSocketChannel.accept(attachment, this);
 
             Attachment attachment2 = new Attachment();
-            attachment2.channelServer = attachment.channelServer;
-            attachment2.channelClient = channelClient;
+            attachment2.serverSocketChannel = attachment.serverSocketChannel;
+            attachment2.socketChannel = channelClient;
             attachment2.isReadMode = true;
             attachment2.buffer = ByteBuffer.allocate(2048);
-            attachment2.clientAddr = socketAddress;
+            attachment2.clientSocketAddress = socketAddress;
 
             ReadWriteHandler readWriteHandler = new ReadWriteHandler();
             channelClient.read(attachment2.buffer, attachment2, readWriteHandler);
