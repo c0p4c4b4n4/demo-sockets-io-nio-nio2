@@ -1,4 +1,4 @@
-package nio2.b;
+package nio2.ASCDemo.server_b;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
