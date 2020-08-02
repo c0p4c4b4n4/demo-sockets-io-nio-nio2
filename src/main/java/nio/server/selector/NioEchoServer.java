@@ -1,4 +1,4 @@
-package nio.server.selector_echo;
+package nio.server.selector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioEchoServer3 {
+public class NioEchoServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo server is starting...");
@@ -46,20 +46,17 @@ public class NioEchoServer3 {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ByteBuffer buffer = ByteBuffer.allocate(10);
+                    int n = socketChannel.read(buffer);
 
-                    while (true) {
-                        buffer.clear();
-                        int n = socketChannel.read(buffer);
-                        System.out.println("read bytes: " + n);
-
-                        if (n <= 0) {
-                            socketChannel.close();
-                            System.out.println("echo client disconnected");
-                            break;
-                        }
+                    if (n < 0) {
+                        socketChannel.close();
+                        System.out.println("echo client disconnected");
+                    } else {
+                        System.out.println("echo server received: " + new String(buffer.array()));
 
                         buffer.flip();
                         socketChannel.write(buffer);
+                        buffer.clear();
                     }
                 }
             }

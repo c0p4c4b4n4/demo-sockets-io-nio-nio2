@@ -1,4 +1,4 @@
-package nio.server.channel_echo;
+package nio.server.channel;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.time.LocalDateTime;
 
 public class NioNonBlockingEchoServer {
 
