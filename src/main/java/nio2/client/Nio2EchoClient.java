@@ -22,7 +22,7 @@ public class Nio2EchoClient {
         byte[] bytes = message.getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         Future<Integer> writeResult = client.write(buffer);
-         writeResult.get();
+        writeResult.get();
 
         buffer.flip();
         Future<Integer> readResult = client.read(buffer);
