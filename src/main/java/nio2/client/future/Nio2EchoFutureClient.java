@@ -1,4 +1,4 @@
-package nio2.b;
+package nio2.client.future;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class AsyncEchoClient {
+public class Nio2EchoFutureClient {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
