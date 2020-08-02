@@ -62,18 +62,17 @@ public class MultiPortEchoServer {
 
                     System.out.println("Got connection from " + sc);
                 } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {
-                    // Read the data
-                    SocketChannel sc = (SocketChannel) key.channel();
+                    SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     while (true) {
                         buffer.clear();
-                        int n = sc.read(buffer);
+                        int n = socketChannel.read(buffer);
                         if (n <= 0) {
                             break;
                         }
                         buffer.flip();
 
-                        sc.write(buffer);
+                        socketChannel.write(buffer);
                     }
 
                     it.remove();
