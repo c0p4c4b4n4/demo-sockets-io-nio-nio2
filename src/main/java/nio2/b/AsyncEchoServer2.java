@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AsyncEchoServer2 {
+
     private AsynchronousServerSocketChannel serverChannel;
     private AsynchronousSocketChannel clientChannel;
 
@@ -21,8 +22,10 @@ public class AsyncEchoServer2 {
             serverChannel.bind(hostAddress);
             while (true) {
 
+                Attachment attachment = new Attachment();
+                attachment.serverChannel = serverChannel;
                 CompletionHandler<AsynchronousSocketChannel, Attachment> handler = new ConnectionHandler();
-                serverChannel.accept(null, handler);
+                serverChannel.accept(attachment, handler);
                 try {
                     System.in.read();
                 } catch (IOException e) {
@@ -38,5 +41,4 @@ public class AsyncEchoServer2 {
         new AsyncEchoServer2();
     }
 
-    private class
 }

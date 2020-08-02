@@ -1,7 +1,5 @@
 package nio2.b;
 
-import nio2.ASCDemo.server.Attachment;
-
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -11,16 +9,19 @@ public class ConnectionHandler implements CompletionHandler<AsynchronousSocketCh
 
     @Override
     public void completed(AsynchronousSocketChannel result, Attachment attachment) {
-        if (serverChannel.isOpen())
-            serverChannel.accept(null, this);
-        clientChannel = result;
-        if ((clientChannel != null) && (clientChannel.isOpen())) {
+        if (attachment.serverChannel.isOpen())
+            attachment.serverChannel.accept(null, this);
+
+        attachment.clientChannel = result;
+
+        if ((attachment.clientChannel != null) && (attachment.clientChannel.isOpen())) {
             ReadWriteHandler handler = new ReadWriteHandler();
             ByteBuffer buffer = ByteBuffer.allocate(32);
-            Map<String, Object> readInfo = new HashMap<>();
-            readInfo.put("action", "read");
-            readInfo.put("buffer", buffer);
-            clientChannel.read(buffer, readInfo, handler);
+
+            Attachment attachment2 = new Attachment();
+            attachment2.action = Attachment.Action.read;
+            attachment2.buffer = buffer;
+            attachment.clientChannel.read(buffer, attachment2, handler);
         }
     }
 
