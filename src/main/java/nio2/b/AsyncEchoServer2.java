@@ -17,32 +17,12 @@ public class AsyncEchoServer2 {
     public AsyncEchoServer2() {
         try {
             serverChannel = AsynchronousServerSocketChannel.open();
-            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999);
+            InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9001);
             serverChannel.bind(hostAddress);
             while (true) {
 
-                serverChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Object>() {
-
-                    @Override
-                    public void completed(AsynchronousSocketChannel result, Object attachment) {
-                        if (serverChannel.isOpen())
-                            serverChannel.accept(null, this);
-                        clientChannel = result;
-                        if ((clientChannel != null) && (clientChannel.isOpen())) {
-                            ReadWriteHandler handler = new ReadWriteHandler();
-                            ByteBuffer buffer = ByteBuffer.allocate(32);
-                            Map<String, Object> readInfo = new HashMap<>();
-                            readInfo.put("action", "read");
-                            readInfo.put("buffer", buffer);
-                            clientChannel.read(buffer, readInfo, handler);
-                        }
-                    }
-
-                    @Override
-                    public void failed(Throwable exc, Object attachment) {
-                        // process error
-                    }
-                });
+                CompletionHandler<AsynchronousSocketChannel, Attachment> handler = new ConnectionHandler();
+                serverChannel.accept(null, handler);
                 try {
                     System.in.read();
                 } catch (IOException e) {
@@ -54,35 +34,9 @@ public class AsyncEchoServer2 {
         }
     }
 
-    class ReadWriteHandler implements CompletionHandler<Integer, Map<String, Object>> {
-
-        @Override
-        public void completed(Integer result, Map<String, Object> attachment) {
-            Map<String, Object> actionInfo = attachment;
-            String action = (String) actionInfo.get("action");
-            if ("read".equals(action)) {
-                ByteBuffer buffer = (ByteBuffer) actionInfo.get("buffer");
-                buffer.flip();
-                actionInfo.put("action", "write");
-                clientChannel.write(buffer, actionInfo, this);
-                buffer.clear();
-            } else if ("write".equals(action)) {
-                ByteBuffer buffer = ByteBuffer.allocate(32);
-                actionInfo.put("action", "read");
-                actionInfo.put("buffer", buffer);
-                clientChannel.read(buffer, actionInfo, this);
-            }
-
-        }
-
-        @Override
-        public void failed(Throwable exc, Map<String, Object> attachment) {
-
-        }
-
-    }
-
     public static void main(String[] args) {
         new AsyncEchoServer2();
     }
+
+    private class
 }
