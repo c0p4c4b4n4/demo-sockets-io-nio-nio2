@@ -19,7 +19,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
-        logger.info("write");
+        logger.info("written: " + bytesWritten);
 
         try {
             socketChannel.close();

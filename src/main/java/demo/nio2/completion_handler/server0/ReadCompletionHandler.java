@@ -21,14 +21,14 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
-        logger.info("read");
+        logger.info("read: " + bytesRead);
 
         byte[] buffer = new byte[bytesRead];
         inputBuffer.rewind();
 
         inputBuffer.get(buffer);
         String message = new String(buffer);
-        System.out.println("Received message from client : " + message);
+        logger.info("Received message from client : " + message);
 
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(serverSocketChannel, socketChannel);
         ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);

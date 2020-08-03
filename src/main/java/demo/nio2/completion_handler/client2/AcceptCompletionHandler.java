@@ -20,6 +20,8 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, At
 
     @Override
     public void completed(Void result, Attachment attachment) {
+        logger.info("accepted");
+
         String message = attachment.messages[0];
         attachment.messages = Arrays.copyOfRange(attachment.messages, 1, attachment.messages.length);
 
