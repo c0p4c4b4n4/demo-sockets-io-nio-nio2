@@ -42,6 +42,8 @@ public class IoEchoThreadPoolServer {
         @Override
         public void run() {
             try {
+                System.out.println("incoming connection: " + socket);
+
                 InputStream is = socket.getInputStream();
                 OutputStream os = socket.getOutputStream();
 
@@ -55,6 +57,7 @@ public class IoEchoThreadPoolServer {
             } finally {
                 try {
                     socket.close();
+                    System.out.println("incoming connection finished");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

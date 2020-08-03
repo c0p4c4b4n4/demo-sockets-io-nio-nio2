@@ -29,7 +29,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
             logger.info("incoming connection: " + socketChannel);
 
-            Callable<String> worker = new Worker(socketChannel);
+            Runnable worker = new Worker(socketChannel);
             executorService.submit(worker);
         }
 
@@ -42,7 +42,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         logger.info("echo server finished");
     }
 
-    private static class Worker implements Callable<String> {
+    private static class Worker implements Runnable {
 
         private final AsynchronousSocketChannel socketChannel;
 
@@ -51,27 +51,33 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         }
 
         @Override
-        public String call() throws Exception {
-            logger.info("incoming connection: " + socketChannel);
+        public void run() {
+            try {
+                logger.info("incoming connection: " + socketChannel);
 
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                while (socketChannel.read(buffer).get() != -1) {
+                    buffer.flip();
 
-            while (socketChannel.read(buffer).get() != -1) {
-                buffer.flip();
+                    socketChannel.write(buffer).get();
 
-                socketChannel.write(buffer).get();
+                    if (buffer.hasRemaining()) {
+                        buffer.compact();
+                    } else {
+                        buffer.clear();
+                    }
+                }
 
-                if (buffer.hasRemaining()) {
-                    buffer.compact();
-                } else {
-                    buffer.clear();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    socketChannel.close();
+                    System.out.println("incoming connection finished");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
-            socketChannel.close();
-            logger.info("incoming connection finished");
-
-            return "???";
         }
     }
 }
