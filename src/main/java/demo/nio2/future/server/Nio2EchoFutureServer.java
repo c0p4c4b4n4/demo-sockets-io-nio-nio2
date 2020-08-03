@@ -1,5 +1,7 @@
 package demo.nio2.future.server;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
@@ -9,7 +11,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class Nio2EchoFutureServer {
+public class Nio2EchoFutureServer extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
@@ -18,14 +20,14 @@ public class Nio2EchoFutureServer {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        System.out.println("echo server started: " + serverSocketChannel);
+        logger.info("echo server started: " + serverSocketChannel);
 
         int i = 0;
         while (i++ < 3) {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-            System.out.println("incoming connection: " + socketChannel);
+            logger.info("incoming connection: " + socketChannel);
 
             ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
@@ -41,10 +43,10 @@ public class Nio2EchoFutureServer {
             }
 
             socketChannel.close();
-            System.out.println("incoming connection finished");
+            logger.info("incoming connection finished");
         }
 
         serverSocketChannel.close();
-        System.out.println("echo server finished");
+        logger.info("echo server finished");
     }
 }
