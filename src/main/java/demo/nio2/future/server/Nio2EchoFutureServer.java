@@ -1,4 +1,4 @@
-package nio2.Ch9_Future;
+package demo.nio2.future.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,7 +9,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class Server1a {
+public class Nio2EchoFutureServer {
 
     public static void main(String[] args) throws IOException {
         // create asynchronous server-socket channel bound to the default group
