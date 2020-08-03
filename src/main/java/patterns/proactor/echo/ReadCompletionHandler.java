@@ -9,7 +9,7 @@ class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> 
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
 
-    public ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
+    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
         this.socketChannel = socketChannel;
         this.inputBuffer = inputBuffer;
     }

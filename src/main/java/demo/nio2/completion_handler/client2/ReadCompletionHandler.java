@@ -1,4 +1,4 @@
-package nio2.ASCDemo.client;
+package demo.nio2.completion_handler.client2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,6 +24,13 @@ class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
+        inputBuffer.flip();
+        int limit = inputBuffer.limit();
+        byte[] bytes = new byte[limit];
+        inputBuffer.get(bytes, 0, limit);
+        String msg = new String(bytes, CSUTF8);
+        System.out.println("echo client received: " + msg);
+
         if (attachment.messages.length == 0)
         {
             attachment.active = false;

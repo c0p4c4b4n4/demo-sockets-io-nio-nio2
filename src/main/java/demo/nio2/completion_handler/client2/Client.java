@@ -1,4 +1,4 @@
-package nio2.ASCDemo.client;
+package demo.nio2.completion_handler.client2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
