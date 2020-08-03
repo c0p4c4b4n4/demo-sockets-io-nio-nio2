@@ -11,9 +11,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Nio2EchoClientCompletionHandler1 extends Demo {
@@ -33,7 +31,7 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
             socketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
             socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
-            List<String> messages = new ArrayList<>(Arrays.asList("Alpha", "Bravo", "Charlie"));
+            String[] messages = new String[] {"Alpha", "Bravo", "Charlie"};
             AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel, messages);
             socketChannel.connect(new InetSocketAddress("localhost", 7000), null, acceptCompletionHandler);
 
@@ -47,11 +45,11 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
     private static class AcceptCompletionHandler implements CompletionHandler<Void, Void> {
 
         private final AsynchronousSocketChannel socketChannel;
-        private List<String> messages;
+        private String[] messages;
         private ByteBuffer outputBuffer;
         private ByteBuffer inputBuffer;
 
-        AcceptCompletionHandler(AsynchronousSocketChannel socketChannel, List<String> messages) {
+        AcceptCompletionHandler(AsynchronousSocketChannel socketChannel, String[] messages) {
             this.socketChannel = socketChannel;
             this.messages = messages;
             this.outputBuffer = null;
@@ -63,7 +61,9 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
             try {
                 logger.info("outgoing connection to: " + socketChannel.getRemoteAddress());
 
-                String message1 = messages.remove(0);
+                String message1 = messages[0];
+                messages = Arrays.copyOfRange(messages, 1, messages.length);
+
                 outputBuffer = ByteBuffer.wrap(message1.getBytes(CHARSET));
                 socketChannel.write(outputBuffer).get(); // blocked
 
@@ -80,11 +80,13 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
                         inputBuffer.clear();
                     }
 
-                    if (messages.isEmpty()) {
+                    if (messages.length == 0) {
                         active = false;
                         break;
                     } else {
-                        String message2 = messages.remove(0);
+                        String message2 = messages[0];
+                        messages = Arrays.copyOfRange(messages, 1, messages.length);
+
                         outputBuffer = ByteBuffer.wrap(message2.getBytes(CHARSET));
                         socketChannel.write(outputBuffer).get(); // blocked
 
