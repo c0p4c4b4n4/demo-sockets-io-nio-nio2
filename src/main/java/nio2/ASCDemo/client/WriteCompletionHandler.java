@@ -10,8 +10,7 @@ class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     private final static Charset CSUTF8 = Charset.forName("UTF-8");
 
-    private BufferedReader conReader =
-            new BufferedReader(new InputStreamReader(System.in));
+    private BufferedReader conReader =  new BufferedReader(new InputStreamReader(System.in));
 
     @Override
     public void completed(Integer result, Attachment att) {
@@ -42,12 +41,12 @@ class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
             byte[] data = msg.getBytes(CSUTF8);
             att.buffer.put(data);
             att.buffer.flip();
-            att.channel.write(att.buffer, att, this);
+            att.socketChannel.write(att.buffer, att, this);
         } else {
             att.isReadMode = true;
 
             att.buffer.clear();
-            att.channel.read(att.buffer, att, this);
+            att.socketChannel.read(att.buffer, att, this);
         }
     }
 

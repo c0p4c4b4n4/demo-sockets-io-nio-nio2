@@ -3,6 +3,7 @@ package nio2.ASCDemo.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
 
@@ -10,11 +11,27 @@ class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     private final static Charset CSUTF8 = Charset.forName("UTF-8");
 
-    private BufferedReader conReader =
-            new BufferedReader(new InputStreamReader(System.in));
+    private BufferedReader conReader =    new BufferedReader(new InputStreamReader(System.in));
 
     @Override
-    public void completed(Integer result, Attachment att) {
+    public void completed(Integer bytesRead, Attachment sessionState) {
+        byte[] buffer = new byte[bytesRead];
+        inputBuffer.rewind();
+
+        inputBuffer.get(buffer);
+        String message = new String(buffer);
+
+        System.out.println("Received message from client : " + message);
+
+        // Echo the message back to client
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
+
+        ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);
+
+        socketChannel.write(outputBuffer, sessionState, writeCompletionHandler);
+    }
+
+    public void completed2(Integer result, Attachment att) {
         if (att.isReadMode) {
             att.buffer.flip();
             int limit = att.buffer.limit();
@@ -42,12 +59,12 @@ class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
             byte[] data = msg.getBytes(CSUTF8);
             att.buffer.put(data);
             att.buffer.flip();
-            att.channel.write(att.buffer, att, this);
+            att.socketChannel.write(att.buffer, att, this);
         } else {
             att.isReadMode = true;
 
             att.buffer.clear();
-            att.channel.read(att.buffer, att, this);
+            att.socketChannel.read(att.buffer, att, this);
         }
     }
 
