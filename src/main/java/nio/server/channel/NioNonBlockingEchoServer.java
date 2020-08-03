@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 public class NioNonBlockingEchoServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("time server is starting...");
+        System.out.println("echo server is starting...");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
@@ -18,7 +18,7 @@ public class NioNonBlockingEchoServer {
 
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(7000));
-        System.out.println("time server started: " + serverSocket);
+        System.out.println("echo server started: " + serverSocket);
 
         int i = 0;
         while (i < 3) {
@@ -37,7 +37,7 @@ public class NioNonBlockingEchoServer {
                     buffer.flip();
 
                     socketChannel.write(buffer);
-                    System.out.println("time server sent: " + buffer.asCharBuffer().toString());
+                    System.out.println("echo server sent: " + buffer.asCharBuffer().toString());
                 }
 
                 socketChannel.close();
@@ -47,7 +47,7 @@ public class NioNonBlockingEchoServer {
             }
         }
 
-        System.out.println("time server finished");
+        System.out.println("echo server finished");
         serverSocket.close();
     }
 }

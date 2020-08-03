@@ -13,8 +13,7 @@ import java.util.concurrent.*;
 public class Nio2EchoFutureServerThreadPool extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        ExecutorService taskExecutor = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
-
+        ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
         serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
@@ -31,16 +30,15 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             logger.info("incoming connection: " + socketChannel);
 
             Callable<String> worker = new Worker(socketChannel);
-            taskExecutor.submit(worker);
+            executorService.submit(worker);
+        }
+
+        logger.info("echo server is finishing");
+        executorService.shutdown();
+        while (!executorService.isTerminated()) {
         }
 
         serverSocketChannel.close();
-        logger.info("echo server is finishing");
-
-        taskExecutor.shutdown();
-        while (!taskExecutor.isTerminated()) {
-        }
-
         logger.info("echo server finished");
     }
 

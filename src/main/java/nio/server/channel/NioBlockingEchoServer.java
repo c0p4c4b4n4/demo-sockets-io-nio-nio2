@@ -19,7 +19,7 @@ public class NioBlockingEchoServer {
 
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress("localhost", 7000));
-        System.out.println("time server started: " + serverSocket);
+        System.out.println("echo server started: " + serverSocket);
 
         int i = 0;
         while (i++ < 3) {
@@ -36,13 +36,13 @@ public class NioBlockingEchoServer {
                 buffer.flip();
 
                 socketChannel.write(buffer);
-                System.out.println("time server sent: " + buffer.asCharBuffer().toString());
+                System.out.println("echo server sent: " + buffer.asCharBuffer().toString());
             }
 
             socketChannel.close();
         }
 
-        System.out.println("time server finished");
+        System.out.println("echo server finished");
         serverSocket.close();
     }
 }

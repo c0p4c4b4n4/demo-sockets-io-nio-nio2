@@ -14,15 +14,18 @@ public class IoEchoThreadPoolServer {
         ServerSocket serverSocket = new ServerSocket(7000);
         System.out.println("echo server started: " + serverSocket);
 
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         int i = 0;
         while (i++ < 3) {
             Socket socket = serverSocket.accept();
-            executor.submit(new Worker(socket));
+            executorService.submit(new Worker(socket));
         }
 
-        executor.shutdown();
+        System.out.println("echo server is finishing");
+        executorService.shutdown();
+        while (!executorService.isTerminated()) {
+        }
 
         serverSocket.close();
         System.out.println("echo server finished");
