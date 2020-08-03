@@ -12,9 +12,9 @@ public class Nio2EchoFutureClient {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
-            AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
+            AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
 
-            Future<Void> connectFuture = client.connect(new InetSocketAddress("localhost", 7000));
+            Future<Void> connectFuture = socketChannel.connect(new InetSocketAddress("localhost", 7000));
             connectFuture.get(); // blocked
 
             System.out.println("echo client sent: " + msg);
@@ -22,18 +22,18 @@ public class Nio2EchoFutureClient {
             byte[] bytes = msg.getBytes();
             ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
-            Future<Integer> writeFuture = client.write(buffer);
+            Future<Integer> writeFuture = socketChannel.write(buffer);
             writeFuture.get();  // blocked
 
             buffer.flip();
-            Future<Integer> readFuture = client.read(buffer);
+            Future<Integer> readFuture = socketChannel.read(buffer);
             readFuture.get();  // blocked
 
             String response = new String(buffer.array()).trim();
             buffer.clear();
             System.out.println("echo client received: " + response);
 
-            client.close();
+            socketChannel.close();
         }
     }
 }
