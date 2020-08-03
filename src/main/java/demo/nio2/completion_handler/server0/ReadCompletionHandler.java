@@ -1,11 +1,13 @@
 package demo.nio2.completion_handler.server0;
 
+import demo.common.Demo;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
+class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
@@ -19,6 +21,8 @@ class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
+        logger.info("read");
+
         byte[] buffer = new byte[bytesRead];
         inputBuffer.rewind();
 

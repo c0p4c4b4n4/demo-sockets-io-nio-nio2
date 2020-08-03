@@ -1,10 +1,13 @@
 package demo.nio2.completion_handler.server0;
 
+import demo.common.Demo;
+
+import java.io.IOException;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
+class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
@@ -16,12 +19,17 @@ class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
+        logger.info("write");
 
-//        try {
-//            socketChannel.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            socketChannel.close();
+
+//            Attachment attachment2 = new Attachment();
+//            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);
+//            serverSocketChannel.accept(attachment2, acceptCompletionHandler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,11 +1,13 @@
 package demo.nio2.completion_handler.server0;
 
+import demo.common.Demo;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
+class AcceptCompletionHandler extends Demo implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
 
     private final AsynchronousServerSocketChannel serverSocketChannel;
 
@@ -15,6 +17,8 @@ class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketCha
 
     @Override
     public void completed(AsynchronousSocketChannel socketChannel, Attachment attachment) {
+        logger.info("accepted");
+
         Attachment newAttachment = new Attachment();
         serverSocketChannel.accept(newAttachment, this);
 
