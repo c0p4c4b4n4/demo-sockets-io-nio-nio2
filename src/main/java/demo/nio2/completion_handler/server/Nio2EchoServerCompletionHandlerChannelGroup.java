@@ -20,7 +20,7 @@ public class Nio2EchoServerCompletionHandlerChannelGroup extends Demo {
         ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
         AsynchronousChannelGroup channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
 
-        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open()) {
+        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup)) {
             if (!serverSocketChannel.isOpen()) {
                 throw new IOException("Asynchronous server socket channel is not open !");
             }
