@@ -28,7 +28,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
         inputBuffer.get(buffer);
         String message = new String(buffer);
-        logger.info("Received message from client : " + message);
+        logger.info("echo server received: " + message);
 
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(serverSocketChannel, socketChannel);
         ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);

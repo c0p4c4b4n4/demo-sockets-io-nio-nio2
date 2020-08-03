@@ -10,16 +10,16 @@ import java.util.concurrent.Future;
 public class Nio2EchoFutureClient {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String[] msgs = {"Alpha", "Bravo", "Charlie"};
-        for (String msg : msgs) {
+        String[] messages = {"Alpha", "Bravo", "Charlie"};
+        for (String message : messages) {
             AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
 
             Future<Void> connectFuture = socketChannel.connect(new InetSocketAddress("localhost", 7000));
             connectFuture.get(); // blocked
 
-            System.out.println("echo client sent: " + msg);
+            System.out.println("echo client sent: " + message);
 
-            byte[] bytes = msg.getBytes();
+            byte[] bytes = message.getBytes();
             ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
             Future<Integer> writeFuture = socketChannel.write(buffer);
