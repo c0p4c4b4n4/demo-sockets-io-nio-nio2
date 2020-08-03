@@ -17,7 +17,7 @@ public class NioEchoServer {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
         System.out.println("echo server started: " + serverSocketChannel);
 
         Selector selector = Selector.open();

@@ -16,7 +16,7 @@ class NioEchoServer2 {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
-        serverSocketChannel.socket().bind(new InetSocketAddress(9001));
+        serverSocketChannel.socket().bind(new InetSocketAddress(7000));
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);

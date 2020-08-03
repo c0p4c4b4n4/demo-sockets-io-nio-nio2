@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 public class IoEchoServer {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(9001);
+        ServerSocket serverSocket = new ServerSocket(7000);
         System.out.println("echo server started: " + serverSocket);
 
         int i = 0;

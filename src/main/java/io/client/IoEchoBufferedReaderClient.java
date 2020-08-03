@@ -9,7 +9,7 @@ public class IoEchoBufferedReaderClient {
     public static void main(String[] args) throws IOException, InterruptedException {
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
-            Socket socket = new Socket("localhost", 9001);
+            Socket socket = new Socket("localhost", 7000);
             System.out.println("echo client connected: " + socket);
 
             OutputStream os = socket.getOutputStream();

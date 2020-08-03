@@ -15,7 +15,7 @@ public class NioEchoClient {
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
             System.out.println("echo client started");
-            SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 9001));
+            SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 7000));
 
             ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
             socketChannel.write(buffer);

@@ -25,7 +25,7 @@ public class Server2b {
                 serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
                 serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
-                serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
+                serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
 
                 System.out.println("Waiting for connections ...");
 

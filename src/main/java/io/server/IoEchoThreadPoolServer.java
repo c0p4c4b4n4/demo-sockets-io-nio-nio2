@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 public class IoEchoThreadPoolServer {
 
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(9001);
+        ServerSocket serverSocket = new ServerSocket(7000);
         System.out.println("echo server started: " + serverSocket);
 
         ExecutorService executor = Executors.newCachedThreadPool();

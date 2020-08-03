@@ -11,7 +11,7 @@ public class ServerB {
     public static void main(String[] args) throws IOException, InterruptedException {
         AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open();
 
-        InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9001);
+        InetSocketAddress hostAddress = new InetSocketAddress("localhost", 7000);
         serverChannel.bind(hostAddress);
 
         Attachment attachment = new Attachment();

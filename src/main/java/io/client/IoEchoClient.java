@@ -11,7 +11,7 @@ public class IoEchoClient {
     public static void main(String[] args) throws IOException, InterruptedException {
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
-            Socket socket = new Socket("localhost", 9001);
+            Socket socket = new Socket("localhost", 7000);
             System.out.println("echo client started: " + socket);
 
             InputStream is = socket.getInputStream();

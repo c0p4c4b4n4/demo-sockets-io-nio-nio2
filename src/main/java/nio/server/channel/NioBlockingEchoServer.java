@@ -18,7 +18,7 @@ public class NioBlockingEchoServer {
         System.out.println("server is blocking: " + serverSocketChannel.isBlocking());
 
         ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress("localhost", 9001));
+        serverSocket.bind(new InetSocketAddress("localhost", 7000));
         System.out.println("time server started: " + serverSocket);
 
         int i = 0;

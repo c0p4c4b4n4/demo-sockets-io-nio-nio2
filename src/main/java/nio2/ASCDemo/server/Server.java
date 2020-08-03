@@ -10,7 +10,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
 
         System.out.println("echo server started: " + serverSocketChannel);
 

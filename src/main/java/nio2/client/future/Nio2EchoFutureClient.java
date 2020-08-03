@@ -14,7 +14,7 @@ public class Nio2EchoFutureClient {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
 
-        Future<Void> connectResult = client.connect(new InetSocketAddress("localhost", 9001));
+        Future<Void> connectResult = client.connect(new InetSocketAddress("localhost", 7000));
         connectResult.get();
 
         String message = "hello";

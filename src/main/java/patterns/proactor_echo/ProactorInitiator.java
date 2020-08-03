@@ -6,7 +6,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 
 public class ProactorInitiator {
 
-    private static final int SERVER_PORT = 9001;
+    private static final int SERVER_PORT = 7000;
 
     public void initiateProactiveServer(int port) throws IOException {
         AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(port));

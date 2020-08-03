@@ -7,7 +7,7 @@ import java.nio.channels.ServerSocketChannel;
 
 public class ReactorInitiator {
 
-    private static final int SERVER_PORT = 9001;
+    private static final int SERVER_PORT = 7000;
 
     public static void main(String[] args) throws IOException {
         System.out.println("Starting Reactor NIO echo server at port: " + SERVER_PORT);

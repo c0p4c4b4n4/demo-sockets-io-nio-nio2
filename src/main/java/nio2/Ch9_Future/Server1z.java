@@ -12,7 +12,7 @@ public class Server1z {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress("localhost", 9001));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
 
         Future<AsynchronousSocketChannel> acceptResult = serverSocketChannel.accept();
         AsynchronousSocketChannel clientChannel = acceptResult.get();
