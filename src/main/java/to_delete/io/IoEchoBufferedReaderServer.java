@@ -1,4 +1,4 @@
-package io.server;
+package to_delete.io;
 
 import java.io.*;
 import java.net.ServerSocket;

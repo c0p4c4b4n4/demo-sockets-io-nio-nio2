@@ -1,4 +1,4 @@
-package io.client;
+package to_delete.io;
 
 import java.io.*;
 import java.net.Socket;
