@@ -1,4 +1,4 @@
-package patterns.reactor_echo;
+package patterns.reactor.echo;
 
 import java.nio.channels.SelectionKey;
 
