@@ -1,15 +1,17 @@
 package demo.nio2.completion_handler.client2;
 
+import demo.common.Demo;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.Arrays;
 
-class AcceptCompletionHandler implements CompletionHandler<Void, Attachment> {
+class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
 
-     AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
+    AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 
@@ -18,7 +20,7 @@ class AcceptCompletionHandler implements CompletionHandler<Void, Attachment> {
         String message = attachment.messages[0];
         attachment.messages = Arrays.copyOfRange(attachment.messages, 1, attachment.messages.length);
 
-        System.out.println("echo client sent: " + message);
+        logger.info("echo client sent: " + message);
 
         ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes()); // TODO charset in constructor
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
@@ -26,6 +28,7 @@ class AcceptCompletionHandler implements CompletionHandler<Void, Attachment> {
     }
 
     @Override
-    public void failed(Throwable e, Attachment attachment) {
+    public void failed(Throwable t, Attachment attachment) {
+        logger.error("Exception during accept connection", t);
     }
 }
