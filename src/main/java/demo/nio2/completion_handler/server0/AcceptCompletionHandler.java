@@ -7,26 +7,23 @@ import java.nio.channels.CompletionHandler;
 
 class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
 
-    private final AsynchronousServerSocketChannel listener;
+    private final AsynchronousServerSocketChannel serverSocketChannel;
 
-    public AcceptCompletionHandler(AsynchronousServerSocketChannel listener) {
-        this.listener = listener;
+    AcceptCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel) {
+        this.serverSocketChannel = serverSocketChannel;
     }
 
     @Override
     public void completed(AsynchronousSocketChannel socketChannel, Attachment attachment) {
-        // accept the next connection
         Attachment newAttachment = new Attachment();
-        listener.accept(newAttachment, this);
+        serverSocketChannel.accept(newAttachment, this);
 
-        // handle this connection
-        ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
+        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(serverSocketChannel, socketChannel, inputBuffer);
         socketChannel.read(inputBuffer, attachment, readCompletionHandler);
     }
 
     @Override
     public void failed(Throwable exc, Attachment attachment) {
-        // Handle connection failure...
     }
 }
