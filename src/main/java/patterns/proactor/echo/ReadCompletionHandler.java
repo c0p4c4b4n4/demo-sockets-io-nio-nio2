@@ -16,7 +16,6 @@ class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> 
 
     @Override
     public void completed(Integer bytesRead, SessionState sessionState) {
-
         byte[] buffer = new byte[bytesRead];
         inputBuffer.rewind();
         // Rewind the input buffer to read from the beginning
@@ -24,8 +23,7 @@ class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> 
         inputBuffer.get(buffer);
         String message = new String(buffer);
 
-        System.out.println("Received message from client : " +
-                message);
+        System.out.println("Received message from client : " + message);
 
         // Echo the message back to client
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);

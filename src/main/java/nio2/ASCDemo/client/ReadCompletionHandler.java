@@ -1,14 +1,13 @@
 package nio2.ASCDemo.client;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
 import java.nio.channels.CompletionHandler;
-
 import java.nio.charset.Charset;
 
-public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> {
+class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
+
     private final static Charset CSUTF8 = Charset.forName("UTF-8");
 
     private BufferedReader conReader =
