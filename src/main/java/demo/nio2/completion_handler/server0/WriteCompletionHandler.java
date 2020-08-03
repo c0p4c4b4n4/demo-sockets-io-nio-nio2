@@ -1,10 +1,10 @@
-package demo.nio2.completion_handler.echo;
+package demo.nio2.completion_handler.server0;
 
 import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class WriteCompletionHandler implements CompletionHandler<Integer, SessionState> {
+class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
 
@@ -13,7 +13,7 @@ class WriteCompletionHandler implements CompletionHandler<Integer, SessionState>
     }
 
     @Override
-    public void completed(Integer bytesWritten, SessionState attachment) {
+    public void completed(Integer bytesWritten, Attachment attachment) {
         try {
             socketChannel.close();
         } catch (IOException e) {
@@ -22,7 +22,7 @@ class WriteCompletionHandler implements CompletionHandler<Integer, SessionState>
     }
 
     @Override
-    public void failed(Throwable exc, SessionState attachment) {
+    public void failed(Throwable exc, Attachment attachment) {
         // Handle write failure.....
     }
 }

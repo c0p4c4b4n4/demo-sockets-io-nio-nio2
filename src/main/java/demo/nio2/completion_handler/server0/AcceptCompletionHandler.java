@@ -1,11 +1,11 @@
-package demo.nio2.completion_handler.echo;
+package demo.nio2.completion_handler.server0;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, SessionState> {
+class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Attachment> {
 
     private final AsynchronousServerSocketChannel listener;
 
@@ -14,19 +14,19 @@ class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketCha
     }
 
     @Override
-    public void completed(AsynchronousSocketChannel socketChannel, SessionState sessionState) {
+    public void completed(AsynchronousSocketChannel socketChannel, Attachment attachment) {
         // accept the next connection
-        SessionState newSessionState = new SessionState();
-        listener.accept(newSessionState, this);
+        Attachment newAttachment = new Attachment();
+        listener.accept(newAttachment, this);
 
         // handle this connection
         ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
         ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
-        socketChannel.read(inputBuffer, sessionState, readCompletionHandler);
+        socketChannel.read(inputBuffer, attachment, readCompletionHandler);
     }
 
     @Override
-    public void failed(Throwable exc, SessionState sessionState) {
+    public void failed(Throwable exc, Attachment attachment) {
         // Handle connection failure...
     }
 }

@@ -1,10 +1,10 @@
-package demo.nio2.completion_handler.echo;
+package demo.nio2.completion_handler.server0;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> {
+class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
@@ -15,7 +15,7 @@ class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> 
     }
 
     @Override
-    public void completed(Integer bytesRead, SessionState sessionState) {
+    public void completed(Integer bytesRead, Attachment attachment) {
         byte[] buffer = new byte[bytesRead];
         inputBuffer.rewind();
         // Rewind the input buffer to read from the beginning
@@ -30,11 +30,11 @@ class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> 
 
         ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);
 
-        socketChannel.write(outputBuffer, sessionState, writeCompletionHandler);
+        socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
     }
 
     @Override
-    public void failed(Throwable exc, SessionState attachment) {
+    public void failed(Throwable exc, Attachment attachment) {
         //Handle read failure.....
     }
 }

@@ -1,10 +1,10 @@
-package demo.nio2.completion_handler.echo;
+package demo.nio2.completion_handler.server0;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 // used to hold client session specific state across a series of completion events
-class SessionState {
+class Attachment {
 
     private Map<String, String> sessionProps = new ConcurrentHashMap<String, String>();
 

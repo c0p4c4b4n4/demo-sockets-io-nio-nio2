@@ -1,4 +1,4 @@
-package demo.nio2.completion_handler.echo;
+package demo.nio2.completion_handler.server0;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,7 +12,7 @@ public class ProactorInitiator {
         AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(port));
         AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(listener);
 
-        SessionState state = new SessionState();
+        Attachment state = new Attachment();
         listener.accept(state, acceptCompletionHandler);
     }
 
