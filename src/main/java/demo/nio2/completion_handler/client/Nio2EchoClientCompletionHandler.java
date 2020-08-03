@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.CharsetDecoder;
@@ -38,17 +37,15 @@ public class Nio2EchoClientCompletionHandler extends Demo {
 
     private static class AcceptCompletionHandler implements CompletionHandler<Void, Void> {
 
-        final ByteBuffer helloBuffer;
-        final ByteBuffer buffer;
+        final ByteBuffer outputBuffer;
+        final ByteBuffer inputBuffer;
         private final AsynchronousSocketChannel socketChannel;
-        CharBuffer charBuffer;
         ByteBuffer randomBuffer;
 
         public AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
             this.socketChannel = socketChannel;
-            helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
-            buffer = ByteBuffer.allocateDirect(1024);
-            charBuffer = null;
+            outputBuffer = ByteBuffer.wrap("Hello !".getBytes());
+            inputBuffer = ByteBuffer.allocateDirect(1024);
         }
 
         @Override
@@ -56,27 +53,32 @@ public class Nio2EchoClientCompletionHandler extends Demo {
             try {
                 logger.info("outgoing connection to: " + socketChannel.getRemoteAddress());
 
-                socketChannel.write(helloBuffer).get();
+                socketChannel.write(outputBuffer).get();
 
-                while (socketChannel.read(buffer).get() != -1) {
-                    buffer.flip();
+                outputBuffer.flip();
+                logger.info("echo client sent: " + decoder.decode(outputBuffer).toString());
 
-                    charBuffer = decoder.decode(buffer);
-                    logger.info("echo client sent: " + charBuffer.toString());
+                while (socketChannel.read(inputBuffer).get() != -1) {
+                    inputBuffer.flip();
 
-                    if (buffer.hasRemaining()) {
-                        buffer.compact();
+                    logger.info("echo client received: " + decoder.decode(inputBuffer).toString());
+
+                    if (inputBuffer.hasRemaining()) {
+                        inputBuffer.compact();
                     } else {
-                        buffer.clear();
+                        inputBuffer.clear();
                     }
 
-                    int r = new Random().nextInt(100);
-                    if (r == 50) {
-                        System.out.println("50 was generated! Close the asynchronous socket channel!");
+                    int r = new Random().nextInt(10);
+                    if (r == 0) {
+                        System.out.println("Close the asynchronous socket channel!");
                         break;
                     } else {
                         randomBuffer = ByteBuffer.wrap("Random number:".concat(String.valueOf(r)).getBytes());
                         socketChannel.write(randomBuffer).get();
+
+                        outputBuffer.flip();
+                        logger.info("echo client sent: " + decoder.decode(randomBuffer).toString());
                     }
                 }
             } catch (IOException | InterruptedException | ExecutionException e) {
