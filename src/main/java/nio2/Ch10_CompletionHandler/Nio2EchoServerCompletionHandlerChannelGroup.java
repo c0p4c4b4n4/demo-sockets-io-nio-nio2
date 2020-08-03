@@ -1,5 +1,7 @@
 package nio2.Ch10_CompletionHandler;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
@@ -12,14 +14,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server2b {
+public class Nio2EchoServerCompletionHandlerChannelGroup extends Demo {
 
     public static void main(String[] args) throws IOException {
         ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
-        AsynchronousChannelGroup threadGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
+        AsynchronousChannelGroup channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
 
         //create asynchronous server-socket channel bound to the default group
-        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(threadGroup)) {
+        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup)) {
 
             if (serverSocketChannel.isOpen()) {
                 serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
@@ -29,8 +31,8 @@ public class Server2b {
 
                 System.out.println("Waiting for connections ...");
 
-                CompletionHandler<AsynchronousSocketChannel, Void> handler = new CompletionHandler2(serverSocketChannel);
-                serverSocketChannel.accept(null, handler);
+                CompletionHandler<AsynchronousSocketChannel, Void> acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);
+                serverSocketChannel.accept(null, acceptCompletionHandler);
 
                 System.in.read(); // wait
             } else {
@@ -39,19 +41,18 @@ public class Server2b {
         }
     }
 
-    private static class CompletionHandler2 implements CompletionHandler<AsynchronousSocketChannel, Void> {
+    private static class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Void> {
 
         private final AsynchronousServerSocketChannel serverSocketChannel;
         private final ByteBuffer buffer;
 
-        public CompletionHandler2(AsynchronousServerSocketChannel serverSocketChannel) {
+         AcceptCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel) {
             this.serverSocketChannel = serverSocketChannel;
             this.buffer = ByteBuffer.allocateDirect(1024);
         }
 
         @Override
         public void completed(AsynchronousSocketChannel result, Void attachment) {
-
             serverSocketChannel.accept(null, this);
 
             try {
