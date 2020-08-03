@@ -3,17 +3,31 @@ package nio2.ASCDemo.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
 
 class WriteCompletionHandler implements CompletionHandler<Integer, Attachment> {
+
+    private final AsynchronousSocketChannel socketChannel;
+
+    WriteCompletionHandler(AsynchronousSocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+    }
 
     private final static Charset CSUTF8 = Charset.forName("UTF-8");
 
     private BufferedReader conReader =  new BufferedReader(new InputStreamReader(System.in));
 
     @Override
-    public void completed(Integer result, Attachment att) {
+    public void completed(Integer bytesWritten, Attachment attachment) {
+        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
+        socketChannel.read(inputBuffer, attachment, readCompletionHandler);
+    }
+
+    public void completed1(Integer result, Attachment att) {
         if (att.isReadMode) {
             att.buffer.flip();
             int limit = att.buffer.limit();

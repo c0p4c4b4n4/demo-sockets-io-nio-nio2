@@ -4,31 +4,39 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 class ReadCompletionHandler implements CompletionHandler<Integer, Attachment> {
 
-    private final static Charset CSUTF8 = Charset.forName("UTF-8");
+    private final AsynchronousSocketChannel socketChannel;
+    private final ByteBuffer inputBuffer;
 
+    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
+        this.socketChannel = socketChannel;
+        this.inputBuffer = inputBuffer;
+    }
+
+    private final static Charset CSUTF8 = Charset.forName("UTF-8");
     private BufferedReader conReader =    new BufferedReader(new InputStreamReader(System.in));
 
     @Override
-    public void completed(Integer bytesRead, Attachment sessionState) {
-        byte[] buffer = new byte[bytesRead];
-        inputBuffer.rewind();
+    public void completed(Integer bytesRead, Attachment attachment) {
+        if (attachment.messages.length == 0)
+        {
+            attachment.active = false;
+        } else {
+            String message = attachment.messages[0];
+            attachment.messages = Arrays.copyOfRange(attachment.messages, 1, attachment.messages.length);
 
-        inputBuffer.get(buffer);
-        String message = new String(buffer);
+            System.out.println("echo client sent: " + message);
 
-        System.out.println("Received message from client : " + message);
-
-        // Echo the message back to client
-        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
-
-        ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);
-
-        socketChannel.write(outputBuffer, sessionState, writeCompletionHandler);
+            ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes()); // TODO charset in constructor
+            WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
+            socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
+        }
     }
 
     public void completed2(Integer result, Attachment att) {

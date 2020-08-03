@@ -3,6 +3,7 @@ package nio2.ASCDemo.client;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.Arrays;
 
 class AcceptCompletionHandler implements CompletionHandler<Void, Attachment> {
 
@@ -14,9 +15,14 @@ class AcceptCompletionHandler implements CompletionHandler<Void, Attachment> {
 
     @Override
     public void completed(Void result, Attachment attachment) {
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
-        socketChannel.read(inputBuffer, attachment, readCompletionHandler);
+        String message = attachment.messages[0];
+        attachment.messages = Arrays.copyOfRange(attachment.messages, 1, attachment.messages.length);
+
+        System.out.println("echo client sent: " + message);
+
+        ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes()); // TODO charset in constructor
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
+        socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
     }
 
     @Override

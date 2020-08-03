@@ -2,12 +2,8 @@ package nio2.ASCDemo.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Client {
@@ -20,14 +16,14 @@ public class Client {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousSocketChannel   socketChannel = AsynchronousSocketChannel.open();
 
-        List<String> messages = new ArrayList<>(Arrays.asList("Alpha", "Bravo", "Charlie"));
         AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel);
 
         Attachment attachment = new Attachment();
         attachment.socketChannel = socketChannel;
-        attachment.messages = new ArrayList<>(Arrays.asList("Alpha", "Bravo", "Charlie"));
+        attachment.messages = new String[] {"Alpha", "Bravo", "Charlie"};
+        attachment.active = true;
         socketChannel.connect(new InetSocketAddress("localhost", 7000), attachment, acceptCompletionHandler);
-
+/*
         socketChannel.connect(new InetSocketAddress("localhost", 7000)).get();
         System.out.printf("Client at %s connected%n", socketChannel.getLocalAddress());
 
@@ -41,7 +37,11 @@ public class Client {
         att.buffer.put(data);
         att.buffer.flip();
         socketChannel.write(att.buffer, att, new ReadCompletionHandler());
+*/
+        while (attachment.active) {
+        }
 
-        Thread.currentThread().join();
+        socketChannel.close();
+        System.out.println("echo client finished");
     }
 }
