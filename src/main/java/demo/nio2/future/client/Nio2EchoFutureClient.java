@@ -1,4 +1,4 @@
-package nio2.client.future;
+package demo.nio2.future.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
