@@ -1,8 +1,6 @@
 package nio2.client.future;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -14,8 +12,8 @@ public class Nio2EchoFutureClient {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
 
-        Future<Void> connectResult = client.connect(new InetSocketAddress("localhost", 7000));
-        connectResult.get();
+        Future<Void> connectFuture = client.connect(new InetSocketAddress("localhost", 7000));
+        connectFuture.get();
 
         String message = "hello";
         System.out.println("request to server:" + message);
@@ -23,12 +21,12 @@ public class Nio2EchoFutureClient {
         byte[] bytes = message.getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
-        Future<Integer> writeResult = client.write(buffer);
-        writeResult.get();
+        Future<Integer> writeFuture = client.write(buffer);
+        writeFuture.get();
 
         buffer.flip();
-        Future<Integer> readResult = client.read(buffer);
-        readResult.get();
+        Future<Integer> readFuture = client.read(buffer);
+        readFuture.get();
 
         String response = new String(buffer.array()).trim();
         buffer.clear();
