@@ -19,12 +19,14 @@ public class Nio2EchoFutureServerThreadPool {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
+        System.out.println("echo server started: " + serverSocketChannel);
 
         int i = 0;
         while (i++ < 3) {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
+            System.out.println("incoming connection: " + socketChannel);
 
             Callable<String> worker = new Worker(socketChannel);
             taskExecutor.submit(worker);
@@ -50,8 +52,7 @@ public class Nio2EchoFutureServerThreadPool {
 
         @Override
         public String call() throws Exception {
-            String host = socketChannel.getRemoteAddress().toString();
-            System.out.println("Incoming connection from: " + host);
+            System.out.println("incoming connection: " + socketChannel);
 
             ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
@@ -68,7 +69,8 @@ public class Nio2EchoFutureServerThreadPool {
             }
 
             socketChannel.close();
-            System.out.println(host + " was successfully served!");
+            System.out.println("incoming connection finished");
+
             return "???";
         }
     }
