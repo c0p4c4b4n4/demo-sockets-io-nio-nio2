@@ -10,71 +10,66 @@ import java.util.concurrent.*;
 
 public class Server1b {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         ExecutorService taskExecutor = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
-        //create asynchronous server-socket channel bound to the default group
-        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open()) {
+        AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
-            if (serverSocketChannel.isOpen()) {
-                serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
-                serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
+        serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
+        serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
-                serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
 
-                System.out.println("Waiting for connections ...");
-                while (true) {
-                    Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
+        int i = 0;
+        while (i++ < 3) {
+            Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
-                    try {
-                        AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-                        Callable<String> worker = new Callable<>() {
+            AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
 
-                            @Override
-                            public String call() throws Exception {
-                                String host = socketChannel.getRemoteAddress().toString();
-                                System.out.println("Incoming connection from: " + host);
+            Callable<String> worker = new Worker(socketChannel);
+            taskExecutor.submit(worker);
+        }
 
-                                ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+        serverSocketChannel.close();
+        System.out.println("echo server is finishing");
 
-                                while (socketChannel.read(buffer).get() != -1) {
-                                    buffer.flip();
+        taskExecutor.shutdown();
+        while (!taskExecutor.isTerminated()) {
+        }
 
-                                    socketChannel.write(buffer).get();
+        System.out.println("echo server finished");
+    }
 
-                                    if (buffer.hasRemaining()) {
-                                        buffer.compact();
-                                    } else {
-                                        buffer.clear();
-                                    }
-                                }
+    private static class Worker implements Callable<String> {
 
-                                socketChannel.close();
-                                System.out.println(host + " was successfully served!");
-                                return host;
-                            }
-                        };
+        private final AsynchronousSocketChannel socketChannel;
 
-                        taskExecutor.submit(worker);
+        public Worker(AsynchronousSocketChannel socketChannel) {
+            this.socketChannel = socketChannel;
+        }
 
-                    } catch (InterruptedException | ExecutionException ex) {
-                        System.err.println(ex);
+        @Override
+        public String call() throws Exception {
+            String host = socketChannel.getRemoteAddress().toString();
+            System.out.println("Incoming connection from: " + host);
 
-                        System.err.println("\n Server is shutting down ...");
+            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
 
-                        //this will make the executor accept no new threads and finish all existing threads in the queue
-                        taskExecutor.shutdown();
+            while (socketChannel.read(buffer).get() != -1) {
+                buffer.flip();
 
-                        //wait until all threads are finish                        
-                        while (!taskExecutor.isTerminated()) {
-                        }
+                socketChannel.write(buffer).get();
 
-                        break;
-                    }
+                if (buffer.hasRemaining()) {
+                    buffer.compact();
+                } else {
+                    buffer.clear();
                 }
-            } else {
-                System.out.println("The asynchronous server-socket channel cannot be opened!");
             }
+
+            socketChannel.close();
+            System.out.println(host + " was successfully served!");
+            return host;
         }
     }
 }
