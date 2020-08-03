@@ -1,9 +1,7 @@
-package nio2.ASCDemo.server;
+package to_delete.nio2_v2.ASCDemo.server;
 
 import java.io.IOException;
-
 import java.net.InetSocketAddress;
-
 import java.nio.channels.AsynchronousServerSocketChannel;
 
 public class Server {
