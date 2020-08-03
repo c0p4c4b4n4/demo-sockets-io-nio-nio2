@@ -1,4 +1,4 @@
-package demo.nio2.completion_handler.client;
+package demo.nio2.completion_handler.client1;
 
 import demo.common.Demo;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class Nio2EchoClientCompletionHandler extends Demo {
+public class Nio2EchoClientCompletionHandler1 extends Demo {
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final CharsetDecoder CHARSET_DECODER = CHARSET.newDecoder();
@@ -34,7 +34,7 @@ public class Nio2EchoClientCompletionHandler extends Demo {
             socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
             List<String> messages = new ArrayList<>(Arrays.asList("Alpha", "Bravo", "Charlie"));
-            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel,messages);
+            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel, messages);
             socketChannel.connect(new InetSocketAddress("localhost", 7000), null, acceptCompletionHandler);
 
             while (active) {
