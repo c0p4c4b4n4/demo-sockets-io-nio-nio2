@@ -8,7 +8,7 @@ public class ReadWriteHandler implements CompletionHandler<Integer, Attachment> 
     @Override
     public void completed(Integer result, Attachment attachment) {
         if (attachment.action == Attachment.Action.read) {
-            ByteBuffer buffer = (ByteBuffer) attachment.buffer;
+            ByteBuffer buffer = attachment.buffer;
             buffer.flip();
 
             attachment.action = Attachment.Action.write;

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 // used to hold client session specific state across a series of completion events
 class SessionState {
 
-    private Map<String, String> sessionProps = new ConcurrentHashMap<String, String>();
+    private Map<String, String> sessionProps = new ConcurrentHashMap<>();
 
     public String getProperty(String key) {
         return sessionProps.get(key);

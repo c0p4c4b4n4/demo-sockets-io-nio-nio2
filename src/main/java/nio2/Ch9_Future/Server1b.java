@@ -28,7 +28,7 @@ public class Server1b {
 
                     try {
                         AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-                        Callable<String> worker = new Callable<String>() {
+                        Callable<String> worker = new Callable<>() {
 
                             @Override
                             public String call() throws Exception {

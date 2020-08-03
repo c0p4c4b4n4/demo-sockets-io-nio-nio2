@@ -23,17 +23,13 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
         try {
             socketChannel.close();
-
-//            Attachment attachment2 = new Attachment();
-//            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);
-//            serverSocketChannel.accept(attachment2, acceptCompletionHandler);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void failed(Throwable exc, Attachment attachment) {
-        // Handle write failure.....
+    public void failed(Throwable t, Attachment attachment) {
+        logger.error("Exception during write", t);
     }
 }

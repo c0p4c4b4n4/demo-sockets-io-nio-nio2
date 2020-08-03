@@ -37,7 +37,7 @@ public class TimeBinServer {
 
             Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
             while (keysIterator.hasNext()) {
-                SelectionKey key = (SelectionKey) keysIterator.next();
+                SelectionKey key = keysIterator.next();
                 keysIterator.remove();
                 if (key.isAcceptable()) {
                     SocketChannel socketChannel = ((ServerSocketChannel) key.channel()).accept();

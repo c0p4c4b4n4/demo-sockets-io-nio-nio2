@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class Dispatcher {
 
-    private final Map<Integer, EventHandler> registeredHandlers = new ConcurrentHashMap<Integer, EventHandler>();
+    private final Map<Integer, EventHandler> registeredHandlers = new ConcurrentHashMap<>();
     private final Selector demultiplexer;
 
     public Dispatcher() throws IOException {
