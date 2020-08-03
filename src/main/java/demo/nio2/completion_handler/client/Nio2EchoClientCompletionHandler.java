@@ -9,12 +9,14 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class Nio2EchoClientCompletionHandler extends Demo {
+
+    private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
     public static void main(String[] args) throws IOException {
         try (AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open()) {
@@ -30,6 +32,7 @@ public class Nio2EchoClientCompletionHandler extends Demo {
             socketChannel.connect(new InetSocketAddress("localhost", 7000), null, acceptCompletionHandler);
 
             System.in.read();
+            logger.info("echo client finished");
         }
     }
 
@@ -40,16 +43,12 @@ public class Nio2EchoClientCompletionHandler extends Demo {
         private final AsynchronousSocketChannel socketChannel;
         CharBuffer charBuffer;
         ByteBuffer randomBuffer;
-        final Charset charset;
-        final CharsetDecoder decoder;
 
         public AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
             this.socketChannel = socketChannel;
             helloBuffer = ByteBuffer.wrap("Hello !".getBytes());
             buffer = ByteBuffer.allocateDirect(1024);
             charBuffer = null;
-            charset = Charset.defaultCharset();
-            decoder = charset.newDecoder();
         }
 
         @Override
@@ -63,7 +62,7 @@ public class Nio2EchoClientCompletionHandler extends Demo {
                     buffer.flip();
 
                     charBuffer = decoder.decode(buffer);
-                    System.out.println(charBuffer.toString());
+                    logger.info("echo client sent: " + charBuffer.toString());
 
                     if (buffer.hasRemaining()) {
                         buffer.compact();
@@ -80,20 +79,20 @@ public class Nio2EchoClientCompletionHandler extends Demo {
                         socketChannel.write(randomBuffer).get();
                     }
                 }
-            } catch (IOException | InterruptedException | ExecutionException ex) {
-                System.err.println(ex);
+            } catch (IOException | InterruptedException | ExecutionException e) {
+                logger.error("Exception during echo processing", e);
             } finally {
                 try {
                     socketChannel.close();
-                } catch (IOException ex) {
-                    System.err.println(ex);
+                } catch (IOException e) {
+                    logger.error("Exception during asynchronous socket channel close", e);
                 }
             }
         }
 
         @Override
-        public void failed(Throwable exc, Void attachment) {
-            throw new UnsupportedOperationException("Connection cannot be established!");
+        public void failed(Throwable e, Void attachment) {
+            logger.error("Connection cannot be established",e);
         }
     }
 }
