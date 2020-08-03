@@ -29,6 +29,7 @@ public class Nio2EchoServerCompletionHandler extends Demo {
             serverSocketChannel.accept(null, acceptCompletionHandler);
 
             System.in.read(); // wait
+            logger.info("echo server finished");
         }
     }
 
@@ -60,20 +61,20 @@ public class Nio2EchoServerCompletionHandler extends Demo {
                         buffer.clear();
                     }
                 }
-            } catch (IOException | InterruptedException | ExecutionException ex) {
-                logger.error("error", ex);
+            } catch (IOException | InterruptedException | ExecutionException e) {
+                logger.error("Exception during echo processing", e);
             } finally {
                 try {
                     socketChannel.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Exception during asynchronous socket channel close", e);
                 }
             }
         }
 
         @Override
         public void failed(Throwable t, Void attachment) {
-            logger.error("Cannot accept connections", t);
+            logger.error("Exception during accept connection", t);
         }
     }
 }
