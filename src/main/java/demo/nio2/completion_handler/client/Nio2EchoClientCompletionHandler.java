@@ -8,14 +8,19 @@ import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Nio2EchoClientCompletionHandler extends Demo {
 
-    private static final CharsetDecoder CHARSET_DECODER = StandardCharsets.UTF_8.newDecoder();
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
+    private static final CharsetDecoder CHARSET_DECODER = CHARSET.newDecoder();
+
     private static volatile boolean active = true;
 
     public static void main(String[] args) throws IOException {
@@ -28,7 +33,8 @@ public class Nio2EchoClientCompletionHandler extends Demo {
             socketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
             socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
-            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel);
+            List<String> messages = new ArrayList<>(Arrays.asList("Alpha", "Bravo", "Charlie"));
+            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel,messages);
             socketChannel.connect(new InetSocketAddress("localhost", 7000), null, acceptCompletionHandler);
 
             while (active) {
@@ -41,12 +47,14 @@ public class Nio2EchoClientCompletionHandler extends Demo {
     private static class AcceptCompletionHandler implements CompletionHandler<Void, Void> {
 
         private final AsynchronousSocketChannel socketChannel;
+        private List<String> messages;
         private ByteBuffer outputBuffer;
         private ByteBuffer inputBuffer;
 
-        AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
+        AcceptCompletionHandler(AsynchronousSocketChannel socketChannel, List<String> messages) {
             this.socketChannel = socketChannel;
-            this.outputBuffer = ByteBuffer.wrap("Hello !".getBytes());
+            this.messages = messages;
+            this.outputBuffer = null;
             this.inputBuffer = ByteBuffer.allocateDirect(1024);
         }
 
@@ -55,12 +63,14 @@ public class Nio2EchoClientCompletionHandler extends Demo {
             try {
                 logger.info("outgoing connection to: " + socketChannel.getRemoteAddress());
 
-                socketChannel.write(outputBuffer).get();
+                String message1 = messages.remove(0);
+                outputBuffer = ByteBuffer.wrap(message1.getBytes(CHARSET));
+                socketChannel.write(outputBuffer).get(); // blocked
 
                 outputBuffer.flip();
                 logger.info("echo client sent: " + CHARSET_DECODER.decode(outputBuffer).toString());
 
-                while (socketChannel.read(inputBuffer).get() != -1) {
+                while (socketChannel.read(inputBuffer).get() != -1) { // blocked
                     inputBuffer.flip();
                     logger.info("echo client received: " + CHARSET_DECODER.decode(inputBuffer).toString());
 
@@ -70,13 +80,13 @@ public class Nio2EchoClientCompletionHandler extends Demo {
                         inputBuffer.clear();
                     }
 
-                    int r = new Random().nextInt(10);
-                    if (r == 0) {
+                    if (messages.isEmpty()) {
                         active = false;
                         break;
                     } else {
-                        outputBuffer = ByteBuffer.wrap("random number ".concat(String.valueOf(r)).getBytes());
-                        socketChannel.write(outputBuffer).get();
+                        String message2 = messages.remove(0);
+                        outputBuffer = ByteBuffer.wrap(message2.getBytes(CHARSET));
+                        socketChannel.write(outputBuffer).get(); // blocked
 
                         outputBuffer.flip();
                         logger.info("echo client sent: " + CHARSET_DECODER.decode(outputBuffer).toString());
