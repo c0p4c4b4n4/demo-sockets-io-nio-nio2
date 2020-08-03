@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
-public class Client extends Demo {
+public class Nio2EchoClientCompletionHandler2 extends Demo {
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
