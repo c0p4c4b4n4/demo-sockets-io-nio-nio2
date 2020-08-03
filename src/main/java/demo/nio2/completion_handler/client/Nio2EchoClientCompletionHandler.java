@@ -1,5 +1,7 @@
 package demo.nio2.completion_handler.client;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
@@ -12,12 +14,10 @@ import java.nio.charset.CharsetDecoder;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-public class Nio2EchoClientCompletionHandler {
+public class Nio2EchoClientCompletionHandler extends Demo {
 
-    public static void main(String[] args) throws IOException{
-
+    public static void main(String[] args) throws IOException {
         try (AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open()) {
-
             if (!socketChannel.isOpen()) {
                 throw new IOException("Asynchronous  socket channel is not open !");
             }
@@ -55,9 +55,8 @@ public class Nio2EchoClientCompletionHandler {
         @Override
         public void completed(Void result, Void attachment) {
             try {
-                System.out.println("Successfully connected at: " + socketChannel.getRemoteAddress());
+                logger.info("outgoing connection to: " + socketChannel.getRemoteAddress());
 
-                //transmitting data
                 socketChannel.write(helloBuffer).get();
 
                 while (socketChannel.read(buffer).get() != -1) {
