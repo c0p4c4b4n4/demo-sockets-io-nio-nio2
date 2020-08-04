@@ -2,9 +2,11 @@ package demo.nio.server.selector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,29 +21,54 @@ public class NioSelectorEchoServer {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-            selector.select();
+            selector.select(); // blocking
 
             Set<SelectionKey> readyHandles = selector.selectedKeys();
             Iterator<SelectionKey> handleIterator = readyHandles.iterator();
 
             while (handleIterator.hasNext()) {
-                SelectionKey handle = handleIterator.next();
+                SelectionKey key = handleIterator.next();
 
-                if (handle.isAcceptable()) {
-                    ReadEventHandler handler = new AcceptEventHandler(selector);
-                    handler.handleEvent(handle);
+                if (key.isAcceptable()) {
+                    System.out.println("accept");
+
+                    ServerSocketChannel serverSocketChannel2 = (ServerSocketChannel) key.channel();
+                    SocketChannel socketChannel = serverSocketChannel2.accept();
+                    if (socketChannel != null) {
+                        socketChannel.configureBlocking(false);
+                        socketChannel.register(selector, SelectionKey.OP_READ);
+                    }
                 }
 
-                if (handle.isReadable()) {
-                    ReadEventHandler handler = new ReadEventHandler(selector);
-                    handler.handleEvent(handle);
+                if (key.isReadable()) {
+                    System.out.println("read");
+
                     handleIterator.remove();
+
+                    SocketChannel socketChannel = (SocketChannel) key.channel();
+
+                    ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
+                    socketChannel.read(inputBuffer);
+
+                    inputBuffer.flip();
+                    byte[] bytes = new byte[inputBuffer.limit()];
+                    inputBuffer.get(bytes);
+
+                    System.out.println("Received message from client : " + new String(bytes));
+                    inputBuffer.flip();
+
+                    socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
                 }
 
-                if (handle.isWritable()) {
-                    ReadEventHandler handler = new WriteEventHandler(selector);
-                    handler.handleEvent(handle);
+                if (key.isWritable()) {
+                    System.out.println("write");
+
                     handleIterator.remove();
+
+                    SocketChannel socketChannel = (SocketChannel) key.channel();
+                    ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
+                    socketChannel.write(inputBuffer);
+                    socketChannel.close();
                 }
             }
         }
