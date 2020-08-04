@@ -6,35 +6,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class IoEchoClient extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String[] msgs = {"Alpha", "Bravo", "Charlie"};
-        for (String msg : msgs) {
+        String[] messages = {"Alpha", "Bravo", "Charlie"};
+        for (String message : messages) {
             Socket socket = new Socket("localhost", 7000);
-            System.out.println("echo client started: " + socket);
+            logger.info("echo client started: " + socket);
 
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
 
-            byte[] bytes = msg.getBytes();
+            byte[] bytes = message.getBytes();
             os.write(bytes);
 
             int totalRead = 0;
-            int read;
             while (totalRead < bytes.length) {
-                if ((read = is.read(bytes, totalRead, bytes.length - totalRead)) == -1)
-                    throw new SocketException("Connection closed prematurely");
-                System.out.println("client read: " + read);
+                int read = is.read(bytes, totalRead, bytes.length - totalRead);
+                if (read <= 0)
+                    break;
+
                 totalRead += read;
+                logger.info("echo client read: {} from {} byte(s)", totalRead, bytes.length);
             }
 
-            System.out.println("echo client received: " + new String(bytes));
+            logger.info("echo client received: " + new String(bytes));
 
             socket.close();
-            System.out.println("echo client disconnected");
+            logger.info("echo client disconnected");
             Thread.sleep(1000);
         }
     }
