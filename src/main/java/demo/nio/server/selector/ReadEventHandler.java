@@ -1,5 +1,6 @@
 package demo.nio.server.selector;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -14,7 +15,7 @@ class ReadEventHandler {
         this.demultiplexer = demultiplexer;
     }
 
-    public void handleEvent(SelectionKey handle) throws Exception {
+    public void handleEvent(SelectionKey handle) throws IOException {
         System.out.println("read");
 
         SocketChannel socketChannel = (SocketChannel) handle.channel();

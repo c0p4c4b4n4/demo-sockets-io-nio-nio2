@@ -10,20 +10,12 @@ import java.util.Set;
 
 public class NioSelectorEchoServer {
 
-    private static final int SERVER_PORT = 7000;
-
     public static void main(String[] args) throws IOException {
-        System.out.println("Starting Reactor NIO echo server at port: " + SERVER_PORT);
-        new NioSelectorEchoServer().initiateReactiveServer(SERVER_PORT);
-    }
-
-    public void initiateReactiveServer(int port) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(port));
+        serverSocketChannel.socket().bind(new InetSocketAddress(7000));
         serverSocketChannel.configureBlocking(false);
 
         Selector selector = Selector.open();
-
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
@@ -54,4 +46,5 @@ public class NioSelectorEchoServer {
             }
         }
     }
+
 }
