@@ -1,4 +1,4 @@
-package demo.nio2.completion_handler.client1;
+package to_delete.nio2_v3.client;
 
 import demo.common.Demo;
 

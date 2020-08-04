@@ -1,4 +1,4 @@
-package demo.nio2.completion_handler.server;
+package to_delete.nio2_v3.server;
 
 import demo.common.Demo;
 
@@ -6,15 +6,21 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Nio2EchoServerCompletionHandler extends Demo {
+public class Nio2EchoServerCompletionHandlerChannelGroup extends Demo {
 
     public static void main(String[] args) throws IOException {
-        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open()) {
+        ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
+        AsynchronousChannelGroup channelGroup = AsynchronousChannelGroup.withCachedThreadPool(executorService, 1);
+
+        try (AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup)) {
             if (!serverSocketChannel.isOpen()) {
                 throw new IOException("Asynchronous server socket channel is not open !");
             }
