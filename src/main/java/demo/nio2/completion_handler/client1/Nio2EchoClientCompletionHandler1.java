@@ -31,7 +31,7 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
             socketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
             socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
-            String[] messages = new String[] {"Alpha", "Bravo", "Charlie"};
+            String[] messages = new String[]{"Alpha", "Bravo", "Charlie"};
             AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel, messages);
             socketChannel.connect(new InetSocketAddress("localhost", 7000), null, acceptCompletionHandler);
 

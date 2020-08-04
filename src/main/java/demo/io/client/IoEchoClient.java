@@ -28,7 +28,7 @@ public class IoEchoClient extends Demo {
                     break;
 
                 totalRead += read;
-                logger.info("echo client read: {} from {} byte(s)", totalRead, bytes.length);
+                logger.info("echo client read: {}", read);
             }
 
             logger.info("echo client received: " + new String(bytes));
