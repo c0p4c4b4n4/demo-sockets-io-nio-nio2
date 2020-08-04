@@ -14,8 +14,10 @@ public class NioSelectorEchoServer {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(7000));
         serverSocketChannel.configureBlocking(false);
+
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
+        System.out.println("echo server started: " + serverSocketChannel);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -23,11 +25,11 @@ public class NioSelectorEchoServer {
         while (true) {
             selector.select(); // blocking
 
-            Set<SelectionKey> readyHandles = selector.selectedKeys();
-            Iterator<SelectionKey> handleIterator = readyHandles.iterator();
+            Set<SelectionKey> keys = selector.selectedKeys();
+            Iterator<SelectionKey> keysIterator = keys.iterator();
 
-            while (handleIterator.hasNext()) {
-                SelectionKey key = handleIterator.next();
+            while (keysIterator.hasNext()) {
+                SelectionKey key = keysIterator.next();
 
                 if (key.isAcceptable()) {
                     System.out.println("accept");
@@ -43,7 +45,7 @@ public class NioSelectorEchoServer {
                 if (key.isReadable()) {
                     System.out.println("read");
 
-                    handleIterator.remove();
+                    keysIterator.remove();
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
@@ -63,7 +65,7 @@ public class NioSelectorEchoServer {
                 if (key.isWritable()) {
                     System.out.println("write");
 
-                    handleIterator.remove();
+                    keysIterator.remove();
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
