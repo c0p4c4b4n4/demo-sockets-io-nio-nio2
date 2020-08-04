@@ -34,7 +34,7 @@ public class NioSelectorEchoServer extends Demo {
                 SelectionKey key = keysIterator.next();
 
                 if (key.isAcceptable()) {
-                    logger.info("key is acceptable: " + key);
+//                    logger.info("key is acceptable: " + key);
 
                     ServerSocketChannel serverSocketChannel2 = (ServerSocketChannel) key.channel();
                     SocketChannel socketChannel = serverSocketChannel2.accept();
@@ -48,7 +48,7 @@ public class NioSelectorEchoServer extends Demo {
 
                 if (key.isReadable()) {
                     keysIterator.remove();
-                    logger.info("key is readable: " + key);
+//                    logger.info("key is readable: " + key);
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
@@ -67,7 +67,7 @@ public class NioSelectorEchoServer extends Demo {
 
                 if (key.isWritable()) {
                     keysIterator.remove();
-                    logger.info("key is writable: " + key);
+//                    logger.info("key is writable: " + key);
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
