@@ -1,5 +1,7 @@
 package demo.nio.server.selector;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -10,14 +12,14 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioSelectorEchoServer {
+public class NioSelectorEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        System.out.println("echo server started: " + serverSocketChannel);
+        logger.info("echo server started: " + serverSocketChannel);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -32,40 +34,40 @@ public class NioSelectorEchoServer {
                 SelectionKey key = keysIterator.next();
 
                 if (key.isAcceptable()) {
-                    System.out.println("accept");
+                    logger.info("key is acceptable: " + key);
 
                     ServerSocketChannel serverSocketChannel2 = (ServerSocketChannel) key.channel();
                     SocketChannel socketChannel = serverSocketChannel2.accept();
                     if (socketChannel != null) {
+                        logger.info("connection is accepted: " + socketChannel);
+
                         socketChannel.configureBlocking(false);
                         socketChannel.register(selector, SelectionKey.OP_READ);
                     }
                 }
 
                 if (key.isReadable()) {
-                    System.out.println("read");
-
                     keysIterator.remove();
+                    logger.info("key is readable: " + key);
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
-                    ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
+                    ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
                     socketChannel.read(inputBuffer);
 
                     inputBuffer.flip();
                     byte[] bytes = new byte[inputBuffer.limit()];
                     inputBuffer.get(bytes);
 
-                    System.out.println("Received message from client : " + new String(bytes));
+                    logger.info("echo server received: " + new String(bytes));
                     inputBuffer.flip();
 
                     socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
                 }
 
                 if (key.isWritable()) {
-                    System.out.println("write");
-
                     keysIterator.remove();
+                    logger.info("key is writable: " + key);
 
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
@@ -74,6 +76,8 @@ public class NioSelectorEchoServer {
                 }
             }
         }
-    }
 
+//        serverSocketChannel.close();
+//        logger.info("echo server finished");
+    }
 }
