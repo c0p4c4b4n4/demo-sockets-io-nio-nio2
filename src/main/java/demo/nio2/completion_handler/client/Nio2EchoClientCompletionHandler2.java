@@ -1,4 +1,4 @@
-package demo.nio2.completion_handler.client2;
+package demo.nio2.completion_handler.client;
 
 import demo.common.Demo;
 

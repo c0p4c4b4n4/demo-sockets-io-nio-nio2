@@ -1,29 +1,31 @@
-package demo.nio2.completion_handler.client2;
+package demo.nio2.completion_handler.server;
 
 import demo.common.Demo;
 
-import java.nio.ByteBuffer;
+import java.io.IOException;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 
 class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
+    private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
-    private final Charset charset;
 
-    WriteCompletionHandler(AsynchronousSocketChannel socketChannel, Charset charset) {
+    public WriteCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel) {
+        this.serverSocketChannel = serverSocketChannel;
         this.socketChannel = socketChannel;
-        this.charset = charset;
     }
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
         logger.info("written: " + bytesWritten);
 
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, charset, inputBuffer);
-        socketChannel.read(inputBuffer, attachment, readCompletionHandler);
+        try {
+            socketChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
