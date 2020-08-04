@@ -1,4 +1,6 @@
-package nio.client;
+package demo.nio.client;
+
+import demo.common.Demo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,19 +9,19 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 
-public class NioEchoClient {
+public class NioEchoClient extends Demo {
 
     private static final CharsetDecoder decoder = StandardCharsets.UTF_8.newDecoder();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         String[] msgs = {"Alpha", "Bravo", "Charlie"};
         for (String msg : msgs) {
-            System.out.println("echo client started");
+            logger.info("echo client started");
             SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 7000));
 
             ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
             socketChannel.write(buffer);
-            System.out.println("echo client sent: " + msg);
+            logger.info("echo client sent: " + msg);
 
             int totalRead = 0;
             while (totalRead < msg.getBytes().length) {
@@ -32,12 +34,11 @@ public class NioEchoClient {
                 totalRead += read;
 
                 buffer.flip();
-                System.out.println("echo client received: " + decoder.decode(buffer));
+                logger.info("echo client received: " + decoder.decode(buffer));
             }
 
             socketChannel.close();
-            System.out.println("echo client disconnected");
-            Thread.sleep(1000);
+            logger.info("echo client disconnected");
         }
     }
 }

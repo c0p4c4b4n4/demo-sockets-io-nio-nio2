@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 
 class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, Attachment> {
 
@@ -22,9 +21,7 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, At
     public void completed(Void result, Attachment attachment) {
         logger.info("accepted");
 
-        String message = attachment.messages[0];
-        attachment.messages = Arrays.copyOfRange(attachment.messages, 1, attachment.messages.length);
-
+        String message = attachment.message;
         logger.info("echo client sent: " + message);
 
         ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes(charset));

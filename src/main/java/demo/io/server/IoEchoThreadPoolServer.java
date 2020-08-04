@@ -56,7 +56,7 @@ public class IoEchoThreadPoolServer extends Demo {
                     logger.info("server read: " + read);
                     logger.info("server received: " + new String(bytes, 0, read, StandardCharsets.UTF_8));
 
-                    sleep(1);
+                    sleep(1000);
                     os.write(bytes, 0, read);
                 }
             } catch (IOException e) {

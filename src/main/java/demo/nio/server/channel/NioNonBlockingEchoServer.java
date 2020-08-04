@@ -1,4 +1,6 @@
-package nio.server.channel;
+package demo.nio.server.channel;
+
+import demo.common.Demo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -7,27 +9,27 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-public class NioNonBlockingEchoServer {
+public class NioNonBlockingEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("echo server is starting...");
+        logger.info("echo server is starting...");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
-        System.out.println("is blocking: " + serverSocketChannel.isBlocking());
+        logger.info("is blocking: " + serverSocketChannel.isBlocking());
 
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress(7000));
-        System.out.println("echo server started: " + serverSocket);
+        logger.info("echo server started: " + serverSocket);
 
         int i = 0;
         while (i < 3) {
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (socketChannel != null) {
                 i++;
-                System.out.println("incoming connection: " + socketChannel);
+                logger.info("incoming connection: " + socketChannel);
 
-                ByteBuffer buffer = ByteBuffer.allocate(10);
+                ByteBuffer buffer = ByteBuffer.allocate(4);
                 while (true) {
                     buffer.clear();
                     int n = socketChannel.read(buffer);
@@ -36,18 +38,20 @@ public class NioNonBlockingEchoServer {
                     }
                     buffer.flip();
 
+                    sleep(1000);
+
                     socketChannel.write(buffer);
-                    System.out.println("echo server sent: " + buffer.asCharBuffer().toString());
+                    logger.info("echo server sent: " + buffer.asCharBuffer());
                 }
 
                 socketChannel.close();
             } else {
-                System.out.println("waiting for incoming connection...");
-                Thread.sleep(1000);
+                logger.info("waiting for incoming connection...");
+                sleep(1000);
             }
         }
 
-        System.out.println("echo server finished");
+        logger.info("echo server finished");
         serverSocket.close();
     }
 }

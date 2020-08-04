@@ -14,23 +14,26 @@ public class Nio2EchoClientCompletionHandler2 extends Demo {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     public static void main(String[] args) throws IOException {
-        AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
+        String[] messages = {"Alpha", "Bravo", "Charlie"};
+        for (String message : messages) {
+            AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
 
-        socketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
-        socketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
-        socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
+            socketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
+            socketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
+            socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
-        Attachment attachment = new Attachment();
-        attachment.messages = new String[]{"Alpha", "Bravo", "Charlie"};
-        attachment.active = true;
+            Attachment attachment = new Attachment();
+            attachment.message = message;
+            attachment.active = true;
 
-        AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel, CHARSET);
-        socketChannel.connect(new InetSocketAddress("localhost", 7000), attachment, acceptCompletionHandler);
+            AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel, CHARSET);
+            socketChannel.connect(new InetSocketAddress("localhost", 7000), attachment, acceptCompletionHandler);
 
-        while (attachment.active) {
+            while (attachment.active) {
+            }
+
+            socketChannel.close();
+            logger.info("echo client finished");
         }
-
-        socketChannel.close();
-        logger.info("echo client finished");
     }
 }

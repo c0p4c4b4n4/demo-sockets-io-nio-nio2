@@ -1,4 +1,6 @@
-package nio.server.channel;
+package demo.nio.server.channel;
+
+import demo.common.Demo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,24 +11,24 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
-public class NioBlockingEchoServer {
+public class NioBlockingEchoServer extends Demo {
 
     private static final CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder();
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        System.out.println("server is blocking: " + serverSocketChannel.isBlocking());
+        logger.info("server is blocking: " + serverSocketChannel.isBlocking());
 
         ServerSocket serverSocket = serverSocketChannel.socket();
         serverSocket.bind(new InetSocketAddress("localhost", 7000));
-        System.out.println("echo server started: " + serverSocket);
+        logger.info("echo server started: " + serverSocket);
 
         int i = 0;
         while (i++ < 3) {
             SocketChannel socketChannel = serverSocketChannel.accept();
-            System.out.println("incoming connection: " + socketChannel);
+            logger.info("incoming connection: " + socketChannel);
 
-            ByteBuffer buffer = ByteBuffer.allocate(10);
+            ByteBuffer buffer = ByteBuffer.allocate(4);
             while (true) {
                 buffer.clear();
                 int n = socketChannel.read(buffer);
@@ -35,14 +37,16 @@ public class NioBlockingEchoServer {
                 }
                 buffer.flip();
 
+                sleep(1000);
                 socketChannel.write(buffer);
-                System.out.println("echo server sent: " + buffer.asCharBuffer().toString());
+
+                logger.info("echo server sent: " + buffer.asCharBuffer());
             }
 
             socketChannel.close();
         }
 
-        System.out.println("echo server finished");
+        logger.info("echo server finished");
         serverSocket.close();
     }
 }

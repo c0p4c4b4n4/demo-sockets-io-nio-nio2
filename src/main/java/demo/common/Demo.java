@@ -9,9 +9,9 @@ public class Demo {
 
     protected static final Logger logger = LoggerFactory.getLogger(Demo.class);
 
-    protected static void sleep(int seconds) {
+    protected static void sleep(int milliseconds) {
         try {
-            TimeUnit.SECONDS.sleep(seconds);
+            TimeUnit.MILLISECONDS.sleep(milliseconds);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
