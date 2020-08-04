@@ -1,5 +1,7 @@
 package demo.io.server;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class IoEchoServer {
+public class IoEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(7000);
@@ -22,9 +24,12 @@ public class IoEchoServer {
             OutputStream os = socket.getOutputStream();
 
             int read;
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[4];
             while ((read = is.read(bytes)) != -1) {
-                System.out.println("server received: " + new String(bytes, StandardCharsets.UTF_8));
+                System.out.println("server read: " + read);
+                System.out.println("server received: " + new String(bytes, 0, read, StandardCharsets.UTF_8));
+
+                sleep(1);
                 os.write(bytes, 0, read);
             }
 
