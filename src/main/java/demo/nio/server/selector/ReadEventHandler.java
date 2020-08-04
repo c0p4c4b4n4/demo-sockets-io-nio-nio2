@@ -5,7 +5,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
-class ReadEventHandler implements EventHandler {
+class ReadEventHandler {
 
     private final Selector demultiplexer;
     private final ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
@@ -14,7 +14,6 @@ class ReadEventHandler implements EventHandler {
         this.demultiplexer = demultiplexer;
     }
 
-    @Override
     public void handleEvent(SelectionKey handle) throws Exception {
         System.out.println("read");
 

@@ -5,7 +5,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-class AcceptEventHandler implements EventHandler {
+class AcceptEventHandler {
 
     private final Selector demultiplexer;
 
@@ -13,7 +13,6 @@ class AcceptEventHandler implements EventHandler {
         this.demultiplexer = demultiplexer;
     }
 
-    @Override
     public void handleEvent(SelectionKey handle) throws Exception {
         System.out.println("accept");
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) handle.channel();

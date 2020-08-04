@@ -3,7 +3,10 @@ package demo.nio.server.selector;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
 public class NioSelectorEchoServer {
 
@@ -15,16 +18,40 @@ public class NioSelectorEchoServer {
     }
 
     public void initiateReactiveServer(int port) throws IOException {
-        ServerSocketChannel server = ServerSocketChannel.open();
-        server.socket().bind(new InetSocketAddress(port));
-        server.configureBlocking(false);
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.socket().bind(new InetSocketAddress(port));
+        serverSocketChannel.configureBlocking(false);
 
-        Dispatcher dispatcher = new Dispatcher();
-        dispatcher.registerChannel(SelectionKey.OP_ACCEPT, server);
-        dispatcher.registerEventHandler(SelectionKey.OP_ACCEPT, new AcceptEventHandler(dispatcher.getDemultiplexer()));
-        dispatcher.registerEventHandler(SelectionKey.OP_READ, new ReadEventHandler(dispatcher.getDemultiplexer()));
-        dispatcher.registerEventHandler(SelectionKey.OP_WRITE, new WriteEventHandler());
+        Selector selector = Selector.open();
 
-        dispatcher.run();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        while (true) {
+            selector.select();
+
+            Set<SelectionKey> readyHandles = selector.selectedKeys();
+            Iterator<SelectionKey> handleIterator = readyHandles.iterator();
+
+            while (handleIterator.hasNext()) {
+                SelectionKey handle = handleIterator.next();
+
+                if (handle.isAcceptable()) {
+                    ReadEventHandler handler = new AcceptEventHandler(selector);
+                    handler.handleEvent(handle);
+                }
+
+                if (handle.isReadable()) {
+                    ReadEventHandler handler = new ReadEventHandler(selector);
+                    handler.handleEvent(handle);
+                    handleIterator.remove();
+                }
+
+                if (handle.isWritable()) {
+                    ReadEventHandler handler = new WriteEventHandler(selector);
+                    handler.handleEvent(handle);
+                    handleIterator.remove();
+                }
+            }
+        }
     }
 }
