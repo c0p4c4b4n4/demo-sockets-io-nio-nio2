@@ -19,7 +19,7 @@ public class TimeBinClient {
 
         long time = 0;
 
-        ByteBuffer buffer = ByteBuffer.allocateDirect(8);
+        ByteBuffer buffer = ByteBuffer.allocate(8);
         while (socketChannel.read(buffer) != -1) {
             buffer.flip();
             while (buffer.hasRemaining()) {

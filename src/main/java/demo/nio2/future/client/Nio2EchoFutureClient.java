@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class Nio2EchoFutureClient {
@@ -33,7 +30,7 @@ public class Nio2EchoFutureClient {
             socketChannel.write(outputBuffer).get();
             System.out.println("echo client sent: " + message);
 
-            ByteBuffer inputBuffer = ByteBuffer.allocateDirect(1024);
+            ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
             while (socketChannel.read(inputBuffer).get() != -1) {
                 inputBuffer.flip();
                 System.out.println("echo client received: " + CHARSET_DECODER.decode(inputBuffer));

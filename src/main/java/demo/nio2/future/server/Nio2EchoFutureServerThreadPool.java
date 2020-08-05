@@ -8,7 +8,10 @@ import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Nio2EchoFutureServerThreadPool extends Demo {
 
@@ -55,7 +58,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             try {
                 logger.info("incoming connection: " + socketChannel);
 
-                ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+                ByteBuffer buffer = ByteBuffer.allocate(1024);
                 while (socketChannel.read(buffer).get() != -1) {
                     buffer.flip();
 

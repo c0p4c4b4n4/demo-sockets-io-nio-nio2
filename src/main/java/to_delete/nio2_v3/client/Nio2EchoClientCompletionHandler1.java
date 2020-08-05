@@ -53,7 +53,7 @@ public class Nio2EchoClientCompletionHandler1 extends Demo {
             this.socketChannel = socketChannel;
             this.messages = messages;
             this.outputBuffer = null;
-            this.inputBuffer = ByteBuffer.allocateDirect(1024);
+            this.inputBuffer = ByteBuffer.allocate(1024);
         }
 
         @Override

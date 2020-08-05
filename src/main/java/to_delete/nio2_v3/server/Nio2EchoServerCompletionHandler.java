@@ -40,7 +40,7 @@ public class Nio2EchoServerCompletionHandler extends Demo {
 
         AcceptCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel) {
             this.serverSocketChannel = serverSocketChannel;
-            this.buffer = ByteBuffer.allocateDirect(1024);
+            this.buffer = ByteBuffer.allocate(1024);
         }
 
         @Override

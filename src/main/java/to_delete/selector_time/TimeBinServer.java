@@ -46,7 +46,7 @@ public class TimeBinServer {
 
                     System.out.println("Receiving connection");
 
-                    ByteBuffer bb = ByteBuffer.allocateDirect(8);
+                    ByteBuffer bb = ByteBuffer.allocate(8);
                     bb.clear();
                     bb.putLong(System.currentTimeMillis());
                     bb.flip();

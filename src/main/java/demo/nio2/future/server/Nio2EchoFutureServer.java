@@ -29,7 +29,7 @@ public class Nio2EchoFutureServer extends Demo {
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
             logger.info("incoming connection: " + socketChannel);
 
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
 
             while (socketChannel.read(buffer).get() != -1) {
                 buffer.flip();
