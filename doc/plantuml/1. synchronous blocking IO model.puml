@@ -1,5 +1,6 @@
 @startuml
-skinparam monochrome true 
+skinparam monochrome true
+skinparam shadowing false
 activate Application
 Application->>Kernel: system call
 deactivate Application

@@ -1,5 +1,9 @@
 https://mermaid-js.github.io/mermaid-live-editor/
+
 https://plantuml.com/sequence-diagram
+https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
+https://plantuml.com/skinparam
+https://github.com/VladimirAlexiev/plantuml-skinparam
 
 https://sequencediagram.org/
 https://www.websequencediagrams.com/
