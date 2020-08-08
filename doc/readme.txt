@@ -5,6 +5,7 @@ https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-para
 https://plantuml.com/skinparam
 https://github.com/VladimirAlexiev/plantuml-skinparam
 https://real-world-plantuml.com/?type=sequence
+https://plantuml-editor.kkeisuke.com/
 
 https://sequencediagram.org/
 https://www.websequencediagrams.com/
