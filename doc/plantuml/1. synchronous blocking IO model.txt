@@ -1,0 +1,13 @@
+@startuml
+skinparam monochrome true 
+activate Application
+Application->>Kernel: system call
+deactivate Application
+activate Kernel
+Note right of Kernel: wait for data
+Note left of Application: is blocked
+Note right of Kernel: copy data
+Kernel-->>Application: returned data
+deactivate Kernel
+activate Application
+@enduml
