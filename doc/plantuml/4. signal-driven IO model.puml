@@ -1,17 +1,18 @@
-sequenceDiagram
-    participant A as Application
-    participant K as Kernel
-    activate A
-    A->>K: system call
-    activate K
-    K-->>A: return
-    Note right of K: wait for data
-    Note left of A: isn't blocked
-    K--xA: signal
-    A->>K: system call
-    deactivate A
-    Note right of K: copy data
-    K-->>A: returned data
-    deactivate K
-    activate A
-    deactivate A
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+    activate Application
+    Application->>Kernel: system call
+    activate Kernel
+    Kernel-->>Application: return
+    Note right of Kernel: wait for data
+    Note left of Application: isn't blocked
+    Kernel--xA: signal
+    Application->>Kernel: system call
+    deactivate Application
+    Note right of Kernel: copy data
+    Kernel-->>Application: returned data
+    deactivate Kernel
+    activate Application
+    deactivate Application
+@enduml
