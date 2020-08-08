@@ -7,12 +7,8 @@ skinparam shadowing false
     Kernel-->>Application: return
     Note right of Kernel: wait for data
     Note left of Application: isn't blocked
-    deactivate Kernel
-    activate Kernel
     Note right of Kernel: copy data
-    Kernel--xA: callback
+    Kernel-->Application: callback
     deactivate Kernel
-    deactivate Application
-    activate Application
     deactivate Application
 @enduml

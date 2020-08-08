@@ -3,20 +3,14 @@ skinparam monochrome true
 skinparam shadowing false
     activate Application
     Application->>Kernel: system call
-    deactivate Application
-    activate Application
     activate Kernel
-    Note right of Kernel: wait for data<br>in many<br>desriptors
-    Note left of Application: is blocked<br>until one<br>of the descriptors<br>is readable
+    Note right of Kernel: wait for data\nin many\ndesriptors
+    Note left of Application: is blocked\nuntil one\nof the descriptors\nis readable
     Kernel-->>Application: returned readable
     Application->>Kernel: system call
     deactivate Application
-    deactivate Kernel
-    activate Kernel
     Note right of Kernel: copy data
     Kernel-->>Application: returned data
     deactivate Kernel
-    activate Application
-    deactivate Application
     activate Application
 @enduml
