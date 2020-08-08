@@ -1,4 +1,6 @@
 @startuml
+title Blocking I/O model
+hide footbox
 skinparam monochrome true
 skinparam shadowing false
 activate Application
