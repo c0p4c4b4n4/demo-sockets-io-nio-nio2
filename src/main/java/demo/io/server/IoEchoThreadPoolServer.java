@@ -17,7 +17,7 @@ public class IoEchoThreadPoolServer extends Demo {
         ServerSocket serverSocket = new ServerSocket(7000);
         logger.info("echo server started: " + serverSocket);
 
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        ExecutorService executorService = Executors.newCachedThreadPool(); // fixedThreadPool
 
         int i = 0;
         while (i++ < 3) {
