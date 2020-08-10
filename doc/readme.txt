@@ -29,3 +29,9 @@ while ((c = System.in.read()) != -1) {
         System.out.println("echo: " + responseLine);
     }
 }
+
+String userInput;
+while ((userInput = stdIn.readLine()) != null) {
+    out.println(userInput);
+    System.out.println("echo: " + in.readLine());
+}
