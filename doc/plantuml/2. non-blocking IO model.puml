@@ -1,5 +1,5 @@
 @startuml
-title Non-blocking I/O model
+title non-blocking I/O model
 hide footbox
 skinparam monochrome true
 skinparam shadowing false

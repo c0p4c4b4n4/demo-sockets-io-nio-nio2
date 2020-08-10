@@ -1,5 +1,5 @@
 @startuml
-title Signal-driven I/O model
+title signal-driven I/O model
 hide footbox
 skinparam monochrome true
 skinparam shadowing false
