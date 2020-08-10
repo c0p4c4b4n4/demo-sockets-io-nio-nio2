@@ -35,3 +35,8 @@ while ((userInput = stdIn.readLine()) != null) {
     out.println(userInput);
     System.out.println("echo: " + in.readLine());
 }
+
+        if (new String(buffer.array()).trim().equals(POISON_PILL)) {
+            client.close();
+            System.out.println("Not accepting client messages anymore");
+        }

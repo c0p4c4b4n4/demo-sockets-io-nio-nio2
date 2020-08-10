@@ -10,7 +10,7 @@ import java.net.Socket;
 public class IoEchoClient extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String[] messages = {"Alpha", "Bravo", "Charlie"};
+        String[] messages = {"Alpha", "Bravo", "bye"};
         for (String message : messages) {
             Socket socket = new Socket("localhost", 7000);
             logger.info("echo client started: " + socket);

@@ -15,8 +15,8 @@ public class IoEchoServer extends Demo {
         ServerSocket serverSocket = new ServerSocket(7000);
         logger.info("echo server started: " + serverSocket);
 
-        int i = 0;
-        while (i++ < 3) {
+        boolean active = true;
+        while (active) {
             Socket socket = serverSocket.accept();
             logger.info("incoming connection accepted: " + socket);
 
@@ -27,7 +27,13 @@ public class IoEchoServer extends Demo {
             byte[] bytes = new byte[4];
             while ((read = is.read(bytes)) != -1) {
                 logger.info("server read: " + read);
-                logger.info("server received: " + new String(bytes, 0, read, StandardCharsets.UTF_8));
+
+                String message = new String(bytes, 0, read, StandardCharsets.UTF_8);
+                logger.info("server received: " + message);
+
+                if (message.trim().equals("bye")) {
+                    active = false;
+                }
 
                 sleep(1000);
                 os.write(bytes, 0, read);
