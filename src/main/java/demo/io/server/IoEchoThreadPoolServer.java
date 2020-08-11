@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IoEchoThreadPoolServer extends Demo {
 
@@ -17,12 +18,12 @@ public class IoEchoThreadPoolServer extends Demo {
         ServerSocket serverSocket = new ServerSocket(7000);
         logger.info("echo server started: " + serverSocket);
 
-        ExecutorService executorService = Executors.newCachedThreadPool(); // fixedThreadPool
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        int i = 0;
-        while (i++ < 3) {
+        AtomicBoolean active = new AtomicBoolean(true);
+        while (active.get()) {
             Socket socket = serverSocket.accept();
-            executorService.submit(new Worker(socket));
+            executorService.submit(new Worker(socket, active));
         }
 
         logger.info("echo server is finishing");
@@ -37,9 +38,11 @@ public class IoEchoThreadPoolServer extends Demo {
     private static class Worker implements Runnable {
 
         private final Socket socket;
+        private final AtomicBoolean active;
 
-        Worker(Socket socket) {
+        Worker(Socket socket, AtomicBoolean active) {
             this.socket = socket;
+            this.active = active;
         }
 
         @Override
@@ -54,7 +57,13 @@ public class IoEchoThreadPoolServer extends Demo {
                 byte[] bytes = new byte[4];
                 while ((read = is.read(bytes)) != -1) {
                     logger.info("server read: " + read);
-                    logger.info("server received: " + new String(bytes, 0, read, StandardCharsets.UTF_8));
+
+                    String message = new String(bytes, 0, read, StandardCharsets.UTF_8);
+                    logger.info("server received: " + message);
+
+                    if (message.trim().equals("bye")) {
+                        active.set(false);
+                    }
 
                     sleep(1000);
                     os.write(bytes, 0, read);
