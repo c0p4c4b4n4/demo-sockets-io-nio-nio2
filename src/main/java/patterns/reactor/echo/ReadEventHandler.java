@@ -25,10 +25,10 @@ class ReadEventHandler implements EventHandler {
         inputBuffer.flip();
         // Rewind the buffer to start reading from the beginning
 
-        byte[] buffer = new byte[inputBuffer.limit()];
-        inputBuffer.get(buffer);
+        byte[] bytes = new byte[inputBuffer.limit()];
+        inputBuffer.get(bytes);
 
-        System.out.println("Received message from client : " + new String(buffer));
+        System.out.println("Received message from client : " + new String(bytes));
         inputBuffer.flip();
         // Rewind the buffer to start reading from the beginning
         // Register the interest for writable readiness event for
