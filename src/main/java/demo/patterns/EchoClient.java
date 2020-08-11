@@ -1,4 +1,4 @@
-package patterns;
+package demo.patterns;
 
 import java.io.BufferedReader;
 import java.io.IOException;

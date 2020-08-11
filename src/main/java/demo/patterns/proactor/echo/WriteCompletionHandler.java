@@ -1,4 +1,4 @@
-package patterns.proactor.echo;
+package demo.patterns.proactor.echo;
 
 import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;

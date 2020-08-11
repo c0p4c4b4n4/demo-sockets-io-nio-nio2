@@ -1,5 +1,7 @@
 package demo.nio.server.selector;
 
+import demo.common.Demo;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -10,7 +12,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioSelector1EchoServer {
+public class NioSelector1EchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo server is starting...");
@@ -35,7 +37,7 @@ public class NioSelector1EchoServer {
                 keyIterator.remove();
 
                 if (key.isAcceptable()) {
-                    accept(serverSocketChannel, selector);
+                    accept(selector, key);
                 }
 
                 if (key.isReadable()) {
@@ -48,11 +50,15 @@ public class NioSelector1EchoServer {
         serverSocketChannel.close();
     }
 
-    private static void accept(ServerSocketChannel serverSocketChannel, Selector selector) throws IOException {
+    private static void accept(Selector selector, SelectionKey key) throws IOException {
+        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
         SocketChannel socketChannel = serverSocketChannel.accept();
-        System.out.println("echo client connected: " + socketChannel);
-        socketChannel.configureBlocking(false);
-        socketChannel.register(selector, SelectionKey.OP_READ);
+        if (socketChannel != null) {
+            logger.info("connection is accepted: " + socketChannel);
+
+            socketChannel.configureBlocking(false);
+            socketChannel.register(selector, SelectionKey.OP_READ);
+        }
     }
 
     private static void read(SelectionKey key) throws IOException {
