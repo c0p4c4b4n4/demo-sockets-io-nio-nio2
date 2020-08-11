@@ -1,4 +1,4 @@
-package nio.server.selector;
+package demo.nio.server.selector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,7 +10,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioEchoServer {
+public class NioSelector1EchoServer {
 
     public static void main(String[] args) throws IOException {
         System.out.println("echo server is starting...");
@@ -23,8 +23,8 @@ public class NioEchoServer {
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        int i = 0;
-        while (i < 3) {
+        boolean active = true;
+        while (active) {
             selector.select();
 
             Set<SelectionKey> selectedKeys = selector.selectedKeys();
@@ -34,8 +34,6 @@ public class NioEchoServer {
                 keyIterator.remove();
 
                 if (key.isAcceptable()) {
-                    i++;
-
                     SocketChannel socketChannel = serverSocketChannel.accept();
                     System.out.println("echo client connected: " + socketChannel);
                     socketChannel.configureBlocking(false);
@@ -46,9 +44,8 @@ public class NioEchoServer {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
 
                     ByteBuffer buffer = ByteBuffer.allocate(10);
-                    int n = socketChannel.read(buffer);
-
-                    if (n < 0) {
+                    int read = socketChannel.read(buffer);
+                    if (read < 0) {
                         socketChannel.close();
                         System.out.println("echo client disconnected");
                     } else {
@@ -56,7 +53,6 @@ public class NioEchoServer {
 
                         buffer.flip();
                         socketChannel.write(buffer);
-                        buffer.clear(); // if the buffer is reusable
                     }
                 }
             }

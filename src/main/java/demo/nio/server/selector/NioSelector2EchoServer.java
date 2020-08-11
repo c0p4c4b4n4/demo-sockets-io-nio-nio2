@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioSelectorEchoServer extends Demo {
+public class NioSelector2EchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
