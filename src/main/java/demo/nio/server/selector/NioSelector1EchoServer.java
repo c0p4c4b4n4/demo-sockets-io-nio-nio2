@@ -34,31 +34,39 @@ public class NioSelector1EchoServer {
                 keyIterator.remove();
 
                 if (key.isAcceptable()) {
-                    SocketChannel socketChannel = serverSocketChannel.accept();
-                    System.out.println("echo client connected: " + socketChannel);
-                    socketChannel.configureBlocking(false);
-                    socketChannel.register(selector, SelectionKey.OP_READ);
+                    accept(serverSocketChannel, selector);
                 }
 
                 if (key.isReadable()) {
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
-
-                    ByteBuffer buffer = ByteBuffer.allocate(10);
-                    int read = socketChannel.read(buffer);
-                    if (read < 0) {
-                        socketChannel.close();
-                        System.out.println("echo client disconnected");
-                    } else {
-                        System.out.println("echo server received: " + new String(buffer.array()));
-
-                        buffer.flip();
-                        socketChannel.write(buffer);
-                    }
+                    read(key);
                 }
             }
         }
 
         System.out.println("echo server finished");
         serverSocketChannel.close();
+    }
+
+    private static void accept(ServerSocketChannel serverSocketChannel, Selector selector) throws IOException {
+        SocketChannel socketChannel = serverSocketChannel.accept();
+        System.out.println("echo client connected: " + socketChannel);
+        socketChannel.configureBlocking(false);
+        socketChannel.register(selector, SelectionKey.OP_READ);
+    }
+
+    private static void read(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+
+        ByteBuffer buffer = ByteBuffer.allocate(10);
+        int read = socketChannel.read(buffer);
+        if (read < 0) {
+            socketChannel.close();
+            System.out.println("echo client disconnected");
+        } else {
+            System.out.println("echo server received: " + new String(buffer.array()));
+
+            buffer.flip();
+            socketChannel.write(buffer);
+        }
     }
 }
