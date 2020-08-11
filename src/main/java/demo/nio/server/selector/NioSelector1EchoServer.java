@@ -27,8 +27,9 @@ public class NioSelector1EchoServer {
         while (active) {
             selector.select();
 
-            Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+            Set<SelectionKey> keys = selector.selectedKeys();
+            Iterator<SelectionKey> keyIterator = keys.iterator();
+
             while (keyIterator.hasNext()) {
                 SelectionKey key = keyIterator.next();
                 keyIterator.remove();
