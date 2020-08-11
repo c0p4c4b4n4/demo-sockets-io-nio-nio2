@@ -2,16 +2,15 @@ package demo.io.client;
 
 import demo.common.Demo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class IoEchoClient extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String[] messages = {"Alpha", "Bravo", "bye"};
-        for (String message : messages) {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String message;
+        while ((message = in.readLine()) != null) {
             Socket socket = new Socket("localhost", 7000);
             logger.info("echo client started: " + socket);
 
