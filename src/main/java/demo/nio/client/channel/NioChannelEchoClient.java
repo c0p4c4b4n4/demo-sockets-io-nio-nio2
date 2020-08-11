@@ -1,4 +1,4 @@
-package demo.nio.client;
+package demo.nio.client.channel;
 
 import demo.common.Demo;
 
@@ -11,7 +11,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class NioEchoClient extends Demo {
+public class NioChannelEchoClient extends Demo {
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 

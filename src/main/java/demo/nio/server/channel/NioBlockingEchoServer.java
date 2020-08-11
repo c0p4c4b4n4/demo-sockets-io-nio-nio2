@@ -31,8 +31,8 @@ public class NioBlockingEchoServer extends Demo {
             ByteBuffer buffer = ByteBuffer.allocate(4);
             while (true) {
                 buffer.clear();
-                int n = socketChannel.read(buffer);
-                if (n <= 0) {
+                int read = socketChannel.read(buffer);
+                if (read <= 0) {
                     break;
                 }
                 buffer.flip();
