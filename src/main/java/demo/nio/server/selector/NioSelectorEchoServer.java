@@ -24,7 +24,8 @@ public class NioSelectorEchoServer extends Demo {
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        while (true) {
+        boolean active = true;
+        while (active) {
             selector.select(); // blocking
 
             Set<SelectionKey> keys = selector.selectedKeys();
@@ -34,50 +35,56 @@ public class NioSelectorEchoServer extends Demo {
                 SelectionKey key = keysIterator.next();
 
                 if (key.isAcceptable()) {
-//                    logger.info("key is acceptable: " + key);
-
-                    ServerSocketChannel serverSocketChannel2 = (ServerSocketChannel) key.channel();
-                    SocketChannel socketChannel = serverSocketChannel2.accept();
-                    if (socketChannel != null) {
-                        logger.info("connection is accepted: " + socketChannel);
-
-                        socketChannel.configureBlocking(false);
-                        socketChannel.register(selector, SelectionKey.OP_READ);
-                    }
+                    accept(selector, key);
                 }
 
                 if (key.isReadable()) {
                     keysIterator.remove();
-//                    logger.info("key is readable: " + key);
-
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
-
-                    ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-                    socketChannel.read(inputBuffer);
-
-                    inputBuffer.flip();
-                    byte[] bytes = new byte[inputBuffer.limit()];
-                    inputBuffer.get(bytes);
-
-                    logger.info("echo server received: " + new String(bytes));
-                    inputBuffer.flip();
-
-                    socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
+                    read(selector, key);
                 }
 
                 if (key.isWritable()) {
                     keysIterator.remove();
-//                    logger.info("key is writable: " + key);
-
-                    SocketChannel socketChannel = (SocketChannel) key.channel();
-                    ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
-                    socketChannel.write(inputBuffer);
-                    socketChannel.close();
+                    write(key);
                 }
             }
         }
 
-//        serverSocketChannel.close();
-//        logger.info("echo server finished");
+        serverSocketChannel.close();
+        logger.info("echo server finished");
+    }
+
+    private static void accept(Selector selector, SelectionKey key) throws IOException {
+        ServerSocketChannel serverSocketChannel2 = (ServerSocketChannel) key.channel();
+        SocketChannel socketChannel = serverSocketChannel2.accept();
+        if (socketChannel != null) {
+            logger.info("connection is accepted: " + socketChannel);
+
+            socketChannel.configureBlocking(false);
+            socketChannel.register(selector, SelectionKey.OP_READ);
+        }
+    }
+
+    private static void read(Selector selector, SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+
+        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
+        socketChannel.read(inputBuffer);
+
+        inputBuffer.flip();
+        byte[] bytes = new byte[inputBuffer.limit()];
+        inputBuffer.get(bytes);
+
+        logger.info("echo server received: " + new String(bytes));
+        inputBuffer.flip();
+
+        socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
+    }
+
+    private static void write(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
+        socketChannel.write(inputBuffer);
+        socketChannel.close();
     }
 }
