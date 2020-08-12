@@ -1,4 +1,4 @@
-package demo.nio.server.selector;
+package to_delete;
 
 import demo.common.Demo;
 
@@ -9,18 +9,17 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NioSelector2EchoServer extends Demo {
+public class NioSelector1EchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: " + serverSocketChannel);
+        System.out.println("echo server started: " + serverSocketChannel);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -30,29 +29,24 @@ public class NioSelector2EchoServer extends Demo {
             selector.select(); // blocking
 
             Set<SelectionKey> keys = selector.selectedKeys();
-            Iterator<SelectionKey> keysIterator = keys.iterator();
+            Iterator<SelectionKey> keyIterator = keys.iterator();
 
-            while (keysIterator.hasNext()) {
-                SelectionKey key = keysIterator.next();
+            while (keyIterator.hasNext()) {
+                SelectionKey key = keyIterator.next();
+                keyIterator.remove();
 
                 if (key.isAcceptable()) {
                     accept(selector, key);
                 }
 
                 if (key.isReadable()) {
-                    keysIterator.remove();
-                    read(selector, key);
-                }
-
-                if (key.isWritable()) {
-                    keysIterator.remove();
-                    write(key);
+                    read(key);
                 }
             }
         }
 
         serverSocketChannel.close();
-        logger.info("echo server finished");
+        System.out.println("echo server finished");
     }
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {
@@ -61,32 +55,24 @@ public class NioSelector2EchoServer extends Demo {
         if (socketChannel != null) {
             logger.info("connection is accepted: " + socketChannel);
 
-            socketChannel.configureBlocking(false);
+            socketChannel.configureBlocking(false); // ???
             socketChannel.register(selector, SelectionKey.OP_READ);
         }
     }
 
-    private static void read(Selector selector, SelectionKey key) throws IOException {
+    private static void read(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        int n = socketChannel.read(inputBuffer);
-        logger.info("server read: " + n);
+        ByteBuffer buffer = ByteBuffer.allocate(10);
+        int n = socketChannel.read(buffer);
+        if (n < 0) {
+            socketChannel.close();
+            System.out.println("echo client disconnected");
+        } else {
+            System.out.println("echo server received: " + new String(buffer.array()));
 
-        inputBuffer.flip();
-        byte[] bytes = new byte[inputBuffer.limit()];
-        inputBuffer.get(bytes);
-
-        logger.info("echo server received: " + new String(bytes, StandardCharsets.UTF_8));
-        inputBuffer.flip();
-
-        socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
-    }
-
-    private static void write(SelectionKey key) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-        ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
-        socketChannel.write(inputBuffer);
-        socketChannel.close();
+            buffer.flip();
+            socketChannel.write(buffer);
+        }
     }
 }

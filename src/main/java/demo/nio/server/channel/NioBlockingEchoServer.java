@@ -4,7 +4,6 @@ import demo.common.Demo;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -16,9 +15,8 @@ public class NioBlockingEchoServer extends Demo {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         logger.info("echo server is blocking: {}", serverSocketChannel.isBlocking());
 
-        ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: {}", serverSocket);
+        serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
+        logger.info("echo server started: {}", serverSocketChannel);
 
         boolean active = true;
         while (active) {
@@ -55,7 +53,7 @@ public class NioBlockingEchoServer extends Demo {
             logger.info("connection closed");
         }
 
+        serverSocketChannel.close();
         logger.info("echo server finished");
-        serverSocket.close();
     }
 }

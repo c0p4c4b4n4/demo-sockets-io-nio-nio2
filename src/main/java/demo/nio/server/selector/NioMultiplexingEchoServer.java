@@ -23,7 +23,7 @@ public class NioMultiplexingEchoServer extends Demo {
             serverSocketChannel.configureBlocking(false);
 
             serverSocketChannel.bind(new InetSocketAddress("localhost", port));
-            logger.info("echo server started: " + serverSocketChannel);
+            logger.info("echo server started: {}", serverSocketChannel);
 
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         }
@@ -72,24 +72,24 @@ public class NioMultiplexingEchoServer extends Demo {
     private static void read(Selector selector, SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        int n = socketChannel.read(inputBuffer);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        int n = socketChannel.read(buffer);
         logger.info("server read: " + n);
 
-        inputBuffer.flip();
-        byte[] bytes = new byte[inputBuffer.limit()];
-        inputBuffer.get(bytes);
+        buffer.flip();
+        byte[] bytes = new byte[buffer.limit()];
+        buffer.get(bytes);
 
         logger.info("echo server received: " + new String(bytes, StandardCharsets.UTF_8));
-        inputBuffer.flip();
+        buffer.flip();
 
-        socketChannel.register(selector, SelectionKey.OP_WRITE, inputBuffer);
+        socketChannel.register(selector, SelectionKey.OP_WRITE, buffer);
     }
 
     private static void write(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
-        ByteBuffer inputBuffer = (ByteBuffer) key.attachment();
-        socketChannel.write(inputBuffer);
+        ByteBuffer buffer = (ByteBuffer) key.attachment();
+        socketChannel.write(buffer);
         socketChannel.close();
     }
 }
