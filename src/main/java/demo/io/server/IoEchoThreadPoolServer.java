@@ -22,7 +22,7 @@ public class IoEchoThreadPoolServer extends Demo {
 
         AtomicBoolean active = new AtomicBoolean(true);
         while (active.get()) {
-            Socket socket = serverSocket.accept();
+            Socket socket = serverSocket.accept(); // blocking
             executorService.submit(new Worker(socket, active));
         }
 
@@ -55,7 +55,7 @@ public class IoEchoThreadPoolServer extends Demo {
 
                 int n;
                 byte[] bytes = new byte[4];
-                while ((n = is.read(bytes)) != -1) {
+                while ((n = is.read(bytes)) != -1) { // blocking
                     logger.info("echo server read: {} byte(s)", n);
 
                     String message = new String(bytes, 0, n, StandardCharsets.UTF_8);
@@ -67,7 +67,7 @@ public class IoEchoThreadPoolServer extends Demo {
 
                     sleep(1000);
 
-                    os.write(bytes, 0, n);
+                    os.write(bytes, 0, n); // blocking
                 }
             } catch (IOException e) {
                 logger.error("exception during socket reading/writing", e);

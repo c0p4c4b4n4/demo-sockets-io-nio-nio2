@@ -21,7 +21,7 @@ public class NioNonBlockingEchoServer extends Demo {
 
         boolean active = true;
         while (active) {
-            SocketChannel socketChannel = serverSocketChannel.accept();
+            SocketChannel socketChannel = serverSocketChannel.accept(); // non-blocking
             if (socketChannel == null) {
                 logger.info("waiting for incoming connection...");
                 sleep(5000);
@@ -33,7 +33,7 @@ public class NioNonBlockingEchoServer extends Demo {
                 ByteBuffer buffer = ByteBuffer.allocate(4);
                 while (true) {
                     buffer.clear();
-                    int n = socketChannel.read(buffer);
+                    int n = socketChannel.read(buffer); // non-blocking
                     logger.info("echo server read: {} byte(s)", n);
                     if (n <= 0) {
                         break;
@@ -52,7 +52,7 @@ public class NioNonBlockingEchoServer extends Demo {
                     sleep(1000);
 
                     buffer.flip();
-                    socketChannel.write(buffer);
+                    socketChannel.write(buffer); // non-blocking
                 }
 
                 socketChannel.close();

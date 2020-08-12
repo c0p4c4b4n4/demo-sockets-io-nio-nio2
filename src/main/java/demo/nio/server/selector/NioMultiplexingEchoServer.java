@@ -73,7 +73,7 @@ public class NioMultiplexingEchoServer extends Demo {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         ByteBuffer buffer = ByteBuffer.allocate(4);
-        int n = socketChannel.read(buffer);
+        int n = socketChannel.read(buffer); // non-blocking
         logger.info("echo server read: {} byte(s)", n);
 
         buffer.flip();
@@ -90,7 +90,7 @@ public class NioMultiplexingEchoServer extends Demo {
     private static void write(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
         ByteBuffer buffer = (ByteBuffer) key.attachment();
-        socketChannel.write(buffer);
+        socketChannel.write(buffer); // non-blocking
         socketChannel.close();
     }
 }
