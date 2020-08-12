@@ -27,7 +27,7 @@ public class NioSelector1EchoServer extends Demo {
 
         boolean active = true;
         while (active) {
-            selector.select();
+            selector.select(); // blocking
 
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> keyIterator = keys.iterator();
@@ -46,8 +46,8 @@ public class NioSelector1EchoServer extends Demo {
             }
         }
 
-        System.out.println("echo server finished");
         serverSocketChannel.close();
+        System.out.println("echo server finished");
     }
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {

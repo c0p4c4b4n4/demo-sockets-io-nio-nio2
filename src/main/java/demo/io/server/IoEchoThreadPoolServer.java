@@ -48,7 +48,7 @@ public class IoEchoThreadPoolServer extends Demo {
         @Override
         public void run() {
             try {
-                logger.info("incoming connection accepted: {}", socket);
+                logger.info("connection accepted: {}", socket);
 
                 InputStream is = socket.getInputStream();
                 OutputStream os = socket.getOutputStream();
@@ -74,7 +74,7 @@ public class IoEchoThreadPoolServer extends Demo {
             } finally {
                 try {
                     socket.close();
-                    logger.info("incoming connection closed");
+                    logger.info("connection closed");
                 } catch (IOException e) {
                     logger.error("exception during socket closing", e);
                 }
