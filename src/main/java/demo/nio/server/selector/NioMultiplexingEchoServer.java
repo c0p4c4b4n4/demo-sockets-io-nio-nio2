@@ -79,7 +79,6 @@ public class NioMultiplexingEchoServer extends Demo {
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
-
         String message = new String(bytes, StandardCharsets.UTF_8);
         logger.info("echo server received: {}", message);
 
