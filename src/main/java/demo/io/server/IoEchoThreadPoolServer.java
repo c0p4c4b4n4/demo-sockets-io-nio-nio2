@@ -14,16 +14,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IoEchoThreadPoolServer extends Demo {
 
+    private static AtomicBoolean active = new AtomicBoolean(true);
+
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(7000);
         logger.info("echo server started: {}", serverSocket);
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        AtomicBoolean active = new AtomicBoolean(true);
         while (active.get()) {
             Socket socket = serverSocket.accept(); // blocking
-            executorService.submit(new Worker(socket, active));
+            executorService.submit(new Worker(socket));
         }
 
         logger.info("echo server is finishing");
@@ -38,11 +39,9 @@ public class IoEchoThreadPoolServer extends Demo {
     private static class Worker implements Runnable {
 
         private final Socket socket;
-        private final AtomicBoolean active;
 
-        Worker(Socket socket, AtomicBoolean active) {
+        Worker(Socket socket) {
             this.socket = socket;
-            this.active = active;
         }
 
         @Override

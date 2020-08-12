@@ -31,8 +31,7 @@ public class NioMultiplexingEchoServer extends Demo {
         }
 
         while (active) {
-            int k = selector.select(); // blocking
-            if (k == 0) {
+            if (selector.select() == 0) {
                 continue;
             }
 
