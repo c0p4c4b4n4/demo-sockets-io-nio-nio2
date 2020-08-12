@@ -16,17 +16,16 @@ import java.util.Set;
 public class NioMultiplexingEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
-        Selector selector = Selector.open();
+        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
 
         for (int port = 7000; port <= 7007; port++) {
-            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.configureBlocking(false);
-
             serverSocketChannel.bind(new InetSocketAddress("localhost", port));
             logger.info("echo server started: {}", serverSocketChannel);
-
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         }
+
+        Selector selector = Selector.open();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         boolean active = true;
         while (active) {
@@ -54,8 +53,8 @@ public class NioMultiplexingEchoServer extends Demo {
             }
         }
 
-//        serverSocketChannel.close();
-//        logger.info("echo server finished");
+        serverSocketChannel.close();
+        logger.info("echo server finished");
     }
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {

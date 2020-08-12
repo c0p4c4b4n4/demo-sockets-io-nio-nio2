@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class NioChannelEchoClient extends Demo {
 
-    public static void main(String[] args) throws IOException  {
+    public static void main(String[] args) throws IOException {
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String message;
         while ((message = stdIn.readLine()) != null) {

@@ -29,7 +29,7 @@ public class NioBlockingEchoServer extends Demo {
                 buffer.clear();
                 int n = socketChannel.read(buffer); // blocking
                 logger.info("echo server read: {} byte(s)", n);
-                if (n <= 0) {
+                if (n < 0) {
                     break;
                 }
 

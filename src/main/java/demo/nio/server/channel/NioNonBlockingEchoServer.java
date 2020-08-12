@@ -35,7 +35,7 @@ public class NioNonBlockingEchoServer extends Demo {
                     buffer.clear();
                     int n = socketChannel.read(buffer); // non-blocking
                     logger.info("echo server read: {} byte(s)", n);
-                    if (n <= 0) {
+                    if (n < 0) {
                         break;
                     }
 
