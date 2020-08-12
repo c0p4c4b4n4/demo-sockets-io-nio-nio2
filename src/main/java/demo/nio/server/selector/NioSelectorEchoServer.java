@@ -27,10 +27,12 @@ public class NioSelectorEchoServer extends Demo {
 
         boolean active = true;
         while (active) {
-            selector.select(); // blocking
+            int k = selector.select(); // blocking
+            if (k == 0) {
+                continue;
+            }
 
-            Set<SelectionKey> keys = selector.selectedKeys();
-            Iterator<SelectionKey> keysIterator = keys.iterator();
+            Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
 
             while (keysIterator.hasNext()) {
                 SelectionKey key = keysIterator.next();
