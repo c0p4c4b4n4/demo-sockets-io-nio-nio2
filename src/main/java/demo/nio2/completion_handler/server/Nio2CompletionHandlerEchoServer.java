@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
 
-public class Nio2EchoServerCompletionHandler extends Demo {
+public class Nio2CompletionHandlerEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(7000));
