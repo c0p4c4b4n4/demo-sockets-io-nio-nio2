@@ -23,12 +23,12 @@ public class IoEchoServer extends Demo {
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
 
-            int read;
+            int n;
             byte[] bytes = new byte[1024];
-            while ((read = is.read(bytes)) != -1) {
-                logger.info("echo server read: {} byte(s)", read);
+            while ((n = is.read(bytes)) != -1) {
+                logger.info("echo server read: {} byte(s)", n);
 
-                String message = new String(bytes, 0, read, StandardCharsets.UTF_8);
+                String message = new String(bytes, 0, n, StandardCharsets.UTF_8);
                 logger.info("echo server received: {}", message);
 
                 if (message.trim().equals("bye")) {
@@ -37,7 +37,7 @@ public class IoEchoServer extends Demo {
 
                 sleep(1000);
 
-                os.write(bytes, 0, read);
+                os.write(bytes, 0, n);
             }
 
             socket.close();

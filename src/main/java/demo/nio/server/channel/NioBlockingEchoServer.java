@@ -29,9 +29,9 @@ public class NioBlockingEchoServer extends Demo {
             ByteBuffer buffer = ByteBuffer.allocate(4);
             while (true) {
                 buffer.clear();
-                int read = socketChannel.read(buffer);
-                logger.info("echo server read: {} byte(s)", read);
-                if (read <= 0) {
+                int n = socketChannel.read(buffer);
+                logger.info("echo server read: {} byte(s)", n);
+                if (n <= 0) {
                     break;
                 }
 
