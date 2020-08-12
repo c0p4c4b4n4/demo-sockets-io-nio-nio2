@@ -54,12 +54,12 @@ public class IoEchoThreadPoolServer extends Demo {
                 OutputStream os = socket.getOutputStream();
 
                 int read;
-                byte[] bytes = new byte[4];
+                byte[] bytes = new byte[1024];
                 while ((read = is.read(bytes)) != -1) {
-                    logger.info("server read: {} byte(s)", read);
+                    logger.info("echo server read: {} byte(s)", read);
 
                     String message = new String(bytes, 0, read, StandardCharsets.UTF_8);
-                    logger.info("server received: {}", message);
+                    logger.info("echo server received: {}", message);
 
                     if (message.trim().equals("bye")) {
                         active.set(false);
@@ -69,13 +69,13 @@ public class IoEchoThreadPoolServer extends Demo {
                     os.write(bytes, 0, read);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("exception during socket reading/writing", e);
             } finally {
                 try {
                     socket.close();
                     logger.info("incoming connection closed");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("exception during socket closing", e);
                 }
             }
         }
