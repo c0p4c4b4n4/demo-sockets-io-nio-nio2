@@ -15,7 +15,6 @@ import java.util.Set;
 public class NioSelector1EchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("echo server is starting...");
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
 
@@ -65,8 +64,8 @@ public class NioSelector1EchoServer extends Demo {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         ByteBuffer buffer = ByteBuffer.allocate(10);
-        int read = socketChannel.read(buffer);
-        if (read < 0) {
+        int n = socketChannel.read(buffer);
+        if (n < 0) {
             socketChannel.close();
             System.out.println("echo client disconnected");
         } else {

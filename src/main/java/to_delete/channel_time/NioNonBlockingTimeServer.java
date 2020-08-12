@@ -26,7 +26,7 @@ public class NioNonBlockingTimeServer {
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (socketChannel != null) {
                 i++;
-                System.out.println("incoming connection: " + socketChannel);
+                System.out.println("connection: " + socketChannel);
 
                 String msg = LocalDateTime.now().toString() + "\r\n";
                 ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());

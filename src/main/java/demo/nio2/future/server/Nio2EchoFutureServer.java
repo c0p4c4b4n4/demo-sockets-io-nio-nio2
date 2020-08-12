@@ -27,7 +27,7 @@ public class Nio2EchoFutureServer extends Demo {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-            logger.info("incoming connection: " + socketChannel);
+            logger.info("connection: " + socketChannel);
 
             ByteBuffer buffer = ByteBuffer.allocate(1024);
 
@@ -43,7 +43,7 @@ public class Nio2EchoFutureServer extends Demo {
             }
 
             socketChannel.close();
-            logger.info("incoming connection finished");
+            logger.info("connection finished");
         }
 
         serverSocketChannel.close();

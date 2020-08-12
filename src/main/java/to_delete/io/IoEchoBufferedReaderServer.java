@@ -14,7 +14,7 @@ public class IoEchoBufferedReaderServer {
         int i = 0;
         while (i++ < 3) {
             Socket socket = serverSocket.accept();
-            System.out.println("incoming connection: " + socket);
+            System.out.println("connection: " + socket);
 
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);

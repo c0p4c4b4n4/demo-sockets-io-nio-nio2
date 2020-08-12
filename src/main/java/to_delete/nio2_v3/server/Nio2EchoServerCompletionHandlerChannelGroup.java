@@ -54,7 +54,7 @@ public class Nio2EchoServerCompletionHandlerChannelGroup extends Demo {
             serverSocketChannel.accept(null, this);
 
             try {
-                logger.info("incoming connection from: " + socketChannel.getRemoteAddress());
+                logger.info("connection from: " + socketChannel.getRemoteAddress());
 
                 while (socketChannel.read(buffer).get() != -1) { // blocked
                     buffer.flip();

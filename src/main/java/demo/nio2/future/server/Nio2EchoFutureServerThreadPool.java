@@ -30,7 +30,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-            logger.info("incoming connection: " + socketChannel);
+            logger.info("connection: " + socketChannel);
 
             Runnable worker = new Worker(socketChannel);
             executorService.submit(worker);
@@ -56,7 +56,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         @Override
         public void run() {
             try {
-                logger.info("incoming connection: " + socketChannel);
+                logger.info("connection: " + socketChannel);
 
                 ByteBuffer buffer = ByteBuffer.allocate(1024);
                 while (socketChannel.read(buffer).get() != -1) {
@@ -76,7 +76,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             } finally {
                 try {
                     socketChannel.close();
-                    System.out.println("incoming connection finished");
+                    System.out.println("connection finished");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

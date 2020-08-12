@@ -25,7 +25,7 @@ public class NioBlockingTimeServer {
         int i = 0;
         while (i++ < 3) {
             SocketChannel socketChannel = serverSocketChannel.accept();
-            System.out.println("incoming connection: " + socketChannel);
+            System.out.println("connection: " + socketChannel);
 
             String msg = LocalDateTime.now().toString() + "\r\n";
             socketChannel.write(encoder.encode(CharBuffer.wrap(msg)));

@@ -73,8 +73,8 @@ public class NioMultiplexingEchoServer extends Demo {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        int read = socketChannel.read(inputBuffer);
-        logger.info("server read: " + read);
+        int n = socketChannel.read(inputBuffer);
+        logger.info("server read: " + n);
 
         inputBuffer.flip();
         byte[] bytes = new byte[inputBuffer.limit()];
