@@ -66,6 +66,7 @@ public class IoEchoThreadPoolServer extends Demo {
                     }
 
                     sleep(1000);
+
                     os.write(bytes, 0, read);
                 }
             } catch (IOException e) {

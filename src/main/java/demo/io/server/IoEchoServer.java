@@ -36,6 +36,7 @@ public class IoEchoServer extends Demo {
                 }
 
                 sleep(1000);
+
                 os.write(bytes, 0, read);
             }
 

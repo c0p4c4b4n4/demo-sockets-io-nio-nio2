@@ -8,12 +8,9 @@ import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class NioBlockingEchoServer extends Demo {
-
-    private static final CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder();
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -26,7 +23,7 @@ public class NioBlockingEchoServer extends Demo {
         boolean active = true;
         while (active) {
             SocketChannel socketChannel = serverSocketChannel.accept();
-            logger.info("incoming connection: {}", socketChannel);
+            logger.info("incoming connection accepted: {}", socketChannel);
 
             ByteBuffer buffer = ByteBuffer.allocate(4);
             while (true) {
@@ -36,15 +33,25 @@ public class NioBlockingEchoServer extends Demo {
                 if (read <= 0) {
                     break;
                 }
+
                 buffer.flip();
+                byte[] bytes = new byte[buffer.limit()];
+                buffer.get(bytes);
+                String message = new String(bytes, StandardCharsets.UTF_8);
+                logger.info("echo server received: {}", message);
+
+                if (message.trim().equals("bye")) {
+                    active = false;
+                }
 
                 sleep(1000);
-                socketChannel.write(buffer);
 
-                logger.info("echo server sent: {}", buffer.asCharBuffer());
+                buffer.flip();
+                socketChannel.write(buffer);
             }
 
             socketChannel.close();
+            logger.info("incoming connection closed");
         }
 
         logger.info("echo server finished");
