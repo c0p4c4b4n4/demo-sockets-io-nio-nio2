@@ -4,15 +4,16 @@ import demo.common.Demo;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class IoEchoClient extends Demo {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws IOException {
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String message;
-        while ((message = in.readLine()) != null) {
+        while ((message = stdIn.readLine()) != null) {
             Socket socket = new Socket("localhost", 7000);
-            logger.info("echo client started: " + socket);
+            logger.info("echo client started: {}", socket);
 
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
@@ -27,14 +28,13 @@ public class IoEchoClient extends Demo {
                     break;
 
                 totalRead += read;
-                logger.info("echo client read: {}", read);
+                logger.info("echo client read: {} byte(s)", read);
             }
 
-            logger.info("echo client received: " + new String(bytes));
+            logger.info("echo client received: {}", new String(bytes, StandardCharsets.UTF_8));
 
             socket.close();
             logger.info("echo client disconnected");
-            Thread.sleep(1000);
         }
     }
 }
