@@ -59,7 +59,7 @@ public class NioSelectorEchoServer extends Demo {
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
         SocketChannel socketChannel = serverSocketChannel.accept();
         if (socketChannel != null) {
-            logger.info("connection is accepted: " + socketChannel);
+            logger.info("connection is accepted: {}", socketChannel);
 
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
@@ -69,17 +69,18 @@ public class NioSelectorEchoServer extends Demo {
     private static void read(Selector selector, SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate(4);
         int n = socketChannel.read(buffer);
-        logger.info("server read: " + n);
+        logger.info("echo server read: {} byte(s)", n);
 
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
 
-        logger.info("echo server received: " + new String(bytes, StandardCharsets.UTF_8));
-        buffer.flip();
+        String message = new String(bytes, StandardCharsets.UTF_8);
+        logger.info("echo server received: {}", message);
 
+        buffer.flip();
         socketChannel.register(selector, SelectionKey.OP_WRITE, buffer);
     }
 
