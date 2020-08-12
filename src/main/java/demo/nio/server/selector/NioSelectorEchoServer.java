@@ -28,8 +28,8 @@ public class NioSelectorEchoServer extends Demo {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (active) {
-            int updated = selector.select(); // blocking
-            if (updated == 0) {
+            int k = selector.select(); // blocking
+            if (k == 0) {
                 continue;
             }
 
