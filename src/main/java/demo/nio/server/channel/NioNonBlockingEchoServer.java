@@ -26,7 +26,7 @@ public class NioNonBlockingEchoServer extends Demo {
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (socketChannel == null) {
                 logger.info("waiting for incoming connection...");
-                sleep(1000);
+                sleep(5000);
             } else {
                 logger.info("incoming connection accepted: {}", socketChannel);
                 socketChannel.configureBlocking(false);
