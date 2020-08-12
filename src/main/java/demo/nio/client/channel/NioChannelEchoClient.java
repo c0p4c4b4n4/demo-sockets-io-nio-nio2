@@ -8,36 +8,34 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class NioChannelEchoClient extends Demo {
 
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
-
     public static void main(String[] args) throws IOException  {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String message;
-        while ((message = in.readLine()) != null) {
-            logger.info("echo client started");
+        while ((message = stdIn.readLine()) != null) {
             SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 7000));
+            logger.info("echo client started: {}", socketChannel);
 
             ByteBuffer buffer = ByteBuffer.wrap(message.getBytes());
             socketChannel.write(buffer);
-            logger.info("echo client sent: " + message);
+            logger.info("echo client sent: {}", message);
 
             int totalRead = 0;
             while (totalRead < message.getBytes().length) {
                 buffer.clear();
 
                 int read = socketChannel.read(buffer);
+                logger.info("echo client read: {} byte(s)", read);
                 if (read <= 0)
                     break;
 
                 totalRead += read;
 
                 buffer.flip();
-                logger.info("echo client received: " + CHARSET.newDecoder().decode(buffer));
+                logger.info("echo client received: {}", StandardCharsets.UTF_8.newDecoder().decode(buffer));
             }
 
             socketChannel.close();
