@@ -27,9 +27,9 @@ public class NioBlockingEchoServer extends Demo {
             ByteBuffer buffer = ByteBuffer.allocate(4);
             while (true) {
                 buffer.clear();
-                int n = socketChannel.read(buffer); // blocking
-                logger.info("echo server read: {} byte(s)", n);
-                if (n < 0) {
+                int read = socketChannel.read(buffer); // blocking
+                logger.info("echo server read: {} byte(s)", read);
+                if (read < 0) {
                     break;
                 }
 
@@ -38,12 +38,9 @@ public class NioBlockingEchoServer extends Demo {
                 buffer.get(bytes);
                 String message = new String(bytes, StandardCharsets.UTF_8);
                 logger.info("echo server received: {}", message);
-
                 if (message.trim().equals("bye")) {
                     active = false;
                 }
-
-                sleep(1000);
 
                 buffer.flip();
                 socketChannel.write(buffer); // blocking

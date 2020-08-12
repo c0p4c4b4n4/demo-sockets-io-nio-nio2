@@ -15,6 +15,8 @@ import java.util.Set;
 
 public class NioMultiplexingEchoServer extends Demo {
 
+    private static boolean active = true;
+
     public static void main(String[] args) throws IOException {
         Selector selector = Selector.open();
 
@@ -28,10 +30,9 @@ public class NioMultiplexingEchoServer extends Demo {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         }
 
-        boolean active = true;
         while (active) {
-            int k = selector.select(); // blocking
-            if (k == 0) {
+            int updated = selector.select(); // blocking
+            if (updated == 0) {
                 continue;
             }
 
@@ -75,14 +76,17 @@ public class NioMultiplexingEchoServer extends Demo {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         ByteBuffer buffer = ByteBuffer.allocate(4);
-        int n = socketChannel.read(buffer); // non-blocking
-        logger.info("echo server read: {} byte(s)", n);
+        int read = socketChannel.read(buffer); // non-blocking
+        logger.info("echo server read: {} byte(s)", read);
 
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
         logger.info("echo server received: {}", message);
+        if (message.trim().equals("bye")) {
+            active = false;
+        }
 
         buffer.flip();
         socketChannel.register(selector, SelectionKey.OP_WRITE, buffer);

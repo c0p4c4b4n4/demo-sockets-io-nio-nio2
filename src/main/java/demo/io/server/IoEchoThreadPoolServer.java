@@ -53,21 +53,18 @@ public class IoEchoThreadPoolServer extends Demo {
                 InputStream is = socket.getInputStream();
                 OutputStream os = socket.getOutputStream();
 
-                int n;
+                int read;
                 byte[] bytes = new byte[4];
-                while ((n = is.read(bytes)) != -1) { // blocking
-                    logger.info("echo server read: {} byte(s)", n);
+                while ((read = is.read(bytes)) != -1) { // blocking
+                    logger.info("echo server read: {} byte(s)", read);
 
-                    String message = new String(bytes, 0, n, StandardCharsets.UTF_8);
+                    String message = new String(bytes, 0, read, StandardCharsets.UTF_8);
                     logger.info("echo server received: {}", message);
-
                     if (message.trim().equals("bye")) {
                         active.set(false);
                     }
 
-                    sleep(1000);
-
-                    os.write(bytes, 0, n); // blocking
+                    os.write(bytes, 0, read); // blocking
                 }
             } catch (IOException e) {
                 logger.error("exception during socket reading/writing", e);
