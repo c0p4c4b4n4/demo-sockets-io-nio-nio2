@@ -18,13 +18,17 @@ public class NioMultiplexingEchoServer extends Demo {
     private static boolean active = true;
 
     public static void main(String[] args) throws IOException {
+        final int ports = 7;
+        ServerSocketChannel[] serverSocketChannels = new ServerSocketChannel[ports];
+
         Selector selector = Selector.open();
 
-        for (int port = 7000; port <= 7007; port++) {
+        for (int p = 0; p < ports; p++) {
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+            serverSocketChannels[p] = serverSocketChannel;
             serverSocketChannel.configureBlocking(false);
 
-            serverSocketChannel.bind(new InetSocketAddress("localhost", port));
+            serverSocketChannel.bind(new InetSocketAddress("localhost", 7000 + p));
             logger.info("echo server started: {}", serverSocketChannel);
 
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -56,8 +60,10 @@ public class NioMultiplexingEchoServer extends Demo {
             }
         }
 
-//        serverSocketChannel.close();
-//        logger.info("echo server finished");
+        for (ServerSocketChannel serverSocketChannel : serverSocketChannels) {
+            serverSocketChannel.close();
+        }
+        logger.info("echo server finished");
     }
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {
