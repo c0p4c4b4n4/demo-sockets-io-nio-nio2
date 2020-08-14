@@ -21,7 +21,6 @@ public class Nio2CompletionHandlerEchoClient extends Demo {
             socketChannel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
 
             Attachment attachment = new Attachment(message, true);
-
             AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(socketChannel);
             socketChannel.connect(new InetSocketAddress("localhost", 7000), attachment, acceptCompletionHandler);
 

@@ -21,7 +21,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
-        logger.info("read: " + bytesRead);
+        logger.info("echo client read: {} byte(s)", bytesRead);
         try {
             inputBuffer.flip();
             logger.info("echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));

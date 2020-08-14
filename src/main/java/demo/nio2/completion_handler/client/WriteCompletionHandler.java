@@ -17,7 +17,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
-        logger.info("written: " + bytesWritten);
+        logger.info("echo client wrote: {} byte(s)", bytesWritten);
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, buffer);
