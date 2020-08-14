@@ -35,9 +35,8 @@ public class NioMultiplexingEchoServer extends Demo {
         }
 
         while (active) {
-            if (selector.select() == 0) {
-                continue;
-            }
+            int selected = selector.select(); // blocking
+            logger.info("selected: {} key(s)", selected);
 
             Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
             while (keysIterator.hasNext()) {
@@ -99,5 +98,11 @@ public class NioMultiplexingEchoServer extends Demo {
         ByteBuffer buffer = (ByteBuffer) key.attachment();
         socketChannel.write(buffer); // non-blocking
         socketChannel.close();
+
+        buffer.flip();
+        byte[] bytes = new byte[buffer.limit()];
+        buffer.get(bytes);
+        String message = new String(bytes, StandardCharsets.UTF_8);
+        logger.info("echo server sent: {}", message);
     }
 }
