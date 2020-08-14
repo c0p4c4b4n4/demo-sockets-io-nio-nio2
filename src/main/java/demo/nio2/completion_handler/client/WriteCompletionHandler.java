@@ -19,13 +19,13 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
     public void completed(Integer bytesWritten, Attachment attachment) {
         logger.info("written: " + bytesWritten);
 
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
-        socketChannel.read(inputBuffer, attachment, readCompletionHandler);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, buffer);
+        socketChannel.read(buffer, attachment, readCompletionHandler);
     }
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("Exception during write", t);
+        logger.error("exception during socket writing", t);
     }
 }

@@ -20,16 +20,16 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, At
     public void completed(Void result, Attachment attachment) {
         logger.info("accepted");
 
-        String message = attachment.message;
+        String message = attachment.getMessage();
         logger.info("echo client sent: " + message);
 
-        ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
+        ByteBuffer buffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
-        socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
+        socketChannel.write(buffer, attachment, writeCompletionHandler);
     }
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("Exception during accept connection", t);
+        logger.error("exception during connection accepting", t);
     }
 }

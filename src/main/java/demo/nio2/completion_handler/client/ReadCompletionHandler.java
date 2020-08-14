@@ -26,7 +26,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
             inputBuffer.flip();
             logger.info("echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
 
-            attachment.active = false;
+            attachment.getActive().set(false);
         } catch (IOException e) {
             logger.error("Exception during echo processing", e);
         }
@@ -34,6 +34,6 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("Exception during read", t);
+        logger.error("exception during socket reading", t);
     }
 }
