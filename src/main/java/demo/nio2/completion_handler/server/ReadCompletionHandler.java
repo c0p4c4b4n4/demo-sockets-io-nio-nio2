@@ -36,6 +36,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("Exception during read", t);
+        logger.error("exception during socket reading", t);
+
     }
 }

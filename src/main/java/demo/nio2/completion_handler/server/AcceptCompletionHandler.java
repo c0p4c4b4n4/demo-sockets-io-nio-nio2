@@ -29,6 +29,6 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Asynchro
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("Exception during accept", t);
+        logger.error("exception during socket accepting", t);
     }
 }
