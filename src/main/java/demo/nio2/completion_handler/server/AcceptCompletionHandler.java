@@ -21,9 +21,9 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Asynchro
 
         serverSocketChannel.accept(null, this);
 
-        ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
-        socketChannel.read(inputBuffer, null, readCompletionHandler);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, buffer);
+        socketChannel.read(buffer, null, readCompletionHandler);
     }
 
     @Override
