@@ -14,7 +14,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
 
-    public ReadCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
+    ReadCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
         this.serverSocketChannel = serverSocketChannel;
         this.socketChannel = socketChannel;
         this.inputBuffer = inputBuffer;
@@ -22,14 +22,14 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
-        logger.info("read: " + bytesRead);
+        logger.info("echo server read: {} byte(s)", bytesRead);
 
         byte[] bytes = new byte[bytesRead];
         inputBuffer.rewind();
 
         inputBuffer.get(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
-        logger.info("echo server received: " + message);
+        logger.info("echo server received: {}", message);
 
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(serverSocketChannel, socketChannel);
         ByteBuffer outputBuffer = ByteBuffer.wrap(bytes);

@@ -12,17 +12,18 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
     private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
 
-    public WriteCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel) {
+    WriteCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel) {
         this.serverSocketChannel = serverSocketChannel;
         this.socketChannel = socketChannel;
     }
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
-        logger.info("written: " + bytesWritten);
+        logger.info("echo server wrote: {} byte(s)", bytesWritten);
 
         try {
             socketChannel.close();
+            logger.info("connection closed");
         } catch (IOException e) {
             e.printStackTrace();
         }
