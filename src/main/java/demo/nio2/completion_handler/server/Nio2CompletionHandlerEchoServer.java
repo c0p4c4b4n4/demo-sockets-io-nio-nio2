@@ -19,5 +19,3 @@ public class Nio2CompletionHandlerEchoServer extends Demo {
         logger.info("echo server finished");
     }
 }
-
-
