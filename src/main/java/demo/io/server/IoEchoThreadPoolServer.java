@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IoEchoThreadPoolServer extends Demo {
 
-    private static AtomicBoolean active = new AtomicBoolean(true);
+    private static final AtomicBoolean active = new AtomicBoolean(true);
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(7000);

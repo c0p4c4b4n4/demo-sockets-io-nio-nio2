@@ -33,19 +33,16 @@ public class NioSelectorEchoServer extends Demo {
             }
 
             Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
-
             while (keysIterator.hasNext()) {
                 SelectionKey key = keysIterator.next();
 
                 if (key.isAcceptable()) {
                     accept(selector, key);
                 }
-
                 if (key.isReadable()) {
                     keysIterator.remove();
                     read(selector, key);
                 }
-
                 if (key.isWritable()) {
                     keysIterator.remove();
                     write(key);
