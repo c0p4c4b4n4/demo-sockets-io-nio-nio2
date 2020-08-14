@@ -8,7 +8,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 
-class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
+class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Void> {
 
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
@@ -19,7 +19,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
     }
 
     @Override
-    public void completed(Integer bytesRead, Attachment attachment) {
+    public void completed(Integer bytesRead, Void attachment) {
         logger.info("echo server read: {} byte(s)", bytesRead);
 
         byte[] bytes = new byte[bytesRead];
@@ -31,11 +31,11 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
         ByteBuffer outputBuffer = ByteBuffer.wrap(bytes);
-        socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
+        socketChannel.write(outputBuffer, null, writeCompletionHandler);
     }
 
     @Override
-    public void failed(Throwable t, Attachment attachment) {
+    public void failed(Throwable t, Void attachment) {
         logger.error("exception during socket reading", t);
 
     }

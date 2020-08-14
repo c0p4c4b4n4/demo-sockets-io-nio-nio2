@@ -7,7 +7,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
+class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Void> {
 
     private final AsynchronousSocketChannel socketChannel;
 
@@ -16,7 +16,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
     }
 
     @Override
-    public void completed(Integer bytesWritten, Attachment attachment) {
+    public void completed(Integer bytesWritten, Void attachment) {
         logger.info("echo server wrote: {} byte(s)", bytesWritten);
 
         try {
@@ -28,7 +28,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
     }
 
     @Override
-    public void failed(Throwable t, Attachment attachment) {
+    public void failed(Throwable t, Void attachment) {
         logger.error("exception during socket writing", t);
     }
 }
