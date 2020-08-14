@@ -16,7 +16,7 @@ public class Nio2CompletionHandlerEchoServer extends Demo {
         AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);
         serverSocketChannel.accept(attachment, acceptCompletionHandler);
 
-        System.in.read(); // wait
+        System.in.read();
         logger.info("echo server finished");
     }
 }

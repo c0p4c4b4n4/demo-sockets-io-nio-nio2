@@ -9,11 +9,9 @@ import java.nio.channels.CompletionHandler;
 
 class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
-    private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
 
-    WriteCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel) {
-        this.serverSocketChannel = serverSocketChannel;
+    WriteCompletionHandler(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 

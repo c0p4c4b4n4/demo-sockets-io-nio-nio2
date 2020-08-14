@@ -10,12 +10,10 @@ import java.nio.charset.StandardCharsets;
 
 class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
-    private final AsynchronousServerSocketChannel serverSocketChannel;
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
 
-    ReadCompletionHandler(AsynchronousServerSocketChannel serverSocketChannel, AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
-        this.serverSocketChannel = serverSocketChannel;
+    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
         this.socketChannel = socketChannel;
         this.inputBuffer = inputBuffer;
     }
@@ -31,7 +29,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
         String message = new String(bytes, StandardCharsets.UTF_8);
         logger.info("echo server received: {}", message);
 
-        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(serverSocketChannel, socketChannel);
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
         ByteBuffer outputBuffer = ByteBuffer.wrap(bytes);
         socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
     }
