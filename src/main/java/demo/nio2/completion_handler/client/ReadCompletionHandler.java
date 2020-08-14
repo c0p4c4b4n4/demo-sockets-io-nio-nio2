@@ -7,16 +7,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
-    private final Charset charset;
     private final ByteBuffer inputBuffer;
 
-    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, Charset charset, ByteBuffer inputBuffer) {
+    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
         this.socketChannel = socketChannel;
-        this.charset = charset;
         this.inputBuffer = inputBuffer;
     }
 
@@ -25,7 +24,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
         logger.info("read: " + bytesRead);
         try {
             inputBuffer.flip();
-            logger.info("echo client received: " + charset.newDecoder().decode(inputBuffer));
+            logger.info("echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
 
             attachment.active = false;
         } catch (IOException e) {

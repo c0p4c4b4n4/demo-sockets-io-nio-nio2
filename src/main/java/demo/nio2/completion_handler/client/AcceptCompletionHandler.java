@@ -6,15 +6,14 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
-    private final Charset charset;
 
-    AcceptCompletionHandler(AsynchronousSocketChannel socketChannel, Charset CHARSET) {
+    AcceptCompletionHandler(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
-        this.charset = CHARSET;
     }
 
     @Override
@@ -24,8 +23,8 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, At
         String message = attachment.message;
         logger.info("echo client sent: " + message);
 
-        ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes(charset));
-        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel, charset);
+        ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8));
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
         socketChannel.write(outputBuffer, attachment, writeCompletionHandler);
     }
 

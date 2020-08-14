@@ -10,11 +10,9 @@ import java.nio.charset.Charset;
 class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
     private final AsynchronousSocketChannel socketChannel;
-    private final Charset charset;
 
-    WriteCompletionHandler(AsynchronousSocketChannel socketChannel, Charset charset) {
+    WriteCompletionHandler(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
-        this.charset = charset;
     }
 
     @Override
@@ -22,7 +20,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
         logger.info("written: " + bytesWritten);
 
         ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, charset, inputBuffer);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, inputBuffer);
         socketChannel.read(inputBuffer, attachment, readCompletionHandler);
     }
 
