@@ -40,7 +40,7 @@ The following I/O models are the most common for the POSIX-compliant operating s
 
 In the blocking I/O model, the application makes a blocking system call until data is received at the kernel _and_ is copied from kernel-space buffer to user-space buffer.
 
-![blocking I/O model](/.images/blocking IO model.png)
+![blocking I/O model](/.images/blocking_IO_model.png)
 
 Pros:
 
@@ -66,7 +66,7 @@ In the non-blocking I/O model the application makes a system call that immediate
 
 To complete the I/O operation, the application should make repeating calls until completion. 
 
-![non-blocking I/O model](/.images/non-blocking IO model.png)
+![non-blocking I/O model](/.images/non_blocking_IO_model.png)
 
 Pros:
 
@@ -88,7 +88,7 @@ In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with 
 
 When the blocking _select_ system call returns that at least one socket is ready, the application makes the second _non-blocking_ call and copies the data from kernel-space buffer to user-space buffer.
 
-![I/O multiplexing model](/.images/IO multiplexing model.png)
+![I/O multiplexing model](/.images/IO_multiplexing_model.png)
 
 Pros:
 
@@ -109,7 +109,7 @@ In the signal-driven I/O model the application makes the first non-bloking call 
 
 Events can be implemented either by a signal or by a thread-based callback.
 
-![signal-driven I/O model](/.images/signal-driven IO model.png)
+![signal-driven I/O model](/.images/signal_driven_IO_model.png)
 
 Pros:
 
@@ -131,7 +131,7 @@ In the asynchronous I/O model (also known as the overlapped I/O model) the appli
 
 The main difference between this model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells us when an I/O operation can be initiated, but with asynchronous I/O, the kernel tells us when an I/O operation is complete.
 
-![asynchronous I/O model](/.images/asynchronous IO model.png)
+![asynchronous I/O model](/.images/asynchronous_IO_model.png)
 
 Pros:
 
