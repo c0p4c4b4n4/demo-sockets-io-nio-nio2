@@ -8,9 +8,8 @@ Application->>Kernel: system call
 activate Kernel
 Kernel-->>Application: return
 Note right of Kernel: wait for data
-Note left of Application: isn't blocked
+Note left of Application: thread\nisn't blocked
 Note right of Kernel: copy data
 Kernel-->Application: callback
 deactivate Kernel
-deactivate Application
 @enduml
