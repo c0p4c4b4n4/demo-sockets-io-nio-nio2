@@ -95,7 +95,9 @@ public class NioMultiplexingEchoServer extends Demo {
 
     private static void write(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
+
         ByteBuffer buffer = (ByteBuffer) key.attachment();
+
         socketChannel.write(buffer); // non-blocking
         socketChannel.close();
 
