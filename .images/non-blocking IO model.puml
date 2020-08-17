@@ -9,7 +9,7 @@ loop wait until data is available
     deactivate Application
     activate Kernel
     Note right of Kernel: wait for data
-    Note left of Application: polling
+    Note left of Application: thread polls
     Kernel-->>Application: no data available
 end
 deactivate Kernel
@@ -21,5 +21,4 @@ Note right of Kernel: copy data
 Kernel-->>Application: returned data
 deactivate Kernel
 activate Application
-deactivate Application
 @enduml
