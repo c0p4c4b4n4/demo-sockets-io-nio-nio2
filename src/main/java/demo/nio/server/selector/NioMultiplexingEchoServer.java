@@ -64,7 +64,7 @@ public class NioMultiplexingEchoServer extends Demo {
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-        SocketChannel socketChannel = serverSocketChannel.accept();
+        SocketChannel socketChannel = serverSocketChannel.accept(); // non-blocking
         if (socketChannel != null) {
             logger.info("connection is accepted: {}", socketChannel);
 
