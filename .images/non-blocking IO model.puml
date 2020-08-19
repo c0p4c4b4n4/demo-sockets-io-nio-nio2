@@ -2,7 +2,6 @@
 title non-blocking I/O model
 hide footbox
 skinparam monochrome true
-skinparam shadowing false
 activate Application
 loop wait until data is available
     Application->>Kernel: system call

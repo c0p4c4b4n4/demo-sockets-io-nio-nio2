@@ -2,7 +2,6 @@
 title blocking I/O model
 hide footbox
 skinparam monochrome true
-skinparam shadowing false
 activate Application
 Application->>Kernel: system call
 deactivate Application
