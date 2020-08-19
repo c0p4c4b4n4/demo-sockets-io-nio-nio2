@@ -2,13 +2,14 @@
 title asynchronous I/O model
 hide footbox
 skinparam monochrome true
-activate Application
-Application->>Kernel: system call
-activate Kernel
-Kernel-->>Application: return
-Note right of Kernel: wait for data
-Note right of Kernel: copy data
-Kernel-->Application: completion\ncallback
-deactivate Kernel
+skinparam titleFontSize 16
+activate application
+application->>kernel: system call
+activate kernel
+kernel-->>application: return
+Note right of kernel: wait for data
+Note right of kernel: copy data
+kernel-->application: completion\ncallback
+deactivate kernel
 ||15||
 @enduml

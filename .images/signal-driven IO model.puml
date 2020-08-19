@@ -2,17 +2,18 @@
 title signal-driven I/O model
 hide footbox
 skinparam monochrome true
-activate Application
-Application->>Kernel: system call
-activate Kernel
-Kernel-->>Application: return
-Note right of Kernel: wait for data
-Kernel-->Application: signal
-Application->>Kernel: system call
-deactivate Application
-Note right of Kernel: copy data
-Kernel-->>Application: returned data
-deactivate Kernel
-activate Application
+skinparam titleFontSize 16
+activate application
+application->>kernel: system call
+activate kernel
+kernel-->>application: return
+Note right of kernel: wait for data
+kernel-->application: signal
+application->>kernel: system call
+deactivate application
+Note right of kernel: copy data
+kernel-->>application: returned data
+deactivate kernel
+activate application
 ||15||
 @enduml

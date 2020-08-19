@@ -2,22 +2,23 @@
 title non-blocking I/O model
 hide footbox
 skinparam monochrome true
-activate Application
+skinparam titleFontSize 16
+activate application
 loop wait until data is available
-    Application->>Kernel: system call
-    deactivate Application
-    activate Kernel
-    Note right of Kernel: wait for data
-    Kernel-->>Application: no data available
-    deactivate Kernel
-    activate Application
+    application->>kernel: system call
+    deactivate application
+    activate kernel
+    Note right of kernel: wait for data
+    kernel-->>application: no data available
+    deactivate kernel
+    activate application
 end
-Application->>Kernel: system call
-deactivate Application
-activate Kernel
-Note right of Kernel: copy data
-Kernel-->>Application: returned data
-deactivate Kernel
-activate Application
+application->>kernel: system call
+deactivate application
+activate kernel
+Note right of kernel: copy data
+kernel-->>application: returned data
+deactivate kernel
+activate application
 ||15||
 @enduml
