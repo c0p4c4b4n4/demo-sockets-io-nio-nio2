@@ -4,7 +4,7 @@ hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16
 activate application
-loop wait until data is available
+loop until data is available
     application->>kernel: system call
     deactivate application
     activate kernel
