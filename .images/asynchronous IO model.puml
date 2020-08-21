@@ -1,5 +1,5 @@
 @startuml
-title asynchronous I/O model
+title Asynchronous I/O model
 hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16

@@ -1,5 +1,5 @@
 @startuml
-title signal-driven I/O model
+title Signal-driven I/O model
 hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16

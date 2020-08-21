@@ -1,5 +1,5 @@
 @startuml
-title non-blocking I/O model
+title Non-blocking I/O model
 hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16
