@@ -3,6 +3,7 @@ title I/O multiplexing model
 hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16
+skinparam sequenceMessageAlign center
 activate application
 application->>kernel: system call
 deactivate application

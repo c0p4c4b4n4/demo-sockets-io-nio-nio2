@@ -3,6 +3,7 @@ title Non-blocking I/O model
 hide footbox
 skinparam monochrome true
 skinparam titleFontSize 16
+skinparam sequenceMessageAlign center
 activate application
 loop until data is available
     application->>kernel: system call
