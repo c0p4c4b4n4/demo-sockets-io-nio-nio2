@@ -9,7 +9,7 @@ loop until data is available
     deactivate application
     activate kernel
     Note right of kernel: wait for data
-    kernel-->>application: no data available
+    kernel-->>application: data availability
     deactivate kernel
     activate application
 end
@@ -17,7 +17,7 @@ application->>kernel: system call
 deactivate application
 activate kernel
 Note right of kernel: copy data
-kernel-->>application: returned data
+kernel-->>application: data
 deactivate kernel
 activate application
 ||15||

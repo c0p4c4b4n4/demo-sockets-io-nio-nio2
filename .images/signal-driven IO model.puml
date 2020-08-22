@@ -12,7 +12,7 @@ kernel-->application: signal
 application->>kernel: system call
 deactivate application
 Note right of kernel: copy data
-kernel-->>application: returned data
+kernel-->>application: data
 deactivate kernel
 activate application
 ||15||

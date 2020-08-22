@@ -9,7 +9,7 @@ deactivate application
 activate kernel
 Note right of kernel: wait for data
 Note right of kernel: copy data
-kernel-->>application: returned data
+kernel-->>application: data
 deactivate kernel
 activate application
 ||15||
