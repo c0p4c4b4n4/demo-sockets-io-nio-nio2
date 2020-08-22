@@ -5,11 +5,15 @@ skinparam monochrome true
 skinparam titleFontSize 16
 activate application
 application->>kernel: system call
+deactivate application
 activate kernel
 Note right of kernel: wait for data\nin many\ndescriptors
 kernel-->>application: readable descriptor
+deactivate kernel
+activate application
 application->>kernel: system call
 deactivate application
+activate kernel
 Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
