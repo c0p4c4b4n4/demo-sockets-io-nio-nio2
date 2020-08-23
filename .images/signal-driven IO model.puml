@@ -2,11 +2,12 @@
 title Signal-driven I/O model
 hide footbox
 skinparam monochrome true
-skinparam defaultFontName Arial
-skinparam titleFontSize 16
+skinparam defaultFontName Microsoft Sans Serif
+skinparam titleFontSize 15
+
 skinparam sequenceMessageAlign center
 activate application
-application->kernel: establish\nsignal\nhandler
+application->kernel: establish\nsignal handler
 activate kernel
 Note right of kernel: wait for data
 kernel-->application: signal
