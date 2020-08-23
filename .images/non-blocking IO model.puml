@@ -10,17 +10,14 @@ loop until data is available
     application->>kernel: reading data
     deactivate application
     activate kernel
-    Note right of kernel: wait for data
-    kernel-->>application: data\navailability
-    deactivate kernel
-    activate application
+    alt no data available
+        kernel-->>application: error code
+    else data  available
+        Note right of kernel: copy data
+        kernel-->>application: data
+        deactivate kernel
+        activate application
+    end
 end
-application->>kernel: reading data
-deactivate application
-activate kernel
-Note right of kernel: copy data
-kernel-->>application: data
-deactivate kernel
-activate application
 ||15||
 @enduml
