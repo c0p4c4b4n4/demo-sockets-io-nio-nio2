@@ -16,5 +16,6 @@ Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
 activate application
-||15||
+||4||
+kernel -[#white]->]
 @enduml
