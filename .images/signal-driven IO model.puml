@@ -4,7 +4,6 @@ hide footbox
 skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
-
 skinparam sequenceMessageAlign center
 activate application
 application->kernel: establish\nsignal handler

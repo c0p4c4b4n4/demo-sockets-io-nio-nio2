@@ -4,14 +4,13 @@ hide footbox
 skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
-
 skinparam sequenceMessageAlign center
 activate application
-application->>kernel: reading\ndescriptor
+application->>kernel: reading\ndescriptors
 deactivate application
 activate kernel
 Note right of kernel: wait for data\nin at least one\ndescriptor
-kernel-->>application: available\ndescriptor
+kernel-->>application: readable\ndescriptors
 deactivate kernel
 activate application
 application->>kernel: reading data
