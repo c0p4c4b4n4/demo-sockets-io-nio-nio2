@@ -9,7 +9,7 @@ activate application
 application->kernel: establish\nsignal handler
 activate kernel
 Note right of kernel: wait for data
-kernel-->application: signal
+kernel->application: readiness\nsignal
 application->>kernel: reading data
 deactivate application
 Note right of kernel: copy data

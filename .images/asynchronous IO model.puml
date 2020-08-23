@@ -10,7 +10,7 @@ application->kernel: operation\ninitiation
 activate kernel
 Note right of kernel: wait for data
 Note right of kernel: copy data
-kernel-->application: completion\ncallback
+kernel->application: completion\ncallback
 deactivate kernel
 ||15||
 @enduml
