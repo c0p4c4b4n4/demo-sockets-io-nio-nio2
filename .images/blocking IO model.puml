@@ -2,6 +2,7 @@
 title Blocking I/O model
 hide footbox
 skinparam monochrome true
+skinparam defaultFontName Arial
 skinparam titleFontSize 16
 skinparam sequenceMessageAlign center
 activate application

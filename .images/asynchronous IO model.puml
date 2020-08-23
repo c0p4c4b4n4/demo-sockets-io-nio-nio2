@@ -2,12 +2,12 @@
 title Asynchronous I/O model
 hide footbox
 skinparam monochrome true
+skinparam defaultFontName Arial
 skinparam titleFontSize 16
 skinparam sequenceMessageAlign center
 activate application
-application->>kernel: system call
+application->kernel: system call
 activate kernel
-kernel-->>application: return
 Note right of kernel: wait for data
 Note right of kernel: copy data
 kernel-->application: completion\ncallback
