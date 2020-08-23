@@ -7,7 +7,7 @@ skinparam titleFontSize 16
 skinparam sequenceMessageAlign center
 activate application
 loop until data is available
-    application->>kernel: system call
+    application->>kernel: reading data
     deactivate application
     activate kernel
     Note right of kernel: wait for data
@@ -15,7 +15,7 @@ loop until data is available
     deactivate kernel
     activate application
 end
-application->>kernel: system call
+application->>kernel: reading data
 deactivate application
 activate kernel
 Note right of kernel: copy data

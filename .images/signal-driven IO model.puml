@@ -6,11 +6,11 @@ skinparam defaultFontName Arial
 skinparam titleFontSize 16
 skinparam sequenceMessageAlign center
 activate application
-application->kernel: system call
+application->kernel: establish\nsignal\nhandler
 activate kernel
 Note right of kernel: wait for data
 kernel-->application: signal
-application->>kernel: system call
+application->>kernel: reading data
 deactivate application
 Note right of kernel: copy data
 kernel-->>application: data

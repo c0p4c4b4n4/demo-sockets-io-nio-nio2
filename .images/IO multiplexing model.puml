@@ -6,14 +6,14 @@ skinparam defaultFontName Arial
 skinparam titleFontSize 16
 skinparam sequenceMessageAlign center
 activate application
-application->>kernel: system call
+application->>kernel: reading\ndescriptor
 deactivate application
 activate kernel
 Note right of kernel: wait for data\nin at least one\ndescriptor
 kernel-->>application: available\ndescriptor
 deactivate kernel
 activate application
-application->>kernel: system call
+application->>kernel: reading data
 deactivate application
 activate kernel
 Note right of kernel: copy data
