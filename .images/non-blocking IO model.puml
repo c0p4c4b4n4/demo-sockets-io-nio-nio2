@@ -6,7 +6,7 @@ skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
 activate application
-loop until data is available
+loop wait for data
     application->>kernel: reading data
     deactivate application
     activate kernel
