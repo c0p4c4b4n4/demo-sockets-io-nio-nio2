@@ -5,21 +5,31 @@ skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
+
 activate application
-loop wait for data
-    application->>kernel: reading data
-    deactivate application
-    activate kernel
-    alt no data available
-        kernel-->>application: error code
-        activate application
-        deactivate application
-    else data  available
-        Note right of kernel: copy data
-        kernel-->>application: data
-        deactivate kernel
-        activate application
-    end
-end
+application->>kernel: reading data
+deactivate application
+activate kernel
+kernel-->>application: error code
+deactivate kernel
+activate application
+
+application->>kernel: reading data
+deactivate application
+activate kernel
+kernel-->>application: error code
+deactivate kernel
+activate application
+
+... data are available ...
+
+application->>kernel: reading data
+deactivate application
+activate kernel
+Note right of kernel: copy data
+kernel-->>application: data
+deactivate kernel
+activate application
+
 ||15||
 @enduml
