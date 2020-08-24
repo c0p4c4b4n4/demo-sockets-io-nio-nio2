@@ -6,16 +6,16 @@ skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
 activate application
-application->kernel: establish\nsignal handler
+application->kernel: signal handler\nestablishing
 activate kernel
 Note right of kernel: wait for data
-kernel->application: readiness\nsignal
+kernel->application: signal
 application->>kernel: reading data
 deactivate application
 Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
 activate application
-||4||
+||2||
 kernel -[#white]->]
 @enduml
