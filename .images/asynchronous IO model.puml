@@ -1,4 +1,5 @@
 @startuml
+scale 1.2
 title Asynchronous I/O model
 hide footbox
 skinparam monochrome true
@@ -12,5 +13,5 @@ Note right of kernel: wait for data
 Note right of kernel: copy data
 kernel->application: completion\ncallback
 deactivate kernel
-||15||
+||25||
 @enduml

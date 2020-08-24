@@ -1,4 +1,5 @@
 @startuml
+scale 1.2
 title I/O multiplexing model
 hide footbox
 skinparam monochrome true
@@ -20,6 +21,6 @@ Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
 activate application
-||4||
+||12||
 kernel -[#white]->]
 @enduml

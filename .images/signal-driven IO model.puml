@@ -1,5 +1,6 @@
 @startuml
 title Signal-driven I/O model
+scale 1.2
 hide footbox
 skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
@@ -16,6 +17,6 @@ Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
 activate application
-||2||
+||10||
 kernel -[#white]->]
 @enduml
