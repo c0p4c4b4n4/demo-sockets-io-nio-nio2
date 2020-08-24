@@ -12,6 +12,8 @@ loop until data is available
     activate kernel
     alt no data available
         kernel-->>application: error code
+        activate application
+        deactivate application
     else data  available
         Note right of kernel: copy data
         kernel-->>application: data
