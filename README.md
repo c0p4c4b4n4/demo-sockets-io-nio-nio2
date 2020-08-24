@@ -3,7 +3,7 @@
 
 ## Introduction
 
-When describing I/O, the terms _non-blocking_ and _asynchronous_ are often used interchangeably, but there is actually a significant difference between them. In this article is described the theoretical and practical differences between non-blocking and asynchronous sockets I/O operations in Java.
+When describing I/O, the terms _non-blocking_ and _asynchronous_ are often used interchangeably, but there is actually a significant difference between them. In this article are described the theoretical and practical differences between non-blocking and asynchronous sockets I/O operations in Java.
 
 Sockets are endpoints to perform two-way communication by TCP and UDP protocols. Actually, Java sockets APIs are adapters for the corresponding functionality of the operating systems. Sockets communication in POSIX-compliant operating systems (Unix, Linux, Mac OS X, BSD, Solaris, AIX, etc.) is performed by _Berkeley sockets_. Sockets communication in Windows is performed by _Winsock_ that is also based on _Berkeley sockets_ with additional functionality to comply with the Windows programming model.
 
@@ -22,7 +22,7 @@ _Synchronous I/O operation_ - an I/O operation that causes the requesting thread
 
 _Asynchronous I/O operation_ - an I/O operation that doesn’t of itself cause the requesting thread to be blocked; this implies that the thread and the I/O operation may be running concurrently.
 
-So, according to the POSIX specification, the difference between the terms _non-blocking_ and _asynchronous_ is straightforward:
+So, according to the POSIX specification, the difference between the terms _non-blocking_ and _asynchronous_ is obvious:
 
 
 
@@ -37,7 +37,7 @@ The following I/O models are the most common for the POSIX-compliant operating s
 
 
 *   blocking I/O model
-*   nonblocking I/O model
+*   non-blocking I/O model
 *   I/O multiplexing model
 *   signal-driven I/O model
 *   asynchronous I/O model
@@ -45,7 +45,7 @@ The following I/O models are the most common for the POSIX-compliant operating s
 
 ### Blocking I/O model
 
-In the _blocking I/O model_, the application makes a blocking system call until data is received at the kernel _and_ is copied from kernel-space buffer to user-space buffer.
+In the _blocking I/O model_, the application makes a blocking system call until data is received at the kernel _and_ is copied from kernel-space buffer into user-space buffer.
 
 ![blocking I/O model](/.images/blocking_IO_model.png)
 
@@ -62,16 +62,16 @@ Cons:
 *   The application is blocked
 
 
-### Nonblocking I/O model
+### Non-blocking I/O model
 
 In the _non-blocking I/O model_ the application makes a system call that immediately returns one of two responses:
 
 
 
 *   if the I/O operation can be completed immediately, the data is returned
-*   if the I/O operation can’t be completed immediately, an error code is returned indicating that the  I/O operation would block or the device is temporarily unavailable
+*   if the I/O operation can’t be completed immediately, an error code is returned indicating that the I/O operation would block or the device is temporarily unavailable
 
-To complete the I/O operation, the application should make repeating system calls until completion. 
+To complete the I/O operation, the application should busy-wait (make repeating system calls) until completion.
 
 ![non-blocking I/O model](/.images/non_blocking_IO_model.png)
 
@@ -85,15 +85,15 @@ Cons:
 
 
 
-*   The application must busy-wait until the data is available, that would cause many user-kernel context switches
+*   The application should busy-wait until completion, that would cause many user-kernel context switches
 *   This model can introduce latency in the I/O because there can be a gap between the data becoming available in the kernel and the user calling read to return it
 
 
 ### I/O multiplexing model
 
-In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes the first _blocking_ _select_ system call to start to monitor activity on many sockets. For each socket, it’s possible to request notification of its readiness for certain I/O operations (connection, availability for reading and writing, error occurrence, etc.)
+In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many sockets. For each socket, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.)
 
-When the blocking _select_ system call returns that at least one socket is ready, the application makes the second _non-blocking_ call and copies the data from kernel-space buffer to user-space buffer.
+When the first blocking _select_ system call returns that at least one socket is ready, the application makes the second non-blocking call and copies the data from kernel-space buffer into user-space buffer.
 
 ![I/O multiplexing model](/.images/IO_multiplexing_model.png)
 
@@ -108,12 +108,12 @@ Cons:
 
 
 *   The application is still blocked on the _select_ system call
-*   In some operating systems the _select_ system call may be implemented in the way when processing delay increases linearly with the number of monitored sockets
+*   Not all operating systems support this model efficiently
 
 
 ### Signal-driven I/O model
 
-In the signal-driven I/O model the application makes the first non-blocking call and registers an event handler. When a socket is read to be read or written, an event is generated for the application. Then the event handler copies the data from kernel-space buffer to user-space buffer.
+In the signal-driven I/O model the application makes a non-blocking call and registers an event handler. When a socket is read to be read or written, an event is generated for the application. Then the event handler copies the data from kernel-space buffer into user-space buffer.
 
 Events can be implemented either by a signal or by a thread-based callback.
 
@@ -135,9 +135,9 @@ Cons:
 
 ### Asynchronous I/O model
 
-In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data is received at the kernel _and_ is copied from kernel-space buffer to user-space buffer), a signal or a thread-based callback is generated to finish the I/O operation. 
+In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data is received at the kernel _and_ is copied from kernel-space buffer into user-space buffer), a signal or a thread-based callback is generated to finish the I/O operation. 
 
-The main difference between this model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation _can be initiated_, but with this model, the kernel tells the application when an I/O operation _is complete_.
+<sub>The main difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation <em>can be initiated</em>, but with the asynchronous I/O model, the kernel tells the application when an I/O operation <em>is completed</em>.</sub>
 
 ![asynchronous I/O model](/.images/asynchronous_IO_model.png)
 
@@ -154,27 +154,6 @@ Cons:
 
 *   The most complicated I/O model to implement
 *   Not all operating systems support this model efficiently
-
-
-### Comparison of the I/O models
-
-There are two distinct phases for an I/O operation:
-
-
-
-1. waiting for the data to arrive on the network _and_ copying the data into kernel-space buffer
-2. copying the data from kernel-space buffer into user-space buffer
-
-The main difference between the first four models is the _first_ phase, as the _second_ phase in the first four models is the same: the thread is blocked on a system call while the data is copied from the kernel buffer to the user buffer. Asynchronous I/O, however, handles both phases and is different from the first four.
-
-The POSIX specification  defines these two terms as follows:
-
-
-
-*   a synchronous I/O operation causes the requesting thread to be blocked until that I/O operation completes.
-*   an asynchronous I/O operation does not cause the requesting thread to be blocked.
-
-Using these definitions, the first four I/O models - _blocking I/O, nonblocking I/O, I/O multiplexing, signal-driven I/O_ - are all synchronous because the  I/O operation blocks the thread. Only the _asynchronous I/O model_ matches the asynchronous I/O definition.
 
 
 ## Java I/O APIs
@@ -213,12 +192,12 @@ Asynchronous channels provide a standard way of performing asynchronous operatio
 
 In the practical part of the article, most of the I/O models mentioned above are implemented in echo clients and servers with Java sockets APIs. A server listens on a registered TCP port 7000. A client connects from its dynamic TCP port to the server port. The client reads an input string from the console and sends the bytes to the server port. The server receives the bytes from its port and sends them back to the client port. The client writes the echoed string on the console. When the client receives the same number of bytes that it has sent, it disconnects from the server.
 
-<sub>The conversion between strings and bytes is performed in UTF-8 encoding.</sub>
+<sub>The conversion between strings and bytes here is performed in UTF-8 encoding.</sub>
 
 
 ### Blocking IO echo server
 
-In the following example, the _blocking I/O model _is implemented in an echo server with Java IO API. 
+In the following example, the _blocking I/O model_ is implemented in an echo server with Java IO API. 
 
 The _ServerSocket.accept_ method blocks until a connection is accepted. The _InputStream.read_ method blocks until input data are available, or a client is disconnected. The _OutputStream.write_ method blocks until all output data are written.
 
@@ -298,7 +277,7 @@ The _ServerSocketChannel_ and _SocketChannel_ objects are explicitly configured 
 
 
 ```
-public class NioNonBlockingEchoServer {
+public class NioNon-blockingEchoServer {
 
    public static void main(String[] args) throws IOException {
        ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -481,7 +460,7 @@ class AcceptCompletionHandler implements CompletionHandler<AsynchronousSocketCha
 ```
 
 
-When the read operation completes (or the operation fails), the _ReadCompletionHandler_ class is called, which by the _AsynchronousSocketChannel.write(ByteBuffer source, A attachment, CompletionHandler&lt;Integer,? super A> handler)_ method initiates an asynchronous write operation to the _AsynchronousSocketChannel_ object from the _ByteBuffer_ object.
+When the read operation completes (or fails), the _ReadCompletionHandler_ class is called, which by the _AsynchronousSocketChannel.write(ByteBuffer source, A attachment, CompletionHandler&lt;Integer,? super A> handler)_ method initiates an asynchronous write operation to the _AsynchronousSocketChannel_ object from the _ByteBuffer_ object.
 
 
 ```
@@ -510,7 +489,7 @@ class ReadCompletionHandler implements CompletionHandler<Integer, Void> {
 ```
 
 
-When the write operation completes (or the operation fails), the _WriteCompletionHandler_ class is called, which by the _AsynchronousSocketChannel.close_ method closes the connection.
+When the write operation completes (or fails), the _WriteCompletionHandler_ class is called, which by the _AsynchronousSocketChannel.close_ method closes the connection.
 
 
 ```
@@ -539,12 +518,12 @@ class WriteCompletionHandler implements CompletionHandler<Integer, Void> {
 ```
 
 
-In this example, asynchronous I/O operations are performed without _attachment_, because all the necessary objects (_AsynchronousSocketChannel_,_ ByteBuffer_) are passed as constructor arguments for the appropriate _completion handlers_.
+In this example, asynchronous I/O operations are performed without _attachment_, because all the necessary objects (_AsynchronousSocketChannel_, _ByteBuffer_) are passed as constructor arguments for the appropriate _completion handlers_.
 
 
 ## Conclusion
 
-The choice of I/O model for sockets communication depends on the parameters of the traffic. If I/O requests are long and infrequent, asynchronous I/O is generally a good choice. However, if I/O requests are short and fast, the overhead of processing kernel I/O requests and kernel signals may make asynchronous I/O less beneficial. In this case, synchronous I/O would be better. 
+The choice of I/O model for sockets communication depends on the parameters of the traffic. If I/O requests are long and infrequent, asynchronous I/O is generally a good choice. However, if I/O requests are short and fast, the overhead of processing kernel calls may make synchronous I/O much better. 
 
 Despite that Java provides a standard way of performing sockets I/O in the different operating systems, the actual performance can vary significantly depending on their implementation. It’s possible to start studying the differences with the well-known article [The C10K problem](http://www.kegel.com/c10k.html). 
 
