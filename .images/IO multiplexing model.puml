@@ -6,6 +6,7 @@ skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
+
 activate application
 application->>kernel: monitoring\ndescriptors
 deactivate application
@@ -21,6 +22,7 @@ Note right of kernel: copy data
 kernel-->>application: data
 deactivate kernel
 activate application
+
 ||12||
 kernel -[#white]->]
 @enduml

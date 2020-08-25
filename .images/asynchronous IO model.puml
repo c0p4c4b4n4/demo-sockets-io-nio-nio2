@@ -6,6 +6,7 @@ skinparam monochrome true
 skinparam defaultFontName Microsoft Sans Serif
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
+
 activate application
 application->kernel: operation\ninitiation
 activate kernel
@@ -13,5 +14,6 @@ Note right of kernel: wait for data
 Note right of kernel: copy data
 kernel->application: completion\ncallback
 deactivate kernel
+
 ||25||
 @enduml
