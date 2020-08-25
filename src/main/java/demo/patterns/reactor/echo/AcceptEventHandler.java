@@ -1,5 +1,6 @@
 package demo.patterns.reactor.echo;
 
+import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -14,7 +15,7 @@ class AcceptEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(SelectionKey handle) throws Exception {
+    public void handleEvent(SelectionKey handle) throws IOException {
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) handle.channel();
         SocketChannel socketChannel = serverSocketChannel.accept();
         if (socketChannel != null) {

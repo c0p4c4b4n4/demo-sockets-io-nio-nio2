@@ -1,5 +1,6 @@
 package demo.patterns.reactor.echo;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -7,7 +8,7 @@ import java.nio.channels.SocketChannel;
 class WriteEventHandler implements EventHandler {
 
     @Override
-    public void handleEvent(SelectionKey handle) throws Exception {
+    public void handleEvent(SelectionKey handle) throws IOException {
         SocketChannel socketChannel = (SocketChannel) handle.channel();
 
         ByteBuffer buffer = (ByteBuffer) handle.attachment();

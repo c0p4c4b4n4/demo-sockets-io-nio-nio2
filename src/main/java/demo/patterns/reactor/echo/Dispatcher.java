@@ -26,46 +26,40 @@ class Dispatcher {
         registeredHandlers.put(eventType, eventHandler);
     }
 
-    // Used to register ServerSocketChannel with the
-    // selector to accept incoming client connections
     public void registerChannel(int eventType, SelectableChannel channel) throws IOException {
         channel.register(demultiplexer, eventType);
     }
 
-    public void run() {
-        try {
-            while (true) {
-                demultiplexer.select();
+    public void run() throws IOException {
+        while (true) {
+            demultiplexer.select();
 
-                Set<SelectionKey> readyHandles = demultiplexer.selectedKeys();
-                Iterator<SelectionKey> handleIterator = readyHandles.iterator();
+            Set<SelectionKey> readyHandles = demultiplexer.selectedKeys();
+            Iterator<SelectionKey> handleIterator = readyHandles.iterator();
 
-                while (handleIterator.hasNext()) {
-                    SelectionKey handle = handleIterator.next();
+            while (handleIterator.hasNext()) {
+                SelectionKey handle = handleIterator.next();
 
-                    if (handle.isAcceptable()) {
-                        EventHandler handler = registeredHandlers.get(SelectionKey.OP_ACCEPT);
-                        handler.handleEvent(handle);
-                        // Note : Here we don't remove this handle from
-                        // selector since we want to keep listening to
-                        // new client connections
-                    }
+                if (handle.isAcceptable()) {
+                    EventHandler handler = registeredHandlers.get(SelectionKey.OP_ACCEPT);
+                    handler.handleEvent(handle);
+                    // Note : Here we don't remove this handle from
+                    // selector since we want to keep listening to
+                    // new client connections
+                }
 
-                    if (handle.isReadable()) {
-                        EventHandler handler = registeredHandlers.get(SelectionKey.OP_READ);
-                        handler.handleEvent(handle);
-                        handleIterator.remove();
-                    }
+                if (handle.isReadable()) {
+                    EventHandler handler = registeredHandlers.get(SelectionKey.OP_READ);
+                    handler.handleEvent(handle);
+                    handleIterator.remove();
+                }
 
-                    if (handle.isWritable()) {
-                        EventHandler handler = registeredHandlers.get(SelectionKey.OP_WRITE);
-                        handler.handleEvent(handle);
-                        handleIterator.remove();
-                    }
+                if (handle.isWritable()) {
+                    EventHandler handler = registeredHandlers.get(SelectionKey.OP_WRITE);
+                    handler.handleEvent(handle);
+                    handleIterator.remove();
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
