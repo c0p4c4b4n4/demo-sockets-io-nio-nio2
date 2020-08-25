@@ -17,6 +17,7 @@ public class Nio2EchoFutureServer extends Demo {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
         serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
+        serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));

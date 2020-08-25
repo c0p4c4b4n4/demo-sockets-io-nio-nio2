@@ -20,7 +20,7 @@ public class IoEchoThreadPoolServer extends Demo {
         ServerSocket serverSocket = new ServerSocket(7000);
         logger.info("echo server started: {}", serverSocket);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         while (active.get()) {
             Socket socket = serverSocket.accept(); // blocking

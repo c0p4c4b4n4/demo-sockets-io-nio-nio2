@@ -16,14 +16,16 @@ import java.util.concurrent.Future;
 public class Nio2EchoFutureServerThreadPool extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
         serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
+        serverSocketChannel.setOption(StandardSocketOptions.SO_SNDBUF, 1024);
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
         logger.info("echo server started: " + serverSocketChannel);
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         int i = 0;
         while (i++ < 3) {
