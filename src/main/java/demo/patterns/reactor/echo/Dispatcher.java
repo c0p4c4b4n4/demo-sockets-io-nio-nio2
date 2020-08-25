@@ -43,9 +43,6 @@ class Dispatcher {
                 if (handle.isAcceptable()) {
                     EventHandler handler = registeredHandlers.get(SelectionKey.OP_ACCEPT);
                     handler.handleEvent(handle);
-                    // Note : Here we don't remove this handle from
-                    // selector since we want to keep listening to
-                    // new client connections
                 }
 
                 if (handle.isReadable()) {
