@@ -49,7 +49,7 @@ public class NioNonBlockingEchoServer extends Demo {
                     }
 
                     buffer.flip();
-                    socketChannel.write(buffer); // non-blocking
+                    socketChannel.write(buffer); // can be non-blocking
                 }
 
                 socketChannel.close();
