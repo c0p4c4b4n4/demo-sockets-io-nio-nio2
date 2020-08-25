@@ -18,7 +18,7 @@ public class NioMultiplexingEchoServer extends Demo {
     private static boolean active = true;
 
     public static void main(String[] args) throws IOException {
-        final int ports = 7;
+        final int ports = 16;
         ServerSocketChannel[] serverSocketChannels = new ServerSocketChannel[ports];
 
         Selector selector = Selector.open();
