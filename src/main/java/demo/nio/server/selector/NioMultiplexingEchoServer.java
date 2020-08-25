@@ -18,7 +18,7 @@ public class NioMultiplexingEchoServer extends Demo {
     private static boolean active = true;
 
     public static void main(String[] args) throws IOException {
-        final int ports = 16;
+        final int ports = 8;
         ServerSocketChannel[] serverSocketChannels = new ServerSocketChannel[ports];
 
         Selector selector = Selector.open();
@@ -64,7 +64,7 @@ public class NioMultiplexingEchoServer extends Demo {
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-        SocketChannel socketChannel = serverSocketChannel.accept(); // non-blocking
+        SocketChannel socketChannel = serverSocketChannel.accept(); // can be non-blocking
         if (socketChannel != null) {
             logger.info("connection is accepted: {}", socketChannel);
 
@@ -77,7 +77,7 @@ public class NioMultiplexingEchoServer extends Demo {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
-        int read = socketChannel.read(buffer); // non-blocking
+        int read = socketChannel.read(buffer); // can be non-blocking
         logger.info("echo server read: {} byte(s)", read);
 
         buffer.flip();
@@ -98,7 +98,7 @@ public class NioMultiplexingEchoServer extends Demo {
 
         ByteBuffer buffer = (ByteBuffer) key.attachment();
 
-        socketChannel.write(buffer); // non-blocking
+        socketChannel.write(buffer); // can be non-blocking
         socketChannel.close();
 
         buffer.flip();
