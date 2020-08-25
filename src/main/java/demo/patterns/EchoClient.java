@@ -15,7 +15,7 @@ public class EchoClient {
             out.flush();
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String reply = in.readLine();
-            System.out.println("Server responded: " + reply);
+            System.out.println("received message from server: " + reply);
         }
     }
 }
