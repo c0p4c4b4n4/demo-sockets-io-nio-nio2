@@ -53,7 +53,7 @@ public class IoEchoThreadPoolServer extends Demo {
                 OutputStream os = socket.getOutputStream();
 
                 int read;
-                byte[] bytes = new byte[4];
+                byte[] bytes = new byte[1024];
                 while ((read = is.read(bytes)) != -1) { // blocking
                     logger.info("echo server read: {} byte(s)", read);
 

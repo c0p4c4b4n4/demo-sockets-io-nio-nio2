@@ -30,7 +30,7 @@ public class NioNonBlockingEchoServer extends Demo {
                 socketChannel.configureBlocking(false);
                 logger.info("connection is blocking: {}", socketChannel.isBlocking());
 
-                ByteBuffer buffer = ByteBuffer.allocate(4);
+                ByteBuffer buffer = ByteBuffer.allocate(1024);
                 while (true) {
                     buffer.clear();
                     int read = socketChannel.read(buffer); // non-blocking

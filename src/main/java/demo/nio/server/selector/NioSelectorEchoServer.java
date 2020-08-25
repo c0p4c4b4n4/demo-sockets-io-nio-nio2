@@ -67,7 +67,7 @@ public class NioSelectorEchoServer extends Demo {
     private static void read(Selector selector, SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
-        ByteBuffer buffer = ByteBuffer.allocate(4);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
         int read = socketChannel.read(buffer); // non-blocking
         logger.info("echo server read: {} byte(s)", read);
 

@@ -24,7 +24,7 @@ public class NioBlockingEchoServer extends Demo {
             logger.info("connection accepted: {}", socketChannel);
             logger.info("connection is blocking: {}", socketChannel.isBlocking());
 
-            ByteBuffer buffer = ByteBuffer.allocate(4);
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
             while (true) {
                 buffer.clear();
                 int read = socketChannel.read(buffer); // blocking
