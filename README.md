@@ -3,9 +3,9 @@
 
 ## Introduction
 
-When describing I/O, the terms _non-blocking_ and _asynchronous_ are often used interchangeably, but there is actually a significant difference between them. In this article are described the theoretical and practical differences between non-blocking and asynchronous sockets I/O operations in Java.
+When describing I/O, the terms _non-blocking_ and _asynchronous_ are often used interchangeably, but there is a significant difference between them. In this article are described the theoretical and practical differences between non-blocking and asynchronous sockets I/O operations in Java.
 
-Sockets are endpoints to perform two-way communication by TCP and UDP protocols. Actually, Java sockets APIs are adapters for the corresponding functionality of the operating systems. Sockets communication in POSIX-compliant operating systems (Unix, Linux, Mac OS X, BSD, Solaris, AIX, etc.) is performed by _Berkeley sockets_. Sockets communication in Windows is performed by _Winsock_ that is also based on _Berkeley sockets_ with additional functionality to comply with the Windows programming model.
+Sockets are endpoints to perform two-way communication by TCP and UDP protocols. Java sockets APIs are adapters for the corresponding functionality of the operating systems. Sockets communication in POSIX-compliant operating systems (Unix, Linux, Mac OS X, BSD, Solaris, AIX, etc.) is performed by _Berkeley sockets_. Sockets communication in Windows is performed by _Winsock_ that is also based on _Berkeley sockets_ with additional functionality to comply with the Windows programming model.
 
 
 ## The POSIX definitions
@@ -41,7 +41,7 @@ The following I/O models are the most common for the POSIX-compliant operating s
 
 ### Blocking I/O model
 
-In the _blocking I/O model_, the application makes a blocking system call until data are received at the kernel _and_ are copied from kernel-space buffer into user-space buffer.
+In the _blocking I/O model_, the application makes a blocking system call until data are received at the kernel _and_ are copied from a kernel-space buffer into a user-space buffer.
 
 ![blocking I/O model](/.images/blocking_IO_model.png)
 
@@ -89,7 +89,7 @@ Cons:
 
 In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many sockets. For each socket, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.)
 
-When the first blocking _select_ system call returns that at least one socket is ready, the application makes the second non-blocking call and copies the data from kernel-space buffer into user-space buffer.
+When the first blocking _select_ system call returns that at least one socket is ready, the application makes the second non-blocking call and copies the data from a kernel-space buffer into a user-space buffer.
 
 ![I/O multiplexing model](/.images/IO_multiplexing_model.png)
 
@@ -109,7 +109,7 @@ Cons:
 
 ### Signal-driven I/O model
 
-In the signal-driven I/O model the application makes a non-blocking call and registers a signal handler. When a socket is ready to be read or written, a signal is generated for the application. Then the signal handler copies the data from kernel-space buffer into user-space buffer.
+In the _signal-driven I/O model_ the application makes a non-blocking call and registers a signal handler. When a socket is ready to be read or written, a signal is generated for the application. Then the signal handler copies the data from a kernel-space buffer into a user-space buffer.
 
 ![signal-driven I/O model](/.images/signal_driven_IO_model.png)
 
@@ -129,7 +129,7 @@ Cons:
 
 ### Asynchronous I/O model
 
-In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from kernel-space buffer into user-space buffer), a signal or a thread-based callback is generated to finish the I/O operation. 
+In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from a kernel-space buffer into a user-space buffer), a signal or a thread-based callback is generated to finish the I/O operation. 
 
 <sub>A difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation <em>can be initiated</em>, but with the asynchronous I/O model, the kernel tells the application when an I/O operation <em>is completed</em>.</sub>
 
@@ -162,9 +162,9 @@ Java IO API is based on streams (_InputStream_, _OutputStream_) that represent b
 
 Java NIO API is based on the three classes: _Channel_, _Buffer_, _Selector_.
 
-The _Channel_ class represents a connection to an entity (hardware device, file, socket, software component etc) that is capable of performing I/O operations (reading or writing). 
+The _Channel_ class represents a connection to an entity (hardware device, file, socket, software component, etc) that is capable of performing I/O operations (reading or writing). 
 
-<sub>In comparison with streams that are uni-directional, channels are bi-directional.</sub>
+<sub>In comparison with uni-directional streams, channels are bi-directional.</sub>
 
 The _Buffer_ class is a fixed-size data container with additional methods to read and write data. All _Channel_ data are handled through _Buffer_ but never directly: all data that are sent to a _Channel_ are written into a _Buffer_, all data that are received from a _Channel_ are read into a _Buffer_.
 
@@ -177,14 +177,14 @@ The _Selector_ class allows subscribing to events from many registered _Selectab
 
 Java NIO2 API is based on asynchronous channels (_AsynchronousServerSocketChannel_, _AsynchronousSocketChannel_, etc) that support asynchronous I/O operations (connecting, reading or writing, errors handling).
 
-The asynchronous channels provide two mechanisms to control asynchronous I/O operations. The first mechanism is by returning a _java.util.concurrent.Future_ object, which models a pending operation and can be used to query its state and obtain the result. The second mechanism is by passing to the operation a _java.nio.channels.CompletionHandler_ object, which defines handler methods that are executed after the operation has completed _or_ failed. Actually, the provided API for both mechanisms are equivalent.
+The asynchronous channels provide two mechanisms to control asynchronous I/O operations. The first mechanism is by returning a _java.util.concurrent.Future_ object, which models a pending operation and can be used to query its state and obtain the result. The second mechanism is by passing to the operation a _java.nio.channels.CompletionHandler_ object, which defines handler methods that are executed after the operation has completed _or_ failed. The provided API for both mechanisms are equivalent.
 
 Asynchronous channels provide a standard way of performing asynchronous operations platform-independently. However, the amount that Java sockets API can exploit native asynchronous capabilities of an operating system, will depend on the support for that platform.
 
 
 ## Socket echo server
 
-Most of the I/O models mentioned above are implemented in echo clients and servers with Java sockets APIs. The echo clients and servers works by the following algorithm: 
+Most of the I/O models mentioned above are implemented in echo servers and clients with Java sockets APIs. The echo servers and clients work by the following algorithm: 
 
 
 
@@ -277,7 +277,7 @@ public class NioBlockingEchoServer {
 
 In the following example, the _non-blocking I/O model_ is implemented in an echo server with Java NIO API. 
 
-The _ServerSocketChannel_ and _SocketChannel_ objects are explicitly configured in the non-blocking mode. The _ServerSocketChannel.accept_ method doesn't block and returns _null_ if no connection is accepted yet or a _SocketChannel_ object otherwise. The _ServerSocket.read_ doesn't block and returns _0_ if no data are available or a positive number otherwise. The _ServerSocket.write_ method doesn't block _only if_ there is free space in the socket's output buffer. 
+The _ServerSocketChannel_ and _SocketChannel_ objects are explicitly configured in the non-blocking mode. The _ServerSocketChannel.accept_ method doesn't block and returns _null_ if no connection is accepted yet or a _SocketChannel_ object otherwise. The _ServerSocket.read_ doesn't block and returns _0_ if no data are available or a positive number otherwise. The _ServerSocket.write_ method doesn't block _if_ there is free space in the socket's output buffer. 
 
 
 ```
@@ -326,12 +326,6 @@ During the initialization, many _ServerSocketChannel_ objects, that are configur
 
 In the main loop, the _Selector.select_ method blocks until at least one of the registered events occurs. Then the _Selector.selectedKeys_ method returns a set of the _SelectionKey_ objects for which events have occurred. Iterating through the _SelectionKey_ objects, it’s possible to determine what I/O event (connect, accept, read, write) has happened and which sockets objects (_ServerSocketChannel, SocketChannel_) have been associated with that event.
 
-When a _SelectionKey_ object indicates that a connection acceptance event has happened, it’s made the _ServerSocketChannel.accept_ call (which can be a non-blocking) to accept the connection. After that a new _SocketChannel_ object is configured in the non-blocking mode and is registered on the same _Selector_ object with the _SelectionKey.OP_READ_ argument to specify that now an event of reading is interesting.
-
-When a _SelectionKey_ object indicates that a read event has happened, it’s made a the _SocketChannel.read_ call (which can be a non-blocking) to read data from the _SocketChannel_ object into a new _ByteByffer_ object. After that, the _SocketChannel_ object is registered on the same _Selector_ object with the _SelectionKey.OP_WRITE_ argument to specify that now an event of write is interesting. Additionally, this _ByteBuffer_ object is used during the registration as an _attachment_.
-
-When a _SelectionKeys_ object indicates that a write event has happened, it’s made the _SocketChannel.write_ call (which can be a non-blocking) to write data to the _SocketChannel_ object from the _ByteByffer_ object, extracted from the _SelectionKey.attachment()_ method. After that, the _SocketChannel.cloase_ call closes the connection.
-
 
 ```
 public class NioMultiplexingEchoServer {
@@ -376,7 +370,14 @@ public class NioMultiplexingEchoServer {
            serverSocketChannel.close();
        }
    }
+}
+```
 
+
+When a _SelectionKey_ object indicates that a connection acceptance event has happened, it’s made the _ServerSocketChannel.accept_ call (which can be a non-blocking) to accept the connection. After that, a new _SocketChannel_ object is configured in the non-blocking mode and is registered on the same _Selector_ object with the _SelectionKey.OP_READ_ argument to specify that now an event of reading is interesting.
+
+
+```
    private static void accept(Selector selector, SelectionKey key) throws IOException {
        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
        SocketChannel socketChannel = serverSocketChannel.accept(); // can be non-blocking
@@ -385,7 +386,13 @@ public class NioMultiplexingEchoServer {
            socketChannel.register(selector, SelectionKey.OP_READ);
        }
    }
+```
 
+
+When a _SelectionKey_ object indicates that a reading event has happened, it’s made a the _SocketChannel.read_ call (which can be a non-blocking) to read data from the _SocketChannel_ object into a new _ByteByffer_ object. After that, the _SocketChannel_ object is registered on the same _Selector_ object with the _SelectionKey.OP_WRITE_ argument to specify that now an event of write is interesting. Additionally, this _ByteBuffer_ object is used during the registration as an _attachment_.
+
+
+```
    private static void read(Selector selector, SelectionKey key) throws IOException {
        SocketChannel socketChannel = (SocketChannel) key.channel();
 
@@ -395,7 +402,13 @@ public class NioMultiplexingEchoServer {
        buffer.flip();
        socketChannel.register(selector, SelectionKey.OP_WRITE, buffer);
    }
+```
 
+
+When a _SelectionKeys_ object indicates that a writing event has happened, it’s made the _SocketChannel.write_ call (which can be a non-blocking) to write data to the _SocketChannel_ object from the _ByteByffer_ object, extracted from the _SelectionKey.attachment()_ method. After that, the _SocketChannel.cloase_ call closes the connection.
+
+
+```
    private static void write(SelectionKey key) throws IOException {
        SocketChannel socketChannel = (SocketChannel) key.channel();
 
@@ -404,7 +417,6 @@ public class NioMultiplexingEchoServer {
        socketChannel.write(buffer); // can be non-blocking
        socketChannel.close();
    }
-}
 ```
 
 
@@ -523,8 +535,8 @@ In this example, asynchronous I/O operations are performed without _attachment_,
 
 ## Conclusion
 
-The choice of I/O model for sockets communication depends on the parameters of the traffic. If I/O requests are long and infrequent, asynchronous I/O is generally a good choice. However, if I/O requests are short and fast, the overhead of processing kernel calls may make synchronous I/O much better. 
+The choice of the I/O model for sockets communication depends on the parameters of the traffic. If I/O requests are long and infrequent, asynchronous I/O is generally a good choice. However, if I/O requests are short and fast, the overhead of processing kernel calls may make synchronous I/O much better. 
 
 Despite that Java provides a standard way of performing sockets I/O in the different operating systems, the actual performance can vary significantly depending on their implementation. It’s possible to start studying these differences with Dan Kegel’s well-known article [The C10K problem](http://www.kegel.com/c10k.html). 
 
-Complete codes of echo servers and clients are available in the [GitHub repository](https://github.com/aliakh/demo-sockets-io-nio-nio2).
+Complete code examples are available in the [GitHub repository](https://github.com/aliakh/demo-sockets-io-nio-nio2).
