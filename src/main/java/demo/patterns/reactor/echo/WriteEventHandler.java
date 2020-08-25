@@ -8,11 +8,10 @@ class WriteEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws Exception {
-        System.out.println("write");
-
         SocketChannel socketChannel = (SocketChannel) handle.channel();
-        ByteBuffer inputBuffer = (ByteBuffer) handle.attachment();
-        socketChannel.write(inputBuffer);
+
+        ByteBuffer buffer = (ByteBuffer) handle.attachment();
+        socketChannel.write(buffer);
         socketChannel.close();
     }
 }

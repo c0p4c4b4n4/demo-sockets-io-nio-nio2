@@ -15,7 +15,6 @@ class AcceptEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws Exception {
-        System.out.println("accept");
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) handle.channel();
         SocketChannel socketChannel = serverSocketChannel.accept();
         if (socketChannel != null) {
