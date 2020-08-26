@@ -14,9 +14,13 @@ In this article are used simplified definitions from the POSIX specification.
 
 _Blocked thread_ - a thread that is waiting for some condition before it can continue execution.
 
-_Blocking_ - a property of a socket that causes calls to it to wait for the requested action to be performed before returning. _Non-blocking_ - a property of a socket that causes calls to it to return without delay, when it is detected that the requested action cannot be completed without an unknown delay.
+_Blocking_ - a property of a socket that causes calls to it to wait for the requested action to be performed before returning. 
 
-_Synchronous I/O operation_ - an I/O operation that causes the requesting thread to be blocked until that I/O operation completes. _Asynchronous I/O operation_ - an I/O operation that doesn’t of itself cause the requesting thread to be blocked; this implies that the thread and the I/O operation may be running concurrently.
+_Non-blocking_ - a property of a socket that causes calls to it to return without delay, when it is detected that the requested action cannot be completed without an unknown delay.
+
+_Synchronous I/O operation_ - an I/O operation that causes the requesting thread to be blocked until that I/O operation completes. 
+
+_Asynchronous I/O operation_ - an I/O operation that doesn’t of itself cause the requesting thread to be blocked; this implies that the thread and the I/O operation may be running concurrently.
 
 So, according to the POSIX specification, the difference between the terms _non-blocking_ and _asynchronous_ is obvious:
 
