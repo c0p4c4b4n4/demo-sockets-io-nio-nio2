@@ -5,7 +5,6 @@ import demo.common.Demo;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 
 class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
@@ -20,7 +19,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
         logger.info("Echo client wrote: {} byte(s)", bytesWritten);
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
-        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, buffer);
+        ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(buffer);
         socketChannel.read(buffer, attachment, readCompletionHandler);
     }
 

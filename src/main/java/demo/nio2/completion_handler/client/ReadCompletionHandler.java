@@ -4,18 +4,14 @@ import demo.common.Demo;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, Attachment> {
 
-    private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
 
-    ReadCompletionHandler(AsynchronousSocketChannel socketChannel, ByteBuffer inputBuffer) {
-        this.socketChannel = socketChannel;
+    ReadCompletionHandler(ByteBuffer inputBuffer) {
         this.inputBuffer = inputBuffer;
     }
 

@@ -3,7 +3,6 @@ package demo.nio2.completion_handler.server;
 import demo.common.Demo;
 
 import java.io.IOException;
-import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
