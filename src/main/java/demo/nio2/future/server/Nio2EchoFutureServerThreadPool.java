@@ -15,6 +15,8 @@ import java.util.concurrent.Future;
 
 public class Nio2EchoFutureServerThreadPool extends Demo {
 
+    private static boolean active = true;
+
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
@@ -27,8 +29,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        int i = 0;
-        while (i++ < 3) {
+        while (active) {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
@@ -51,7 +52,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
 
         private final AsynchronousSocketChannel socketChannel;
 
-        public Worker(AsynchronousSocketChannel socketChannel) {
+        Worker(AsynchronousSocketChannel socketChannel) {
             this.socketChannel = socketChannel;
         }
 
@@ -72,7 +73,6 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
                         buffer.clear();
                     }
                 }
-
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             } finally {

@@ -13,6 +13,8 @@ import java.util.concurrent.Future;
 
 public class Nio2EchoFutureServer extends Demo {
 
+    private static boolean active = true;
+
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
 
@@ -23,8 +25,7 @@ public class Nio2EchoFutureServer extends Demo {
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
         logger.info("Echo server started: {}", serverSocketChannel);
 
-        int i = 0;
-        while (i++ < 3) {
+        while (active) {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
