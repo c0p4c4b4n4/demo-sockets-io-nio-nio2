@@ -1,9 +1,9 @@
 @startuml
-scale 1.2
+scale 1.1
 title Asynchronous I/O model
 hide footbox
 skinparam monochrome true
-skinparam defaultFontName Microsoft Sans Serif
+skinparam defaultFontName Source Sans Pro
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
 
@@ -15,5 +15,5 @@ Note right of kernel: copy data
 kernel->application: completion\ncallback
 deactivate kernel
 
-||25||
+||26||
 @enduml

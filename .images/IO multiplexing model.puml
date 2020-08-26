@@ -1,9 +1,9 @@
 @startuml
-scale 1.2
+scale 1.1
 title I/O multiplexing model
 hide footbox
 skinparam monochrome true
-skinparam defaultFontName Microsoft Sans Serif
+skinparam defaultFontName Source Sans Pro
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
 

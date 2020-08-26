@@ -1,14 +1,14 @@
 @startuml
 title Signal-driven I/O model
-scale 1.2
+scale 1.1
 hide footbox
 skinparam monochrome true
-skinparam defaultFontName Microsoft Sans Serif
+skinparam defaultFontName Source Sans Pro
 skinparam titleFontSize 15
 skinparam sequenceMessageAlign center
 activate application
 
-application->kernel: signal handler\nestablishing
+application->kernel: handler\nestablishing
 activate kernel
 Note right of kernel: wait for data
 kernel->application: signal
@@ -19,6 +19,6 @@ kernel-->>application: data
 deactivate kernel
 activate application
 
-||11||
+||14||
 kernel -[#white]->]
 @enduml
