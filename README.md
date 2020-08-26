@@ -131,7 +131,7 @@ Cons:
 
 ### Asynchronous I/O model
 
-In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from kernel space into user space), a signal or a thread-based callback is generated to finish the I/O operation. 
+In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from kernel space into user space), a completion callback is generated to finish the I/O operation. 
 
 A difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation _can be initiated_, but with the asynchronous I/O model, the kernel tells the application when an I/O operation _is completed_.
 
@@ -200,7 +200,7 @@ Most of the I/O models mentioned above are implemented here in echo servers and 
 
 <sub>The conversion between strings and bytes here is performed explicitly in UTF-8 encoding.</sub>
 
-In the following article, only simplified codes for the echo servers are provided. A link to the complete codes for echo servers and clients is provided in the conclusion.
+Further only simplified codes for echo servers are provided. The link to the complete codes for echo servers and clients is provided in the conclusion.
 
 
 ### Blocking IO echo server
@@ -409,7 +409,7 @@ When a _SelectionKey_ object indicates that a reading event has happened, it’s
 ```
 
 
-When a _SelectionKeys_ object indicates that a writing event has happened, it’s made the _SocketChannel.write_ call (which can be a non-blocking) to write data to the _SocketChannel_ object from the _ByteByffer_ object, extracted from the _SelectionKey.attachment()_ method. After that, the _SocketChannel.cloase_ call closes the connection.
+When a _SelectionKeys_ object indicates that a writing event has happened, it’s made the _SocketChannel.write_ call (which can be a non-blocking) to write data to the _SocketChannel_ object from the _ByteByffer_ object, extracted from the _SelectionKey.attachment_ method. After that, the _SocketChannel.cloase_ call closes the connection.
 
 
 ```
