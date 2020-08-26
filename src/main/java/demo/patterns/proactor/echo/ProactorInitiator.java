@@ -16,6 +16,7 @@ public class ProactorInitiator {
 
     public static void main(String[] args) throws IOException {
         new ProactorInitiator().initiateProactiveServer(7000);
+
         System.in.read();
     }
 }
