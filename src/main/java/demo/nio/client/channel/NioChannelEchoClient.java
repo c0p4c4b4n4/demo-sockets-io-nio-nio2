@@ -17,29 +17,29 @@ public class NioChannelEchoClient extends Demo {
         String message;
         while ((message = stdIn.readLine()) != null) {
             SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 7000));
-            logger.info("echo client started: {}", socketChannel);
+            logger.info("Echo client started: {}", socketChannel);
 
             ByteBuffer buffer = ByteBuffer.wrap(message.getBytes());
             socketChannel.write(buffer);
-            logger.info("echo client sent: {}", message);
+            logger.info("Echo client sent: {}", message);
 
             int totalRead = 0;
             while (totalRead < message.getBytes().length) {
                 buffer.clear();
 
                 int read = socketChannel.read(buffer);
-                logger.info("echo client read: {} byte(s)", read);
+                logger.info("Echo client read: {} byte(s)", read);
                 if (read <= 0)
                     break;
 
                 totalRead += read;
 
                 buffer.flip();
-                logger.info("echo client received: {}", StandardCharsets.UTF_8.newDecoder().decode(buffer));
+                logger.info("Echo client received: {}", StandardCharsets.UTF_8.newDecoder().decode(buffer));
             }
 
             socketChannel.close();
-            logger.info("echo client disconnected");
+            logger.info("Echo client disconnected");
         }
     }
 }

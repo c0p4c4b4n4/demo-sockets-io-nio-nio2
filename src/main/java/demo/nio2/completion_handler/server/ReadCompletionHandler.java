@@ -19,13 +19,13 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, V
 
     @Override
     public void completed(Integer bytesRead, Void attachment) {
-        logger.info("echo server read: {} byte(s)", bytesRead);
+        logger.info("Echo server read: {} byte(s)", bytesRead);
 
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
-        logger.info("echo server received: {}", message);
+        logger.info("Echo server received: {}", message);
 
         WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
         buffer.flip();
@@ -34,6 +34,6 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, V
 
     @Override
     public void failed(Throwable t, Void attachment) {
-        logger.error("exception during socket reading", t);
+        logger.error("Exception during socket reading", t);
     }
 }

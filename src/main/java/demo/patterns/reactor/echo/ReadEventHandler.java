@@ -24,7 +24,7 @@ class ReadEventHandler implements EventHandler {
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
-        System.out.println("received message from client: " + new String(bytes, StandardCharsets.UTF_8));
+        System.out.println("Received message from client: " + new String(bytes, StandardCharsets.UTF_8));
 
         buffer.flip();
         socketChannel.register(demultiplexer, SelectionKey.OP_WRITE, buffer);

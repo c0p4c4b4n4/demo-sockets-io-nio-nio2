@@ -22,7 +22,7 @@ public class NioSelectorEchoServer extends Demo {
         serverSocketChannel.configureBlocking(false);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: {}", serverSocketChannel);
+        logger.info("Echo server started: {}", serverSocketChannel);
 
         Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -50,7 +50,7 @@ public class NioSelectorEchoServer extends Demo {
         }
 
         serverSocketChannel.close();
-        logger.info("echo server finished");
+        logger.info("Echo server finished");
     }
 
     private static void accept(Selector selector, SelectionKey key) throws IOException {
@@ -69,13 +69,13 @@ public class NioSelectorEchoServer extends Demo {
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         int read = socketChannel.read(buffer); // can be non-blocking
-        logger.info("echo server read: {} byte(s)", read);
+        logger.info("Echo server read: {} byte(s)", read);
 
         buffer.flip();
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
-        logger.info("echo server received: {}", message);
+        logger.info("Echo server received: {}", message);
         if (message.trim().equals("bye")) {
             active = false;
         }
@@ -94,6 +94,6 @@ public class NioSelectorEchoServer extends Demo {
         byte[] bytes = new byte[buffer.limit()];
         buffer.get(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
-        logger.info("echo server sent: {}", message);
+        logger.info("Echo server sent: {}", message);
     }
 }

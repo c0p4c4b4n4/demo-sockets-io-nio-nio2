@@ -11,11 +11,16 @@ public class EchoClient {
     public static void main(String[] args) throws IOException {
         try (Socket socket = new Socket("localhost", 7000)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.print("Hello!");
+
+            String message = "Hello!";
+            out.print(message);
             out.flush();
+            System.out.println("Sent message to server: " + message);
+
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
             String reply = in.readLine();
-            System.out.println("received message from server: " + reply);
+            System.out.println("Received message from server: " + reply);
         }
     }
 }

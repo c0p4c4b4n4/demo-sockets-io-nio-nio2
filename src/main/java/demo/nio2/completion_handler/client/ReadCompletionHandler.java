@@ -21,10 +21,10 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void completed(Integer bytesRead, Attachment attachment) {
-        logger.info("echo client read: {} byte(s)", bytesRead);
+        logger.info("Echo client read: {} byte(s)", bytesRead);
         try {
             inputBuffer.flip();
-            logger.info("echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
+            logger.info("Echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
 
             attachment.getActive().set(false);
         } catch (IOException e) {
@@ -34,6 +34,6 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("exception during socket reading", t);
+        logger.error("Exception during socket reading", t);
     }
 }

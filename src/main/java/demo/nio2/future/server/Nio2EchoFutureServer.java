@@ -21,7 +21,7 @@ public class Nio2EchoFutureServer extends Demo {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: " + serverSocketChannel);
+        logger.info("Echo server started: " + serverSocketChannel);
 
         int i = 0;
         while (i++ < 3) {
@@ -48,6 +48,6 @@ public class Nio2EchoFutureServer extends Demo {
         }
 
         serverSocketChannel.close();
-        logger.info("echo server finished");
+        logger.info("Echo server finished");
     }
 }

@@ -13,10 +13,10 @@ public class NioBlockingEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        logger.info("echo server is blocking: {}", serverSocketChannel.isBlocking());
+        logger.info("Echo server is blocking: {}", serverSocketChannel.isBlocking());
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: {}", serverSocketChannel);
+        logger.info("Echo server started: {}", serverSocketChannel);
 
         boolean active = true;
         while (active) {
@@ -28,7 +28,7 @@ public class NioBlockingEchoServer extends Demo {
             while (true) {
                 buffer.clear();
                 int read = socketChannel.read(buffer); // blocking
-                logger.info("echo server read: {} byte(s)", read);
+                logger.info("Echo server read: {} byte(s)", read);
                 if (read < 0) {
                     break;
                 }
@@ -37,7 +37,7 @@ public class NioBlockingEchoServer extends Demo {
                 byte[] bytes = new byte[buffer.limit()];
                 buffer.get(bytes);
                 String message = new String(bytes, StandardCharsets.UTF_8);
-                logger.info("echo server received: {}", message);
+                logger.info("Echo server received: {}", message);
                 if (message.trim().equals("bye")) {
                     active = false;
                 }
@@ -51,6 +51,6 @@ public class NioBlockingEchoServer extends Demo {
         }
 
         serverSocketChannel.close();
-        logger.info("echo server finished");
+        logger.info("Echo server finished");
     }
 }

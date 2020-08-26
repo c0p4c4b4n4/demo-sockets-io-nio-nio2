@@ -23,7 +23,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("echo server started: " + serverSocketChannel);
+        logger.info("Echo server started: " + serverSocketChannel);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -38,13 +38,13 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             executorService.submit(worker);
         }
 
-        logger.info("echo server is finishing");
+        logger.info("Echo server is finishing");
         executorService.shutdown();
         while (!executorService.isTerminated()) {
         }
 
         serverSocketChannel.close();
-        logger.info("echo server finished");
+        logger.info("Echo server finished");
     }
 
     private static class Worker implements Runnable {

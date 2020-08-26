@@ -17,18 +17,18 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
     @Override
     public void completed(Integer bytesWritten, Void attachment) {
-        logger.info("echo server wrote: {} byte(s)", bytesWritten);
+        logger.info("Echo server wrote: {} byte(s)", bytesWritten);
 
         try {
             socketChannel.close();
             logger.info("connection closed");
         } catch (IOException e) {
-            logger.error("exception during socket closing", e);
+            logger.error("Exception during socket closing", e);
         }
     }
 
     @Override
     public void failed(Throwable t, Void attachment) {
-        logger.error("exception during socket writing", t);
+        logger.error("Exception during socket writing", t);
     }
 }

@@ -28,7 +28,7 @@ public class Nio2CompletionHandlerEchoClient extends Demo {
             }
 
             socketChannel.close();
-            logger.info("echo client finished");
+            logger.info("Echo client finished");
         }
     }
 }

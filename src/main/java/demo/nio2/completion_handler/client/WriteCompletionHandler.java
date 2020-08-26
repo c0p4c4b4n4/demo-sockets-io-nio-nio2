@@ -17,7 +17,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
     @Override
     public void completed(Integer bytesWritten, Attachment attachment) {
-        logger.info("echo client wrote: {} byte(s)", bytesWritten);
+        logger.info("Echo client wrote: {} byte(s)", bytesWritten);
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         ReadCompletionHandler readCompletionHandler = new ReadCompletionHandler(socketChannel, buffer);
@@ -26,6 +26,6 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
     @Override
     public void failed(Throwable t, Attachment attachment) {
-        logger.error("exception during socket writing", t);
+        logger.error("Exception during socket writing", t);
     }
 }

@@ -13,7 +13,7 @@ public class IoEchoClient extends Demo {
         String message;
         while ((message = stdIn.readLine()) != null) {
             Socket socket = new Socket("localhost", 7000);
-            logger.info("echo client started: {}", socket);
+            logger.info("Echo client started: {}", socket);
 
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
@@ -28,13 +28,13 @@ public class IoEchoClient extends Demo {
                     break;
 
                 totalRead += read;
-                logger.info("echo client read: {} byte(s)", read);
+                logger.info("Echo client read: {} byte(s)", read);
             }
 
-            logger.info("echo client received: {}", new String(bytes, StandardCharsets.UTF_8));
+            logger.info("Echo client received: {}", new String(bytes, StandardCharsets.UTF_8));
 
             socket.close();
-            logger.info("echo client disconnected");
+            logger.info("Echo client disconnected");
         }
     }
 }

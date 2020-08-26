@@ -28,6 +28,6 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Asynchro
 
     @Override
     public void failed(Throwable t, Void attachment) {
-        logger.error("exception during connection accepting", t);
+        logger.error("Exception during connection accepting", t);
     }
 }

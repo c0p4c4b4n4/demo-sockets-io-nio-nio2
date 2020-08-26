@@ -28,12 +28,12 @@ public class Nio2EchoFutureClient {
 
             ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes());
             socketChannel.write(outputBuffer).get();
-            System.out.println("echo client sent: " + message);
+            System.out.println("Echo client sent: " + message);
 
             ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
             while (socketChannel.read(inputBuffer).get() != -1) {
                 inputBuffer.flip();
-                System.out.println("echo client received: " + CHARSET_DECODER.decode(inputBuffer));
+                System.out.println("Echo client received: " + CHARSET_DECODER.decode(inputBuffer));
 
                 if (inputBuffer.hasRemaining()) {
                     inputBuffer.compact();
