@@ -41,7 +41,7 @@ The following I/O models are the most common for the POSIX-compliant operating s
 
 ### Blocking I/O model
 
-In the _blocking I/O model_, the application makes a blocking system call until data are received at the kernel _and_ are copied from a kernel-space buffer into a user-space buffer.
+In the _blocking I/O model_, the application makes a blocking system call until data are received at the kernel _and_ are copied from kernel space into user space.
 
 ![blocking I/O model](/.images/blocking_IO_model.png)
 
@@ -87,9 +87,9 @@ Cons:
 
 ### I/O multiplexing model
 
-In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many sockets. For each socket, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.)
+In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many descriptors. For each descriptor, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.)
 
-When the first blocking _select_ system call returns that at least one socket is ready, the application makes the second non-blocking call and copies the data from a kernel-space buffer into a user-space buffer.
+When the first blocking _select_ system call returns that at least one descriptor is ready, the application makes the second non-blocking call and copies the data from kernel space into user space.
 
 ![I/O multiplexing model](/.images/IO_multiplexing_model.png)
 
@@ -97,7 +97,7 @@ Pros:
 
 
 
-*   It’s possible to perform I/O operations on multiple sockets in one thread
+*   It’s possible to perform I/O operations on multiple descriptors in one thread
 
 Cons:
 
@@ -109,7 +109,7 @@ Cons:
 
 ### Signal-driven I/O model
 
-In the _signal-driven I/O model_ the application makes a non-blocking call and registers a signal handler. When a socket is ready to be read or written, a signal is generated for the application. Then the signal handler copies the data from a kernel-space buffer into a user-space buffer.
+In the _signal-driven I/O model_ the application makes a non-blocking call and registers a signal handler. When a socket is ready to be read or written, a signal is generated for the application. Then the signal handler copies the data from kernel space into user space.
 
 ![signal-driven I/O model](/.images/signal_driven_IO_model.png)
 
@@ -129,7 +129,7 @@ Cons:
 
 ### Asynchronous I/O model
 
-In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from a kernel-space buffer into a user-space buffer), a signal or a thread-based callback is generated to finish the I/O operation. 
+In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from kernel space into user space), a signal or a thread-based callback is generated to finish the I/O operation. 
 
 <sub>A difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation <em>can be initiated</em>, but with the asynchronous I/O model, the kernel tells the application when an I/O operation <em>is completed</em>.</sub>
 
@@ -419,6 +419,10 @@ When a _SelectionKeys_ object indicates that a writing event has happened, it’
    }
 ```
 
+
+After every reading or writing the SelectionKey object is removed from the set of the SelectionKey objects to prevent its reuse. But the
+
+SelectionKey object for connection acceptance is not removed to have the ability to make the next similar operation.
 
 
 ### Asynchronous NIO2 echo server
