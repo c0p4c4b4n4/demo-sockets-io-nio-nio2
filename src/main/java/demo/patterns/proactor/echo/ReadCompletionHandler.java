@@ -3,8 +3,9 @@ package demo.patterns.proactor.echo;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.charset.StandardCharsets;
 
-public class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> {
+public class ReadCompletionHandler implements CompletionHandler<Integer, Session> {
 
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;
@@ -15,26 +16,19 @@ public class ReadCompletionHandler implements CompletionHandler<Integer, Session
     }
 
     @Override
-    public void completed(Integer bytesRead, SessionState sessionState) {
-        byte[] bytes = new byte[bytesRead];
+    public void completed(Integer bytesRead, Session session) {
         inputBuffer.rewind();
-        // Rewind the input buffer to read from the beginning
-
+        byte[] bytes = new byte[bytesRead];
         inputBuffer.get(bytes);
-        String message = new String(bytes);
-
-        System.out.println("Received message from client : " + message);
-
-        // Echo the message back to client
-        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
+        System.out.println("Received message from client: " + new String(bytes, StandardCharsets.UTF_8));
 
         ByteBuffer outputBuffer = ByteBuffer.wrap(bytes);
-
-        socketChannel.write(outputBuffer, sessionState, writeCompletionHandler);
+        WriteCompletionHandler writeCompletionHandler = new WriteCompletionHandler(socketChannel);
+        socketChannel.write(outputBuffer, session, writeCompletionHandler);
     }
 
     @Override
-    public void failed(Throwable exc, SessionState attachment) {
-        //Handle read failure.....
+    public void failed(Throwable e, Session attachment) {
+        e.printStackTrace();
     }
 }

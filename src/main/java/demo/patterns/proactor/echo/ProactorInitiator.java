@@ -6,23 +6,19 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 
 public class ProactorInitiator {
 
-    private static final int SERVER_PORT = 7000;
-
     public void initiateProactiveServer(int port) throws IOException {
         AsynchronousServerSocketChannel listener = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(port));
-        AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(listener);
 
-        SessionState state = new SessionState();
+        Session state = new Session();
+        AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(listener);
         listener.accept(state, acceptCompletionHandler);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Starting Proactor NIO2 echo server at port: " + SERVER_PORT);
-        new ProactorInitiator().initiateProactiveServer(SERVER_PORT);
+        new ProactorInitiator().initiateProactiveServer(7000);
 
-        // sleep indefinitely since otherwise the JVM would terminate
         while (true) {
-            Thread.sleep(Long.MAX_VALUE);
+            Thread.sleep(Long.MAX_VALUE); // sleep indefinitely since otherwise the JVM would terminate
         }
     }
 }

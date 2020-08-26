@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-public class WriteCompletionHandler implements CompletionHandler<Integer, SessionState> {
+public class WriteCompletionHandler implements CompletionHandler<Integer, Session> {
 
     private final AsynchronousSocketChannel socketChannel;
 
@@ -13,7 +13,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, Sessio
     }
 
     @Override
-    public void completed(Integer bytesWritten, SessionState attachment) {
+    public void completed(Integer bytesWritten, Session attachment) {
         try {
             socketChannel.close();
         } catch (IOException e) {
@@ -22,7 +22,7 @@ public class WriteCompletionHandler implements CompletionHandler<Integer, Sessio
     }
 
     @Override
-    public void failed(Throwable exc, SessionState attachment) {
-        // Handle write failure.....
+    public void failed(Throwable e, Session attachment) {
+        e.printStackTrace();
     }
 }
