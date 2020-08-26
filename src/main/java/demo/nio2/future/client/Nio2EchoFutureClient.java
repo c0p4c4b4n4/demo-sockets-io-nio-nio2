@@ -1,23 +1,23 @@
 package demo.nio2.future.client;
 
+import demo.common.Demo;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
-public class Nio2EchoFutureClient {
-
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final CharsetDecoder CHARSET_DECODER = CHARSET.newDecoder();
+public class Nio2EchoFutureClient extends Demo {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String[] messages = {"Alpha", "Bravo", "Charlie"};
-        for (String message : messages) {
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        String message;
+        while ((message = stdIn.readLine()) != null) {
             AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
 
             socketChannel.setOption(StandardSocketOptions.SO_RCVBUF, 1024);
@@ -28,12 +28,12 @@ public class Nio2EchoFutureClient {
 
             ByteBuffer outputBuffer = ByteBuffer.wrap(message.getBytes());
             socketChannel.write(outputBuffer).get();
-            System.out.println("Echo client sent: " + message);
+            logger.info("Echo client sent: {}", message);
 
             ByteBuffer inputBuffer = ByteBuffer.allocate(1024);
             while (socketChannel.read(inputBuffer).get() != -1) {
                 inputBuffer.flip();
-                System.out.println("Echo client received: " + CHARSET_DECODER.decode(inputBuffer));
+                logger.info("Echo client received: {}", StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
 
                 if (inputBuffer.hasRemaining()) {
                     inputBuffer.compact();
