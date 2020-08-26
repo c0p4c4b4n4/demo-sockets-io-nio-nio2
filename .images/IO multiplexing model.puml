@@ -23,6 +23,6 @@ kernel-->>application: data
 deactivate kernel
 activate application
 
-||12||
+||11||
 kernel -[#white]->]
 @enduml
