@@ -6,7 +6,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-class AcceptEventHandler implements EventHandler {
+public class AcceptEventHandler implements EventHandler {
 
     private final Selector demultiplexer;
 

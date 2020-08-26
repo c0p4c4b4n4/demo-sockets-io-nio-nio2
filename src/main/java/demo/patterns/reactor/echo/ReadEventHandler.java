@@ -7,7 +7,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 
-class ReadEventHandler implements EventHandler {
+public class ReadEventHandler implements EventHandler {
 
     private final Selector demultiplexer;
     private final ByteBuffer buffer = ByteBuffer.allocate(1024);

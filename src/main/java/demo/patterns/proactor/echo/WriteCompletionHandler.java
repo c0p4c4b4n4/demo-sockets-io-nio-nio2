@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class WriteCompletionHandler implements CompletionHandler<Integer, SessionState> {
+public class WriteCompletionHandler implements CompletionHandler<Integer, SessionState> {
 
     private final AsynchronousSocketChannel socketChannel;
 

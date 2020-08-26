@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
-class WriteEventHandler implements EventHandler {
+public class WriteEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(SelectionKey handle) throws IOException {

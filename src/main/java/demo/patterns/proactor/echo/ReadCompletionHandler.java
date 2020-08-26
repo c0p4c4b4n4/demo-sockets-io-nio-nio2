@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> {
+public class ReadCompletionHandler implements CompletionHandler<Integer, SessionState> {
 
     private final AsynchronousSocketChannel socketChannel;
     private final ByteBuffer inputBuffer;

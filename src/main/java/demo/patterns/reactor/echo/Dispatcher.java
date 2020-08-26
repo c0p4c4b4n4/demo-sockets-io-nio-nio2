@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-class Dispatcher {
+public class Dispatcher {
 
     private final Map<Integer, EventHandler> registeredHandlers = new ConcurrentHashMap<>();
     private final Selector demultiplexer;
