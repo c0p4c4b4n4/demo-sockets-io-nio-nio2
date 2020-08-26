@@ -21,14 +21,14 @@ public class Nio2EchoFutureServer extends Demo {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("Echo server started: " + serverSocketChannel);
+        logger.info("Echo server started: {}", serverSocketChannel);
 
         int i = 0;
         while (i++ < 3) {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-            logger.info("Connection: " + socketChannel);
+            logger.info("Connection: {}", socketChannel);
 
             ByteBuffer buffer = ByteBuffer.allocate(1024);
 

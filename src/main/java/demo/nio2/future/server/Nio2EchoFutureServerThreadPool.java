@@ -23,7 +23,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 
         serverSocketChannel.bind(new InetSocketAddress("localhost", 7000));
-        logger.info("Echo server started: " + serverSocketChannel);
+        logger.info("Echo server started: {}", serverSocketChannel);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -32,7 +32,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
             Future<AsynchronousSocketChannel> socketChannelFuture = serverSocketChannel.accept();
 
             AsynchronousSocketChannel socketChannel = socketChannelFuture.get();
-            logger.info("Connection: " + socketChannel);
+            logger.info("Connection: {}", socketChannel);
 
             Runnable worker = new Worker(socketChannel);
             executorService.submit(worker);
@@ -58,7 +58,7 @@ public class Nio2EchoFutureServerThreadPool extends Demo {
         @Override
         public void run() {
             try {
-                logger.info("Connection: " + socketChannel);
+                logger.info("Connection: {}", socketChannel);
 
                 ByteBuffer buffer = ByteBuffer.allocate(1024);
                 while (socketChannel.read(buffer).get() != -1) {

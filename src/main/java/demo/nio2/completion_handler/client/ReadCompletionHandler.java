@@ -20,7 +20,7 @@ class ReadCompletionHandler extends Demo implements CompletionHandler<Integer, A
         logger.info("Echo client read: {} byte(s)", bytesRead);
         try {
             inputBuffer.flip();
-            logger.info("Echo client received: " + StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
+            logger.info("Echo client received: {}", StandardCharsets.UTF_8.newDecoder().decode(inputBuffer));
 
             attachment.getActive().set(false);
         } catch (IOException e) {
