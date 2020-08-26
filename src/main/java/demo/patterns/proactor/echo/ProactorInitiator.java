@@ -14,12 +14,9 @@ public class ProactorInitiator {
         listener.accept(state, acceptCompletionHandler);
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         new ProactorInitiator().initiateProactiveServer(7000);
-
-        while (true) {
-            Thread.sleep(Long.MAX_VALUE); // sleep indefinitely since otherwise the JVM would terminate
-        }
+        System.in.read();
     }
 }
 
