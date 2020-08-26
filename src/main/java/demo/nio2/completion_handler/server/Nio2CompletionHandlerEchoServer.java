@@ -9,7 +9,8 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 public class Nio2CompletionHandlerEchoServer extends Demo {
 
     public static void main(String[] args) throws IOException {
-        AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(7000));
+        AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
+        serverSocketChannel.bind(new InetSocketAddress(7000));
         logger.info("Echo server started");
 
         AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);

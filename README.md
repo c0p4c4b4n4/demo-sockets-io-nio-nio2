@@ -86,14 +86,12 @@ Cons:
 
 
 *   The application should busy-wait until completion, that would cause many user-kernel context switches
-*   This model can introduce latency in the I/O because there can be a gap between the data availability in the kernel and the data reading by the application
+*   This model can introduce I/O latency because there can be a gap between the data availability in the kernel and the data reading by the application
 
 
 ### I/O multiplexing model
 
-In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many descriptors. For each descriptor, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.)
-
-When the first blocking _select_ system call returns that at least one descriptor is ready, the application makes the second non-blocking call and copies the data from kernel space into user space.
+In the _I/O multiplexing model_ (also known as the _non-blocking I/O model with blocking notifications_), the application makes a blocking _select_ system call to start to monitor activity on many descriptors. For each descriptor, it’s possible to request notification of its readiness for certain I/O operations (connection, reading or writing, error occurrence, etc.). When the _select_ system call returns that at least one descriptor is ready, the application makes a non-blocking call and copies the data from kernel space into user space.
 
 ![I/O multiplexing model](/.images/IO_multiplexing_model.png)
 
@@ -135,7 +133,7 @@ Cons:
 
 In the _asynchronous I/O model_ (also known as the _overlapped I/O model_) the application makes the non-blocking call and starts a background operation in the kernel. When the operation is completed (data are received at the kernel _and_ are copied from kernel space into user space), a signal or a thread-based callback is generated to finish the I/O operation. 
 
-<sub>A difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation <em>can be initiated</em>, but with the asynchronous I/O model, the kernel tells the application when an I/O operation <em>is completed</em>.</sub>
+A difference between the asynchronous I/O model and the signal-driven I/O model is that with signal-driven I/O, the kernel tells the application when an I/O operation _can be initiated_, but with the asynchronous I/O model, the kernel tells the application when an I/O operation _is completed_.
 
 ![asynchronous I/O model](/.images/asynchronous_IO_model.png)
 
@@ -159,12 +157,12 @@ Cons:
 
 ### Java IO API
 
-Java IO API is based on streams (_InputStream_, _OutputStream_) that represent blocking, one-directional bytes flow.
+Java IO API is based on streams (_InputStream_, _OutputStream_) that represent blocking, one-directional data flow.
 
 
 ### Java NIO API
 
-Java NIO API is based on the three classes: _Channel_, _Buffer_, _Selector_.
+Java NIO API is based on the _Channel_, _Buffer_, _Selector_ classes, that are adapters to low-level I/O operations of operating systems.
 
 The _Channel_ class represents a connection to an entity (hardware device, file, socket, software component, etc) that is capable of performing I/O operations (reading or writing). 
 
@@ -174,21 +172,21 @@ The _Buffer_ class is a fixed-size data container with additional methods to rea
 
 <sub>In comparison with streams, that are byte-oriented, channels are block-oriented. Byte-oriented I/O is simpler but for some I/O entities can be rather slow. Block-oriented I/O can be much faster but is more complicated. </sub>
 
-The _Selector_ class allows subscribing to events from many registered _SelectableChannel_ objects in a single place. When events arrive, a _Selector_ object dispatches them to the corresponding event handlers.
+The _Selector_ class allows subscribing to events from many registered _SelectableChannel_ objects in a single call. When events arrive, a _Selector_ object dispatches them to the corresponding event handlers.
 
 
 ### Java NIO2 API
 
 Java NIO2 API is based on asynchronous channels (_AsynchronousServerSocketChannel_, _AsynchronousSocketChannel_, etc) that support asynchronous I/O operations (connecting, reading or writing, errors handling).
 
-The asynchronous channels provide two mechanisms to control asynchronous I/O operations. The first mechanism is by returning a _java.util.concurrent.Future_ object, which models a pending operation and can be used to query its state and obtain the result. The second mechanism is by passing to the operation a _java.nio.channels.CompletionHandler_ object, which defines handler methods that are executed after the operation has completed _or_ failed. The provided API for both mechanisms are equivalent.
+The asynchronous channels provide two mechanisms to control asynchronous I/O operations. The first mechanism is by returning a _java.util.concurrent.Future_ object, which models a pending operation and can be used to query the state and obtain the result. The second mechanism is by passing to the operation a _java.nio.channels.CompletionHandler_ object, which defines handler methods that are executed after the operation has completed _or_ failed. The provided API for both mechanisms are equivalent.
 
 Asynchronous channels provide a standard way of performing asynchronous operations platform-independently. However, the amount that Java sockets API can exploit native asynchronous capabilities of an operating system, will depend on the support for that platform.
 
 
 ## Socket echo server
 
-Most of the I/O models mentioned above are implemented in echo servers and clients with Java sockets APIs. The echo servers and clients work by the following algorithm: 
+Most of the I/O models mentioned above are implemented here in echo servers and clients with Java sockets APIs. The echo servers and clients work by the following algorithm: 
 
 
 
@@ -200,7 +198,9 @@ Most of the I/O models mentioned above are implemented in echo servers and clien
 6. when the client receives the same number of bytes that it has sent, it disconnects from the server
 7. when the server receives a special string, it stops listening
 
-<sub>The conversion between strings and bytes here is performed in UTF-8 encoding.</sub>
+<sub>The conversion between strings and bytes here is performed explicitly in UTF-8 encoding.</sub>
+
+In the following article, only simplified codes for the echo servers are provided. A link to the complete codes for echo servers and clients is provided in the conclusion.
 
 
 ### Blocking IO echo server
@@ -281,7 +281,7 @@ public class NioBlockingEchoServer {
 
 In the following example, the _non-blocking I/O model_ is implemented in an echo server with Java NIO API. 
 
-The _ServerSocketChannel_ and _SocketChannel_ objects are explicitly configured in the non-blocking mode. The _ServerSocketChannel.accept_ method doesn't block and returns _null_ if no connection is accepted yet or a _SocketChannel_ object otherwise. The _ServerSocket.read_ doesn't block and returns _0_ if no data are available or a positive number otherwise. The _ServerSocket.write_ method doesn't block _if_ there is free space in the socket's output buffer. 
+The _ServerSocketChannel_ and _SocketChannel_ objects are explicitly configured in the non-blocking mode. The _ServerSocketChannel.accept_ method doesn't block and returns _null_ if no connection is accepted yet or a _SocketChannel_ object otherwise. The _ServerSocket.read_ doesn't block and returns _0_ if no data are available or a positive number of bytes read otherwise. The _ServerSocket.write_ method doesn't block _if_ there is free space in the socket's output buffer. 
 
 
 ```
@@ -324,11 +324,11 @@ public class NioNonBlockingEchoServer {
 
 In the following example, the _multiplexing I/O model_ is implemented in an echo server Java NIO API. 
 
-During the initialization, many _ServerSocketChannel_ objects, that are configured in the non-blocking mode, are registered on the same _Selector_ object with the _SelectionKey.OP_ACCEPT_ argument to specify that an event of connection acceptance is interesting.
-
-<sub>Indication of a selection key that a channel is ready for some operation category is a hint, but not a guarantee.</sub>
+During the initialization, multiple _ServerSocketChannel_ objects, that are configured in the non-blocking mode, are registered on the same _Selector_ object with the _SelectionKey.OP_ACCEPT_ argument to specify that an event of connection acceptance is interesting.
 
 In the main loop, the _Selector.select_ method blocks until at least one of the registered events occurs. Then the _Selector.selectedKeys_ method returns a set of the _SelectionKey_ objects for which events have occurred. Iterating through the _SelectionKey_ objects, it’s possible to determine what I/O event (connect, accept, read, write) has happened and which sockets objects (_ServerSocketChannel, SocketChannel_) have been associated with that event.
+
+<sub>Indication of a selection key that a channel is ready for some operation is a hint, not a guarantee.</sub>
 
 
 ```
@@ -440,7 +440,8 @@ The _AsynchronousServerSocketChannel.accept_ method initiates an asynchronous co
 public class Nio2CompletionHandlerEchoServer {
 
    public static void main(String[] args) throws IOException {
-       AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open().bind(new InetSocketAddress(7000));
+       AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open();
+       serverSocketChannel.bind(new InetSocketAddress(7000));
 
        AcceptCompletionHandler acceptCompletionHandler = new AcceptCompletionHandler(serverSocketChannel);
        serverSocketChannel.accept(null, acceptCompletionHandler);
