@@ -26,9 +26,9 @@ public class NioNonBlockingEchoServer extends Demo {
                 logger.info("waiting for incoming connection...");
                 sleep(5000);
             } else {
-                logger.info("connection accepted: {}", socketChannel);
+                logger.info("Connection accepted: {}", socketChannel);
                 socketChannel.configureBlocking(false);
-                logger.info("connection is blocking: {}", socketChannel.isBlocking());
+                logger.info("Connection is blocking: {}", socketChannel.isBlocking());
 
                 ByteBuffer buffer = ByteBuffer.allocate(1024);
                 while (true) {
@@ -53,7 +53,7 @@ public class NioNonBlockingEchoServer extends Demo {
                 }
 
                 socketChannel.close();
-                logger.info("connection closed");
+                logger.info("Connection closed");
             }
         }
 

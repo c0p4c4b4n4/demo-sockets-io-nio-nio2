@@ -18,7 +18,7 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Void, At
 
     @Override
     public void completed(Void result, Attachment attachment) {
-        logger.info("connection accepted: {}", socketChannel);
+        logger.info("Connection accepted: {}", socketChannel);
 
         String message = attachment.getMessage();
         logger.info("Echo client sent: {}", message);

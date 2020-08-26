@@ -21,7 +21,7 @@ class WriteCompletionHandler extends Demo implements CompletionHandler<Integer, 
 
         try {
             socketChannel.close();
-            logger.info("connection closed");
+            logger.info("Connection closed");
         } catch (IOException e) {
             logger.error("Exception during socket closing", e);
         }

@@ -18,7 +18,7 @@ public class IoEchoServer extends Demo {
         boolean active = true;
         while (active) {
             Socket socket = serverSocket.accept(); // blocking
-            logger.info("connection accepted: {}", socket);
+            logger.info("Connection accepted: {}", socket);
 
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
@@ -38,7 +38,7 @@ public class IoEchoServer extends Demo {
             }
 
             socket.close();
-            logger.info("connection closed");
+            logger.info("Connection closed");
         }
 
         serverSocket.close();

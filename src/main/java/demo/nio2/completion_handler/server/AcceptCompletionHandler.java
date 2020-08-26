@@ -17,7 +17,7 @@ class AcceptCompletionHandler extends Demo implements CompletionHandler<Asynchro
 
     @Override
     public void completed(AsynchronousSocketChannel socketChannel, Void attachment) {
-        logger.info("connection accepted: {}", socketChannel);
+        logger.info("Connection accepted: {}", socketChannel);
 
         serverSocketChannel.accept(null, this);
 

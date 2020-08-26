@@ -57,7 +57,7 @@ public class NioSelectorEchoServer extends Demo {
         ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
         SocketChannel socketChannel = serverSocketChannel.accept(); // can be non-blocking
         if (socketChannel != null) {
-            logger.info("connection is accepted: {}", socketChannel);
+            logger.info("Connection is accepted: {}", socketChannel);
 
             socketChannel.configureBlocking(false);
             socketChannel.register(selector, SelectionKey.OP_READ);
